@@ -2,7 +2,9 @@
 
 public static class MasterManager
 {
-    public static double ReplyRate => 0.05;
+    public static float ReplyRate => 0.05f;
+    public static float ReplyMaxDelay => 2f;
+    public static float TypingMaxDelay => 1f;
 
     public static IReadOnlyList<(float rate, string message)> ReplyMessages => new List<(float rate, string message)>
     {

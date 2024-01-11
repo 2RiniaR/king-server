@@ -17,6 +17,6 @@ public static class DiscordEntry
         if (message is not SocketUserMessage userMessage || userMessage.Author.IsBot) return;
 
         // 発言
-        await DiscordManager.ExecuteAsync<ReplyPresenter>(userMessage);
+        await DiscordManager.ExecuteAsync<RareReplyPresenter>(userMessage);
     }
 }
