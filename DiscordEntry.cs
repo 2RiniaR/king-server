@@ -16,6 +16,13 @@ public static class DiscordEntry
         // botは弾く
         if (message is not SocketUserMessage userMessage || userMessage.Author.IsBot) return;
 
+        if (userMessage.MentionedUsers.Any(x => x.Id == DiscordManager.Client.CurrentUser.Id))
+        {
+            // 返信
+            await DiscordManager.ExecuteAsync<InteractReplyPresenter>(userMessage);
+            return;
+        }
+
         // 発言
         await DiscordManager.ExecuteAsync<RareReplyPresenter>(userMessage);
     }

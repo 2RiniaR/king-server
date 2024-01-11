@@ -3,12 +3,10 @@ using Discord;
 
 namespace Approvers.King.Events;
 
-public class RareReplyPresenter : DiscordMessagePresenterBase
+public class InteractReplyPresenter : DiscordMessagePresenterBase
 {
     protected override async Task MainAsync()
     {
-        if (RandomUtility.GetRandomFloat(1f) > MasterManager.ReplyRate) return;
-
         await Task.Delay(TimeSpan.FromSeconds(RandomUtility.GetRandomFloat(MasterManager.ReplyMaxDelay)));
         using (Message.Channel.EnterTypingState())
         {
