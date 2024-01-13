@@ -1,4 +1,5 @@
 ﻿using Approvers.King.Common;
+using Approvers.King.Triggers;
 
 namespace Approvers.King;
 
@@ -13,7 +14,7 @@ public class Program
     {
         await DiscordManager.InitializeAsync();
 
-        DiscordEntry.RegisterEvents();
+        DiscordTrigger.RegisterEvents();
 
         // 永久に待つ
         await Task.Delay(-1);

@@ -2,9 +2,9 @@
 using Approvers.King.Events;
 using Discord.WebSocket;
 
-namespace Approvers.King;
+namespace Approvers.King.Triggers;
 
-public static class DiscordEntry
+public static class DiscordTrigger
 {
     public static void RegisterEvents()
     {
@@ -18,6 +18,13 @@ public static class DiscordEntry
 
         if (userMessage.MentionedUsers.Any(x => x.Id == DiscordManager.Client.CurrentUser.Id))
         {
+            if (MasterManager.SilentTriggerMessages.Any(userMessage.Content.Contains))
+            {
+                // 黙らせる
+                await DiscordManager.ExecuteAsync<SilentCommandPresenter>(userMessage);
+                return;
+            }
+
             // 返信
             await DiscordManager.ExecuteAsync<InteractReplyPresenter>(userMessage);
             return;

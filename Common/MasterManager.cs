@@ -17,4 +17,30 @@ public static class MasterManager
         (1f, "noob"),
         (1f, "それね、ちょっと分かる"),
     };
+
+    public static string SilentCommandReplyMessage => "（いっそうの気配が{0}から消え去った）";
+
+    public static IReadOnlyList<string> SilentTriggerMessages => new List<string>
+    {
+        "だまれ",
+        "黙れ",
+        "だまって",
+        "黙って",
+        "だまろう",
+        "黙ろう",
+        "damare",
+        "しゃべるな",
+        "喋るな",
+        "しゃべんな",
+        "喋んな",
+        "帰れ",
+        "かえれ",
+        "帰って",
+        "かえって",
+        "帰ろう",
+        "かえろう",
+        "kaere",
+    };
+
+    public static TimeSpan SilentTimeSpan => TimeSpan.FromMinutes(5);
 }
