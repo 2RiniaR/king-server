@@ -18,6 +18,13 @@ public static class DiscordTrigger
 
         if (userMessage.MentionedUsers.Any(x => x.Id == DiscordManager.Client.CurrentUser.Id))
         {
+            if (MasterManager.SilentTriggerMessages.Any(userMessage.Content.Contains))
+            {
+                // 黙らせる
+                await DiscordManager.ExecuteAsync<SilentCommandPresenter>(userMessage);
+                return;
+            }
+
             // 返信
             await DiscordManager.ExecuteAsync<InteractReplyPresenter>(userMessage);
             return;
