@@ -2,7 +2,7 @@
 
 public static class MasterManager
 {
-    public static float ReplyRate => 1f;
+    public static float ReplyRate => 0.05f;
     public static float ReplyMaxDelay => 2f;
     public static float TypingMaxDelay => 1f;
 
