@@ -2,9 +2,9 @@
 using Approvers.King.Events;
 using Discord.WebSocket;
 
-namespace Approvers.King;
+namespace Approvers.King.Triggers;
 
-public static class DiscordEntry
+public static class DiscordTrigger
 {
     public static void RegisterEvents()
     {
