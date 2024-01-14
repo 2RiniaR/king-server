@@ -8,7 +8,7 @@ public class RareReplyPresenter : DiscordMessagePresenterBase
     protected override async Task MainAsync()
     {
         if (SilentManager.IsSilent(Message.Author.Id) ||
-            RandomUtility.GetRandomFloat(1f) > MasterManager.ReplyRate) return;
+            RandomUtility.IsHit(MasterManager.ReplyRate) == false) return;
 
         await Task.Delay(TimeSpan.FromSeconds(RandomUtility.GetRandomFloat(MasterManager.ReplyMaxDelay)));
         using (Message.Channel.EnterTypingState())
