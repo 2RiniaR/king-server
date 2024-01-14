@@ -43,4 +43,11 @@ public static class MasterManager
     };
 
     public static TimeSpan SilentTimeSpan => TimeSpan.FromMinutes(5);
+
+    public static IReadOnlyList<string> GachaTriggerMessages => new List<string>
+    {
+        "10連",
+        "ガチャ",
+        "おみくじ",
+    };
 }

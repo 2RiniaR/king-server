@@ -25,6 +25,13 @@ public static class DiscordTrigger
                 return;
             }
 
+            if (MasterManager.GachaTriggerMessages.Any(userMessage.Content.Contains))
+            {
+                // 10連ガチャ
+                await DiscordManager.ExecuteAsync<GachaCommandPresenter>(userMessage);
+                return;
+            }
+
             // 返信
             await DiscordManager.ExecuteAsync<InteractReplyPresenter>(userMessage);
             return;

@@ -13,4 +13,9 @@ public static class RandomUtility
     {
         return (float)(min + (max - min) * Random.NextDouble());
     }
+
+    public static bool IsHit(float probability)
+    {
+        return GetRandomFloat(1f) <= probability;
+    }
 }
