@@ -22,7 +22,8 @@ public class GachaCommandPresenter : DiscordMessagePresenterBase
         if (results.All(x => x == null))
         {
             builder.AppendLine();
-            builder.AppendLine("ザコ！");
+            var ridiculeMessage = MasterManager.RidiculeMessages.PickRandom();
+            builder.AppendLine(Discord.Format.Bold(Discord.Format.Italics(ridiculeMessage)));
         }
 
         await Message.ReplyAsync(builder.ToString());
