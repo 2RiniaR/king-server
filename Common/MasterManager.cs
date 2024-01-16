@@ -50,4 +50,11 @@ public static class MasterManager
         "ガチャ",
         "おみくじ",
     };
+
+    public static IReadOnlyList<string> RidiculeMessages => new List<string>
+    {
+        "雑魚",
+        "雑魚じゃん",
+        "雑魚すぎ",
+    };
 }

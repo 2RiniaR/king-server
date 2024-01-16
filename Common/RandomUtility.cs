@@ -18,4 +18,10 @@ public static class RandomUtility
     {
         return GetRandomFloat(1f) <= probability;
     }
+
+    public static T PickRandom<T>(this IEnumerable<T> source)
+    {
+        var array = source.ToArray();
+        return array[Random.Next(array.Length)];
+    }
 }
