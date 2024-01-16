@@ -10,13 +10,19 @@ public class GachaCommandPresenter : DiscordMessagePresenterBase
 
     protected override async Task MainAsync()
     {
-        var results = Enumerable.Range(0, PickCount).Select(_ => Pick());
+        var results = Enumerable.Range(0, PickCount).Select(_ => Pick()).ToList();
 
         var builder = new StringBuilder();
         builder.AppendLine($"↓↓↓ いっそう{PickCount}連おみくじ ↓↓↓");
         foreach (var result in results)
         {
             builder.AppendLine(result != null ? Discord.Format.Bold($"・{result}") : Discord.Format.Code("x"));
+        }
+
+        if (results.All(x => x == null))
+        {
+            builder.AppendLine();
+            builder.AppendLine("ザコ！");
         }
 
         await Message.ReplyAsync(builder.ToString());
