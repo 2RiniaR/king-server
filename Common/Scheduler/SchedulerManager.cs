@@ -19,7 +19,7 @@ public static class SchedulerManager
         var now = TimeManager.GetNow();
         foreach (var runner in Runners)
         {
-            if (runner.Predicate(now)) runner.Run();
+            if (runner.Predicate != null && runner.Predicate(now)) runner.Run();
         }
     }
 

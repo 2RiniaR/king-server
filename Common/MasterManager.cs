@@ -36,6 +36,5 @@ public static class MasterManager
         "雑魚", "雑魚じゃん", "雑魚すぎ",
     };
 
-    public static TimeSpan DailyResetTime =>
-        TimeSpan.FromHours(22) + TimeSpan.FromMinutes(42) + TimeSpan.FromSeconds(20);
+    public static TimeSpan DailyResetTime => TimeSpan.FromHours(0);
 }
