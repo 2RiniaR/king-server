@@ -11,7 +11,7 @@ public class InteractReplyPresenter : DiscordMessagePresenterBase
         using (Message.Channel.EnterTypingState())
         {
             await Task.Delay(TimeSpan.FromSeconds(RandomUtility.GetRandomFloat(MasterManager.TypingMaxDelay)));
-            await Message.ReplyAsync(MessageUtility.PickRandomMessage());
+            await Message.ReplyAsync(GachaManager.Instance.PickMessage());
         }
     }
 }

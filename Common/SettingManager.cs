@@ -11,7 +11,11 @@ public class SettingManager
         .AddUserSecrets<SettingManager>(true)
         .Build();
 
-    public static string Get(string name)
+    public static string DiscordSecret => Get("DiscordSecret");
+    public static ulong DiscordTargetGuildId => ulong.Parse(Get("DiscordTargetGuildId"));
+    public static ulong DiscordMainChannelId => ulong.Parse(Get("DiscordMainChannelId"));
+
+    private static string Get(string name)
     {
         return Configuration[name] ??
                throw new Exception($"Environment variable {name} is not set.");

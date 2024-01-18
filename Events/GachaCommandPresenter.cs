@@ -10,7 +10,9 @@ public class GachaCommandPresenter : DiscordMessagePresenterBase
 
     protected override async Task MainAsync()
     {
-        var results = Enumerable.Range(0, PickCount).Select(_ => Pick()).ToList();
+        var results = Enumerable.Range(0, PickCount)
+            .Select(_ => GachaManager.Instance.TryPickRareReplyMessage())
+            .ToList();
 
         var builder = new StringBuilder();
         builder.AppendLine($"↓↓↓ いっそう{PickCount}連おみくじ ↓↓↓");
@@ -27,11 +29,5 @@ public class GachaCommandPresenter : DiscordMessagePresenterBase
         }
 
         await Message.ReplyAsync(builder.ToString());
-    }
-
-    private static string? Pick()
-    {
-        if (RandomUtility.IsHit(MasterManager.ReplyRate) == false) return null;
-        return MessageUtility.PickRandomMessage();
     }
 }
