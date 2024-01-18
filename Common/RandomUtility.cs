@@ -14,6 +14,16 @@ public static class RandomUtility
         return (float)(min + (max - min) * Random.NextDouble());
     }
 
+    public static int GetRandomInt(int max)
+    {
+        return GetRandomInt(0, max);
+    }
+
+    public static int GetRandomInt(int min, int max)
+    {
+        return Random.Next(min, max);
+    }
+
     public static bool IsHit(float probability)
     {
         return GetRandomFloat(1f) <= probability;
@@ -23,5 +33,10 @@ public static class RandomUtility
     {
         var array = source.ToArray();
         return array[Random.Next(array.Length)];
+    }
+
+    public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> list)
+    {
+        return list.OrderBy(_ => Guid.NewGuid());
     }
 }

@@ -1,5 +1,5 @@
-﻿using Discord;
-using Discord.WebSocket;
+﻿using System.Text;
+using Discord;
 
 namespace Approvers.King.Common;
 
@@ -32,21 +32,17 @@ public abstract class PresenterBase
 
     public static class Format
     {
-        private static readonly string[] SanitizeTarget = { "\\", "*", "_", "~", "`", ".", ":", "/", ">", "|", "#" };
-
-        public static string Sanitize(string text)
+        public static string Table(IEnumerable<(string key, string value)> records)
         {
-            foreach (var target in SanitizeTarget)
+            var recordList = records.ToList();
+            var maxLength = recordList.Max(r => r.key.Length);
+            var sb = new StringBuilder();
+            foreach (var (key, value) in recordList)
             {
-                text = text.Replace(target, "\\" + target);
+                sb.AppendLine($"| {value.PadLeft(maxLength)} | {Discord.Format.Sanitize(key)}");
             }
 
-            return text;
-        }
-
-        public static string UserName(IUser user)
-        {
-            return Sanitize((user as SocketGuildUser)?.Nickname ?? user.Username);
+            return Discord.Format.Code(sb.ToString());
         }
     }
 }

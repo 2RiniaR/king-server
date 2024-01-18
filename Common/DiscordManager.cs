@@ -13,8 +13,9 @@ public static class DiscordManager
     public static async Task InitializeAsync()
     {
         Client.Log += OnLog;
-        await Client.LoginAsync(TokenType.Bot, SettingManager.Get("DISCORD_SECRET"));
+        await Client.LoginAsync(TokenType.Bot, SettingManager.DiscordSecret);
         await Client.StartAsync();
+        await EventUtility.WaitAsync(h => Client.Ready += h, h => Client.Ready -= h);
     }
 
     private static Task OnLog(LogMessage content)
