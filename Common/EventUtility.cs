@@ -9,7 +9,7 @@ public static class EventUtility
         Func<Task>? h = null;
         h = () =>
         {
-            unregister(h);
+            unregister(h!);
             tcs.SetResult();
             return Task.CompletedTask;
         };
