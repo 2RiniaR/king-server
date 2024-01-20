@@ -48,6 +48,13 @@ public class Program
                 return;
             }
 
+            if (MasterManager.GachaInfoTriggerMessages.Any(userMessage.Content.Contains))
+            {
+                // 排出率を投稿する
+                await DiscordManager.ExecuteAsync<GachaInfoCommandPresenter>(userMessage);
+                return;
+            }
+
             // 返信
             await DiscordManager.ExecuteAsync<InteractReplyPresenter>(userMessage);
             return;
