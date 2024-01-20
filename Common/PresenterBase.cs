@@ -29,20 +29,4 @@ public abstract class PresenterBase
             .WithCurrentTimestamp()
             .Build();
     }
-
-    public static class Format
-    {
-        public static string Table(IEnumerable<(string key, string value)> records)
-        {
-            var recordList = records.ToList();
-            var maxLength = recordList.Max(r => r.key.Length);
-            var sb = new StringBuilder();
-            foreach (var (key, value) in recordList)
-            {
-                sb.AppendLine($"| {value.PadLeft(maxLength)} | {Discord.Format.Sanitize(key)}");
-            }
-
-            return Discord.Format.Code(sb.ToString());
-        }
-    }
 }

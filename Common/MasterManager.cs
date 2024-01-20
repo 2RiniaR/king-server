@@ -31,6 +31,11 @@ public static class MasterManager
         "10連", "ガチャ", "おみくじ",
     };
 
+    public static IReadOnlyList<string> GachaInfoTriggerMessages => new List<string>
+    {
+        "今日", "本日", "確率", "何パー", "何％", "何%", "分布", "排出", "today",
+    };
+
     public static IReadOnlyList<string> RidiculeMessages => new List<string>
     {
         "雑魚", "雑魚じゃん", "雑魚すぎ",
