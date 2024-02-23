@@ -7,7 +7,8 @@ public class RareReplyPresenter : DiscordMessagePresenterBase
 {
     protected override async Task MainAsync()
     {
-        if (SilentManager.IsSilent(Message.Author.Id)) return;
+        if (SilentManager.IsSilent(Message.Author.Id) ||
+            Message.Channel.Id != SettingManager.DiscordMainChannelId) return;
 
         var message = GachaManager.Instance.TryPickRareReplyMessage();
         if (message == null) return;
