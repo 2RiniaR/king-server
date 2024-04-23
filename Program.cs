@@ -22,6 +22,7 @@ public class Program
 
         DiscordManager.Client.MessageReceived += OnMessageReceived;
         SchedulerManager.RegisterDaily<GachaRateUpdatePresenter>(MasterManager.DailyResetTime);
+        SchedulerManager.RegisterYearly<BirthPresenter>(MasterManager.Birthday + MasterManager.DailyResetTime);
 
         // 永久に待つ
         await Task.Delay(-1);

@@ -2,7 +2,7 @@
 
 public abstract class SchedulerJobRunner
 {
-    public Func<DateTime, bool>? Predicate { get; init; }
+    public Predicate<DateTime>? Predicate { get; init; }
     public abstract void Run();
 }
 
