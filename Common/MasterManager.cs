@@ -44,6 +44,4 @@ public static class MasterManager
     public static TimeSpan DailyResetTime => TimeSpan.FromHours(0);
 
     public static DateTime Birthday => new(2003, 4, 24);
-
-    public static string BirthdayMessage => "†　誕　生　日　だ　祝　え　カ　ス　†";
 }

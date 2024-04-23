@@ -3,8 +3,8 @@
 public static class TimeManager
 {
     /// <summary>
-    /// アプリ内の現在時刻を取得する
-    /// デバッグ機能により操作されることがある
+    ///     アプリ内の現在時刻を取得する
+    ///     デバッグ機能により操作されることがある
     /// </summary>
     public static DateTime GetNow()
     {
@@ -12,7 +12,7 @@ public static class TimeManager
     }
 
     /// <summary>
-    /// 過ぎていればtrue
+    ///     過ぎていればtrue
     /// </summary>
     public static bool IsExpired(DateTime time)
     {

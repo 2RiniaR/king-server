@@ -1,14 +1,20 @@
 ﻿using Approvers.King.Common;
-using Discord;
 
 namespace Approvers.King.Events;
 
 public class BirthPresenter : SchedulerJobPresenterBase
 {
+    private static readonly string Message = $"""
+                                              {string.Join("", EnumerableUtility.Repeat(IssoUtility.SmileStamp, 16))}
+                                              {IssoUtility.SmileStamp}　　　　　　　　　　　　　　　　　　　 {IssoUtility.SmileStamp}
+                                              {IssoUtility.SmileStamp}    ***†　誕　生　日　だ　祝　え　カ　ス　†***   {IssoUtility.SmileStamp}
+                                              {IssoUtility.SmileStamp}　　　　　　　　　　　　　　　　　　　 {IssoUtility.SmileStamp}
+                                              {string.Join("", EnumerableUtility.Repeat(IssoUtility.SmileStamp, 16))}
+                                              """;
+
     protected override async Task MainAsync()
     {
         var guild = DiscordManager.Client.GetGuild(SettingManager.DiscordTargetGuildId);
-        var message = Format.Italics(Format.Bold(MasterManager.BirthdayMessage));
-        await guild.GetTextChannel(SettingManager.DiscordMainChannelId).SendMessageAsync(message);
+        await guild.GetTextChannel(SettingManager.DiscordMainChannelId).SendMessageAsync(Message);
     }
 }
