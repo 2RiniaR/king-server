@@ -36,6 +36,8 @@ public class Program
 
         if (userMessage.MentionedUsers.Any(x => x.Id == DiscordManager.Client.CurrentUser.Id))
         {
+            if (await TryExecuteMarugame(userMessage)) return;
+
             if (MasterManager.SilentTriggerMessages.Any(userMessage.Content.Contains))
             {
                 // 黙らせる
@@ -64,5 +66,26 @@ public class Program
 
         // 発言
         await DiscordManager.ExecuteAsync<RareReplyPresenter>(userMessage);
+    }
+
+    private static async Task<bool> TryExecuteMarugame(SocketUserMessage userMessage)
+    {
+        // 「丸亀製麺」の次にある改行以降が対象
+
+        var marugameIndex =
+            userMessage.Content.IndexOf(MasterManager.MarugameTrigger, StringComparison.InvariantCulture);
+        if (marugameIndex < 0) return false;
+
+        var subs = userMessage.Content[(marugameIndex + MasterManager.MarugameTrigger.Length)..];
+        var contentIndex = subs.IndexOf('\n');
+        if (contentIndex < 0) return false;
+
+        // 丸亀製麺
+        await DiscordManager.ExecuteAsync<MarugamePresenter>(userMessage, presenter =>
+        {
+            presenter.Content = subs[(contentIndex + 1)..];
+            return Task.CompletedTask;
+        });
+        return true;
     }
 }
