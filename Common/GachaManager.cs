@@ -19,10 +19,10 @@ public class GachaManager
     public void Initialize()
     {
         _replyMessageTable.Clear();
-        _replyMessageTable.AddRange(MasterManager.ReplyMessages.Select(x => new ReplyMessage
+        _replyMessageTable.AddRange(MasterManager.RandomMessageMaster.GetAll(x => x.Type == RandomMessageType.GeneralReply).Select(x => new ReplyMessage
         {
             Rate = 1f,
-            Message = x,
+            Message = x.Content,
         }));
     }
 
@@ -48,7 +48,11 @@ public class GachaManager
 
     public void ShuffleRareReplyRate()
     {
-        RareReplyRate = MasterManager.RareReplyRateTable.PickRandom();
+        var step = MasterManager.SettingMaster.RareReplyProbabilityStepPermillage;
+        var max = MasterManager.SettingMaster.MaxRareReplyProbabilityPermillage;
+        RareReplyRate = Enumerable.Range(0, max / step)
+            .Select(i => NumberUtility.GetPercentFromPermillage((i + 1) * step))
+            .PickRandom();
     }
 
     public void ShuffleMessageRates()

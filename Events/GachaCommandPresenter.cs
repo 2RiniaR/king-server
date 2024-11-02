@@ -18,14 +18,14 @@ public class GachaCommandPresenter : DiscordMessagePresenterBase
         builder.AppendLine($"↓↓↓ いっそう{PickCount}連おみくじ ↓↓↓");
         foreach (var result in results)
         {
-            builder.AppendLine(result != null ? Discord.Format.Bold($"・{result}") : Discord.Format.Code("x"));
+            builder.AppendLine(result != null ? Format.Bold($"・{result}") : Format.Code("x"));
         }
 
         if (results.All(x => x == null))
         {
             builder.AppendLine();
-            var ridiculeMessage = MasterManager.RidiculeMessages.PickRandom();
-            builder.AppendLine(Discord.Format.Bold(Discord.Format.Italics(ridiculeMessage)));
+            var ridiculeMessage = MasterManager.RandomMessageMaster.GetAll(x => x.Type == RandomMessageType.GachaFailed).PickRandom().Content;
+            builder.AppendLine(Format.Bold(Format.Italics(ridiculeMessage)));
         }
 
         await Message.ReplyAsync(builder.ToString());

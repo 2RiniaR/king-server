@@ -8,8 +8,8 @@ public class GachaInfoCommandPresenter : DiscordMessagePresenterBase
     {
         // 排出率を投稿する
         await DiscordManager.Client
-            .GetGuild(SettingManager.DiscordTargetGuildId)
-            .GetTextChannel(SettingManager.DiscordMainChannelId)
+            .GetGuild(EnvironmentManager.DiscordTargetGuildId)
+            .GetTextChannel(EnvironmentManager.DiscordMainChannelId)
             .SendMessageAsync(embed: GachaUtility.GetInfoEmbedBuilder().Build());
     }
 }

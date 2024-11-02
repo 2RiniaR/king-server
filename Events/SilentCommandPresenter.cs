@@ -7,9 +7,10 @@ public class SilentCommandPresenter : DiscordMessagePresenterBase
 {
     protected override async Task MainAsync()
     {
-        SilentManager.SetSilent(Message.Author.Id, MasterManager.SilentTimeSpan);
+        var silentTimeSpan = NumberUtility.GetTimeSpanFromMilliseconds(MasterManager.SettingMaster.SilentDuration);
+        SilentManager.SetSilent(Message.Author.Id, silentTimeSpan);
         var message = string.Format(
-            MasterManager.SilentCommandReplyMessage,
+            MasterManager.SettingMaster.SilentReplyMessage,
             MentionUtils.MentionUser(Message.Author.Id));
         await Message.ReplyAsync(message);
     }

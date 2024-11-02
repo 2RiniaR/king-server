@@ -8,15 +8,17 @@ public class RareReplyPresenter : DiscordMessagePresenterBase
     protected override async Task MainAsync()
     {
         if (SilentManager.IsSilent(Message.Author.Id) ||
-            Message.Channel.Id != SettingManager.DiscordMainChannelId) return;
+            Message.Channel.Id != EnvironmentManager.DiscordMainChannelId) return;
 
         var message = GachaManager.Instance.TryPickRareReplyMessage();
         if (message == null) return;
 
-        await Task.Delay(TimeSpan.FromSeconds(RandomUtility.GetRandomFloat(MasterManager.ReplyMaxDelay)));
+        var replyMaxDelay = NumberUtility.GetSecondsFromMilliseconds(MasterManager.SettingMaster.ReplyMaxDuration);
+        await Task.Delay(TimeSpan.FromSeconds(RandomUtility.GetRandomFloat(replyMaxDelay)));
         using (Message.Channel.EnterTypingState())
         {
-            await Task.Delay(TimeSpan.FromSeconds(RandomUtility.GetRandomFloat(MasterManager.TypingMaxDelay)));
+            var typingMaxDelay = NumberUtility.GetSecondsFromMilliseconds(MasterManager.SettingMaster.TypingMaxDuration);
+            await Task.Delay(TimeSpan.FromSeconds(RandomUtility.GetRandomFloat(typingMaxDelay)));
             await Message.ReplyAsync(message);
         }
     }
