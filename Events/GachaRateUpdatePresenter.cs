@@ -11,12 +11,12 @@ public class GachaRateUpdatePresenter : SchedulerJobPresenterBase
         GachaManager.Instance.ShuffleMessageRates();
 
         // 名前を更新する
-        var guild = DiscordManager.Client.GetGuild(SettingManager.DiscordTargetGuildId);
+        var guild = DiscordManager.Client.GetGuild(EnvironmentManager.DiscordTargetGuildId);
         await guild.CurrentUser.ModifyAsync(x =>
             x.Nickname = $"{GachaManager.Instance.RareReplyRate:P0}の確率でわかってくれる創造主");
 
         // 排出率を投稿する
-        await guild.GetTextChannel(SettingManager.DiscordMainChannelId)
+        await guild.GetTextChannel(EnvironmentManager.DiscordMainChannelId)
             .SendMessageAsync(embed: GachaUtility.GetInfoEmbedBuilder().Build());
     }
 }

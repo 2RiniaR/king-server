@@ -2,18 +2,20 @@
 
 namespace Approvers.King.Common;
 
-public class SettingManager
+public class EnvironmentManager
 {
     private static IConfigurationRoot Configuration { get; } = new ConfigurationBuilder()
         .SetBasePath(Directory.GetCurrentDirectory())
-        .AddJsonFile("appsettings.json", true)
+        .AddJsonFile("./Environment/appsettings.json", true)
         .AddEnvironmentVariables()
-        .AddUserSecrets<SettingManager>(true)
+        .AddUserSecrets<EnvironmentManager>(true)
         .Build();
 
     public static string DiscordSecret => Get("DiscordSecret");
     public static ulong DiscordTargetGuildId => ulong.Parse(Get("DiscordTargetGuildId"));
     public static ulong DiscordMainChannelId => ulong.Parse(Get("DiscordMainChannelId"));
+    public static string GoogleCredentialFilePath => Get("GoogleCredentialFilePath");
+    public static string GoogleMasterSheetId => Get("GoogleMasterSheetId");
 
     private static string Get(string name)
     {

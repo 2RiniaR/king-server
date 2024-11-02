@@ -14,7 +14,7 @@ public class BirthPresenter : SchedulerJobPresenterBase
 
     protected override async Task MainAsync()
     {
-        var guild = DiscordManager.Client.GetGuild(SettingManager.DiscordTargetGuildId);
-        await guild.GetTextChannel(SettingManager.DiscordMainChannelId).SendMessageAsync(Message);
+        var guild = DiscordManager.Client.GetGuild(EnvironmentManager.DiscordTargetGuildId);
+        await guild.GetTextChannel(EnvironmentManager.DiscordMainChannelId).SendMessageAsync(Message);
     }
 }

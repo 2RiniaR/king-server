@@ -13,6 +13,8 @@ public class Program
 
     private static async Task BuildAsync(string[] args)
     {
+        await MasterManager.FetchAsync();
+        
         GachaManager.Instance.Initialize();
         SchedulerManager.Initialize();
         await DiscordManager.InitializeAsync();
@@ -21,12 +23,19 @@ public class Program
         await new GachaRateUpdatePresenter().RunAsync();
 
         DiscordManager.Client.MessageReceived += OnMessageReceived;
-        SchedulerManager.RegisterDaily<GachaRateUpdatePresenter>(MasterManager.DailyResetTime);
-        SchedulerManager.RegisterYearly<BirthPresenter>(MasterManager.Birthday + MasterManager.DailyResetTime +
+        SchedulerManager.RegisterDaily<GachaRateUpdatePresenter>(TimeManager.DailyResetTime);
+        SchedulerManager.RegisterYearly<BirthPresenter>(TimeManager.Birthday + TimeManager.DailyResetTime +
                                                         TimeSpan.FromSeconds(1));
 
         // 永久に待つ
         await Task.Delay(-1);
+    }
+    
+    private static bool IsContainsTriggerPhrase(string content, TriggerType triggerType)
+    {
+        return MasterManager.TriggerPhraseMaster
+            .GetAll(x => x.TriggerType == triggerType)
+            .Any(x => content.Contains(x.Phrase));
     }
 
     private static async Task OnMessageReceived(SocketMessage message)
@@ -36,23 +45,30 @@ public class Program
 
         if (userMessage.MentionedUsers.Any(x => x.Id == DiscordManager.Client.CurrentUser.Id))
         {
+            if (message.Content.EndsWith("reload"))
+            {
+                // マスタデータをリロード
+                await DiscordManager.ExecuteAsync<MasterReloadPresenter>(userMessage);
+                return;
+            }
+            
             if (await TryExecuteMarugame(userMessage)) return;
 
-            if (MasterManager.SilentTriggerMessages.Any(userMessage.Content.Contains))
+            if (IsContainsTriggerPhrase(userMessage.Content, TriggerType.Silent))
             {
                 // 黙らせる
                 await DiscordManager.ExecuteAsync<SilentCommandPresenter>(userMessage);
                 return;
             }
 
-            if (MasterManager.GachaTriggerMessages.Any(userMessage.Content.Contains))
+            if (IsContainsTriggerPhrase(userMessage.Content, TriggerType.GachaExecute))
             {
                 // 10連ガチャ
                 await DiscordManager.ExecuteAsync<GachaCommandPresenter>(userMessage);
                 return;
             }
 
-            if (MasterManager.GachaInfoTriggerMessages.Any(userMessage.Content.Contains))
+            if (IsContainsTriggerPhrase(userMessage.Content, TriggerType.GachaGet))
             {
                 // 排出率を投稿する
                 await DiscordManager.ExecuteAsync<GachaInfoCommandPresenter>(userMessage);
@@ -71,12 +87,14 @@ public class Program
     private static async Task<bool> TryExecuteMarugame(SocketUserMessage userMessage)
     {
         // 「丸亀製麺」の次にある改行以降が対象
+        var marugameTrigger =
+            MasterManager.TriggerPhraseMaster.FirstOrDefault(x => x.TriggerType == TriggerType.Marugame)?.Phrase ?? "";
 
         var marugameIndex =
-            userMessage.Content.IndexOf(MasterManager.MarugameTrigger, StringComparison.InvariantCulture);
+            userMessage.Content.IndexOf(marugameTrigger, StringComparison.InvariantCulture);
         if (marugameIndex < 0) return false;
 
-        var subs = userMessage.Content[(marugameIndex + MasterManager.MarugameTrigger.Length)..];
+        var subs = userMessage.Content[(marugameIndex + marugameTrigger.Length)..];
         var contentIndex = subs.IndexOf('\n');
         if (contentIndex < 0) return false;
 
