@@ -16,6 +16,7 @@ public class EnvironmentManager
     public static ulong DiscordMainChannelId => ulong.Parse(Get("DiscordMainChannelId"));
     public static string GoogleCredentialFilePath => Get("GoogleCredentialFilePath");
     public static string GoogleMasterSheetId => Get("GoogleMasterSheetId");
+    public static string SqliteConnectionString => Get("SqliteConnectionString");
 
     private static string Get(string name)
     {

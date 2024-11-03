@@ -36,10 +36,14 @@ public class SettingMaster : MasterTable<string, Setting>
     public int TypingMaxDuration => GetInt(nameof(TypingMaxDuration));
     public int SilentDuration => GetInt(nameof(SilentDuration));
     public int DailyResetTime => GetInt(nameof(DailyResetTime));
+    public int MonthlyResetDay => GetInt(nameof(MonthlyResetDay));
     public int BirthdayMonth => GetInt(nameof(BirthdayMonth));
     public int BirthdayDay => GetInt(nameof(BirthdayDay));
     public int MaxRareReplyProbabilityPermillage => GetInt(nameof(MaxRareReplyProbabilityPermillage));
     public int RareReplyProbabilityStepPermillage => GetInt(nameof(RareReplyProbabilityStepPermillage));
+    public int PricePerGachaOnce => GetInt(nameof(PricePerGachaOnce));
+    public int PricePerGachaTenTimes => GetInt(nameof(PricePerGachaTenTimes));
+    public int PricePerGachaOnceCertain => GetInt(nameof(PricePerGachaOnceCertain));
     public string SilentReplyMessage => GetString(nameof(SilentReplyMessage));
 }
 

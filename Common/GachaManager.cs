@@ -1,10 +1,8 @@
 ﻿namespace Approvers.King.Common;
 
-public class GachaManager
+public class GachaManager : Singleton<GachaManager>
 {
     private readonly List<ReplyMessage> _replyMessageTable = new();
-
-    public static GachaManager Instance { get; } = new();
 
     /// <summary>
     /// 現在のメッセージに反応する確率
@@ -26,13 +24,18 @@ public class GachaManager
         }));
     }
 
-    public string? TryPickRareReplyMessage()
+    public string? Roll()
     {
         if (RandomUtility.IsHit(RareReplyRate) == false) return null;
-        return PickMessage();
+        return GetRandomResult();
     }
 
-    public string PickMessage()
+    public string RollWithoutNone()
+    {
+        return GetRandomResult();
+    }
+
+    private string GetRandomResult()
     {
         var totalRate = _replyMessageTable.Sum(x => x.Rate);
         var value = RandomUtility.GetRandomFloat(totalRate);

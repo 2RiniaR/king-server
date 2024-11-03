@@ -3,7 +3,7 @@
 public static class TimeManager
 {
     public static TimeSpan DailyResetTime => TimeSpan.FromMilliseconds(MasterManager.SettingMaster.DailyResetTime);
-
+    public static int MonthlyResetDay => MasterManager.SettingMaster.MonthlyResetDay;
     public static DateTime Birthday => new DateTime(1, MasterManager.SettingMaster.BirthdayMonth,
         MasterManager.SettingMaster.BirthdayDay);
     
