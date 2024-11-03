@@ -64,6 +64,13 @@ public class Program
                 return;
             }
 
+            if (IsContainsTriggerPhrase(userMessage.Content, TriggerType.PurchaseGet))
+            {
+                // 課金情報の表示
+                await DiscordManager.ExecuteAsync<PurchaseInfoCommandPresenter>(userMessage);
+                return;
+            }
+
             if (IsContainsTriggerPhrase(userMessage.Content, TriggerType.GachaExecute))
             {
                 // 10連ガチャ

@@ -44,6 +44,7 @@ public class SettingMaster : MasterTable<string, Setting>
     public int PricePerGachaOnce => GetInt(nameof(PricePerGachaOnce));
     public int PricePerGachaTenTimes => GetInt(nameof(PricePerGachaTenTimes));
     public int PricePerGachaOnceCertain => GetInt(nameof(PricePerGachaOnceCertain));
+    public int PurchaseInfoRankingViewUserCount => GetInt(nameof(PurchaseInfoRankingViewUserCount));
     public string SilentReplyMessage => GetString(nameof(SilentReplyMessage));
 }
 
