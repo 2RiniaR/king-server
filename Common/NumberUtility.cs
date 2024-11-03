@@ -2,6 +2,11 @@ namespace Approvers.King.Common;
 
 public static class NumberUtility
 {
+    public static DateTime GetBaseDateTime()
+    {
+        return new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+    }
+    
     public static float GetSecondsFromMilliseconds(float milliseconds)
     {
         return milliseconds / 1000f;

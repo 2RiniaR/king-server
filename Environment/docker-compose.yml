@@ -4,5 +4,4 @@ services:
   app:
     image: [ docker_user_id ]/king-server:latest
     environment:
-      DISCORD_SECRET: SECRET  # Change this
       TZ: Asia/Tokyo

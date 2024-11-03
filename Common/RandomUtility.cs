@@ -2,7 +2,7 @@
 
 public static class RandomUtility
 {
-    private static readonly Random Random = new();
+    private static readonly Random Random = new((int)DateTime.Now.Ticks & 0x0000FFFF);
 
     public static float GetRandomFloat(float max)
     {

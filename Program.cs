@@ -23,9 +23,12 @@ public class Program
         await new GachaRateUpdatePresenter().RunAsync();
 
         DiscordManager.Client.MessageReceived += OnMessageReceived;
+        
+        var reset = TimeManager.DailyResetTime;
         SchedulerManager.RegisterDaily<GachaRateUpdatePresenter>(TimeManager.DailyResetTime);
         SchedulerManager.RegisterYearly<BirthPresenter>(TimeManager.Birthday + TimeManager.DailyResetTime +
                                                         TimeSpan.FromSeconds(1));
+        SchedulerManager.RegisterMonthly<MonthlyResetPresenter>(TimeManager.MonthlyResetDay, TimeManager.DailyResetTime);
 
         // 永久に待つ
         await Task.Delay(-1);

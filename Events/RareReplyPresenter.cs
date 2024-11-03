@@ -10,9 +10,20 @@ public class RareReplyPresenter : DiscordMessagePresenterBase
         if (SilentManager.IsSilent(Message.Author.Id) ||
             Message.Channel.Id != EnvironmentManager.DiscordMainChannelId) return;
 
-        var message = GachaManager.Instance.TryPickRareReplyMessage();
-        if (message == null) return;
+        await using var app = AppService.CreateSession();
+        var user = await app.FindOrCreateUserAsync(Message.Author.Id);
+        
+        var message = user.RollGachaOnce();
+        if (message != null)
+        {
+            await SendReplyAsync(message);
+        }
 
+        await app.SaveChangesAsync();
+    }
+    
+    private async Task SendReplyAsync(string message)
+    {
         var replyMaxDelay = NumberUtility.GetSecondsFromMilliseconds(MasterManager.SettingMaster.ReplyMaxDuration);
         await Task.Delay(TimeSpan.FromSeconds(RandomUtility.GetRandomFloat(replyMaxDelay)));
         using (Message.Channel.EnterTypingState())

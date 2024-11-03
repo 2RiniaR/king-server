@@ -32,6 +32,17 @@ public static class SchedulerManager
         });
     }
 
+    public static void RegisterMonthly<T>(int day, TimeSpan time) where T : SchedulerJobPresenterBase, new()
+    {
+        Runners.Add(new SchedulerJobRunner<T>
+        {
+            Predicate = x => x.Day == day &&
+                             x.Hour == time.Hours &&
+                             x.Minute == time.Minutes &&
+                             x.Second == time.Seconds
+        });
+    }
+
     public static void RegisterYearly<T>(DateTime datetime) where T : SchedulerJobPresenterBase, new()
     {
         Runners.Add(new SchedulerJobRunner<T>
