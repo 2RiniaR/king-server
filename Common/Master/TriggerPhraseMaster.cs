@@ -11,6 +11,7 @@ public enum TriggerType
     GachaExecute,
     GachaGet,
     Marugame,
+    PurchaseGet,
 }
 
 [SuppressMessage("ReSharper", "UnassignedGetOnlyAutoProperty")]
