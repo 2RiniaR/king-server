@@ -5,37 +5,41 @@ public class GachaManager : Singleton<GachaManager>
     private readonly List<ReplyMessage> _replyMessageTable = new();
 
     /// <summary>
-    /// 現在のメッセージに反応する確率
+    ///     現在のメッセージに反応する確率
     /// </summary>
     public float RareReplyRate { get; private set; }
 
     /// <summary>
-    /// 各メッセージの確率
+    ///     各メッセージの確率
     /// </summary>
     public IReadOnlyList<ReplyMessage> ReplyMessageTable => _replyMessageTable;
 
     public void Initialize()
     {
-        _replyMessageTable.Clear();
-        _replyMessageTable.AddRange(MasterManager.RandomMessageMaster.GetAll(x => x.Type == RandomMessageType.GeneralReply).Select(x => new ReplyMessage
-        {
-            Rate = 1f,
-            Message = x.Content,
-        }));
+        RefreshMessageTable();
     }
 
-    public string? Roll()
+    public void RefreshMessageTable()
+    {
+        _replyMessageTable.Clear();
+        var messages = MasterManager.RandomMessageMaster
+            .GetAll(x => x.Type == RandomMessageType.GeneralReply)
+            .Select(x => new ReplyMessage { Rate = 1f, Message = x });
+        _replyMessageTable.AddRange(messages);
+    }
+
+    public RandomMessage? Roll()
     {
         if (RandomUtility.IsHit(RareReplyRate) == false) return null;
         return GetRandomResult();
     }
 
-    public string RollWithoutNone()
+    public RandomMessage RollWithoutNone()
     {
         return GetRandomResult();
     }
 
-    private string GetRandomResult()
+    private RandomMessage GetRandomResult()
     {
         var totalRate = _replyMessageTable.Sum(x => x.Rate);
         var value = RandomUtility.GetRandomFloat(totalRate);
@@ -78,6 +82,6 @@ public class GachaManager : Singleton<GachaManager>
     public class ReplyMessage
     {
         public float Rate { get; set; }
-        public string Message { get; init; } = string.Empty;
+        public RandomMessage Message { get; set; }
     }
 }

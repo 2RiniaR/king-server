@@ -9,9 +9,9 @@ public class InteractReplyPresenter : DiscordMessagePresenterBase
     {
         await using var app = AppService.CreateSession();
         var user = await app.FindOrCreateUserAsync(Message.Author.Id);
-        
+
         var message = user.RollGachaOnceCertain();
-        await SendReplyAsync(message);
+        await SendReplyAsync(message.Content);
 
         await app.SaveChangesAsync();
     }
@@ -22,7 +22,8 @@ public class InteractReplyPresenter : DiscordMessagePresenterBase
         await Task.Delay(TimeSpan.FromSeconds(RandomUtility.GetRandomFloat(replyMaxDelay)));
         using (Message.Channel.EnterTypingState())
         {
-            var typingMaxDelay = NumberUtility.GetSecondsFromMilliseconds(MasterManager.SettingMaster.TypingMaxDuration);
+            var typingMaxDelay =
+                NumberUtility.GetSecondsFromMilliseconds(MasterManager.SettingMaster.TypingMaxDuration);
             await Task.Delay(TimeSpan.FromSeconds(RandomUtility.GetRandomFloat(typingMaxDelay)));
             await Message.ReplyAsync(message);
         }

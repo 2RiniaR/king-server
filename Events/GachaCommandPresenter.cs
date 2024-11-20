@@ -13,23 +13,24 @@ public class GachaCommandPresenter : DiscordMessagePresenterBase
 
         var results = user.RollGachaTenTimes();
         await SendReplyAsync(user, results);
-        
+
         await app.SaveChangesAsync();
     }
-    
-    private async Task SendReplyAsync(User user, IReadOnlyList<string?> results)
+
+    private async Task SendReplyAsync(User user, IReadOnlyList<RandomMessage?> results)
     {
         var builder = new StringBuilder();
         builder.AppendLine($"↓↓↓ いっそう{results.Count}連おみくじ ↓↓↓");
         foreach (var result in results)
         {
-            builder.AppendLine(result != null ? Format.Bold($"・{result}") : Format.Code("x"));
+            builder.AppendLine(result != null ? Format.Bold($"・{result.Content}") : Format.Code("x"));
         }
 
         if (results.All(x => x == null))
         {
             builder.AppendLine();
-            var failedMessage = MasterManager.RandomMessageMaster.GetAll(x => x.Type == RandomMessageType.GachaFailed).PickRandom().Content;
+            var failedMessage = MasterManager.RandomMessageMaster.GetAll(x => x.Type == RandomMessageType.GachaFailed)
+                .PickRandom().Content;
             builder.AppendLine(Format.Bold(Format.Italics(failedMessage)));
         }
 

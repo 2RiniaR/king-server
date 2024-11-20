@@ -9,7 +9,7 @@ public static class GachaUtility
     {
         var records = GachaManager.Instance.ReplyMessageTable
             .OrderByDescending(x => x.Rate)
-            .Select(x => (x.Message, x.Rate.ToString("P0")));
+            .Select(x => (x.Message.Content, x.Rate.ToString("P0")));
         return new EmbedBuilder()
             .WithTitle(
                 $"{IssoUtility.SmileStamp}{IssoUtility.SmileStamp}{IssoUtility.SmileStamp} 本日のいっそう {IssoUtility.SmileStamp}{IssoUtility.SmileStamp}{IssoUtility.SmileStamp}")
