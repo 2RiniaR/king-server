@@ -11,7 +11,7 @@ public class InteractReplyPresenter : DiscordMessagePresenterBase
         var user = await app.FindOrCreateUserAsync(Message.Author.Id);
 
         var message = user.RollGachaOnceCertain();
-        await SendReplyAsync(message.Content);
+        await SendReplyAsync(message.RandomMessage?.Content ?? MessageConst.MissingMessage);
 
         await app.SaveChangesAsync();
     }

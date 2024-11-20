@@ -17,15 +17,19 @@ public class GachaCommandPresenter : DiscordMessagePresenterBase
         await app.SaveChangesAsync();
     }
 
-    private async Task SendReplyAsync(User user, IReadOnlyList<RandomMessage?> results)
+    private async Task SendReplyAsync(User user, IReadOnlyList<GachaProbability?> results)
     {
         var builder = new StringBuilder();
         builder.AppendLine($"↓↓↓ いっそう{results.Count}連おみくじ ↓↓↓");
         foreach (var result in results)
         {
-            builder.AppendLine(result != null ? Format.Bold($"・{result.Content}") : Format.Code("x"));
+            builder.AppendLine(result != null
+                ? Format.Bold(
+                    $"・{result.RandomMessage?.Content ?? MessageConst.MissingMessage} ({result.Probability:P0})")
+                : Format.Code("x"));
         }
 
+        // 爆死してたら煽る
         if (results.All(x => x == null))
         {
             builder.AppendLine();

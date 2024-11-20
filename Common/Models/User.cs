@@ -12,19 +12,19 @@ public class User
         MonthlyPurchase = 0;
     }
 
-    public RandomMessage? RollGachaOnce()
+    public GachaProbability? RollGachaOnce()
     {
         MonthlyPurchase += MasterManager.SettingMaster.PricePerGachaOnce;
         return GachaManager.Instance.Roll();
     }
 
-    public RandomMessage RollGachaOnceCertain()
+    public GachaProbability RollGachaOnceCertain()
     {
         MonthlyPurchase += MasterManager.SettingMaster.PricePerGachaOnceCertain;
         return GachaManager.Instance.RollWithoutNone();
     }
 
-    public List<RandomMessage?> RollGachaTenTimes()
+    public List<GachaProbability?> RollGachaTenTimes()
     {
         const int pickCount = 10;
         MonthlyPurchase += MasterManager.SettingMaster.PricePerGachaTenTimes;

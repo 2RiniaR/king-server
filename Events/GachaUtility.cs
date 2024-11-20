@@ -8,8 +8,9 @@ public static class GachaUtility
     public static EmbedBuilder GetInfoEmbedBuilder()
     {
         var records = GachaManager.Instance.ReplyMessageTable
-            .OrderByDescending(x => x.Rate)
-            .Select(x => (x.Message.Content, x.Rate.ToString("P0")));
+            .OrderByDescending(x => x.Probability)
+            .Where(x => x.Probability.IsApproximate(0f) == false)
+            .Select(x => (x.RandomMessage?.Content ?? MessageConst.MissingMessage, x.Probability.ToString("P0")));
         return new EmbedBuilder()
             .WithTitle(
                 $"{IssoUtility.SmileStamp}{IssoUtility.SmileStamp}{IssoUtility.SmileStamp} 本日のいっそう {IssoUtility.SmileStamp}{IssoUtility.SmileStamp}{IssoUtility.SmileStamp}")

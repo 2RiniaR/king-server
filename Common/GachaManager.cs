@@ -4,7 +4,7 @@ namespace Approvers.King.Common;
 
 public class GachaManager : Singleton<GachaManager>
 {
-    private readonly List<ReplyMessage> _replyMessageTable = new();
+    private readonly List<GachaProbability> _replyMessageTable = new();
 
     /// <summary>
     ///     現在のメッセージに反応する確率
@@ -14,7 +14,7 @@ public class GachaManager : Singleton<GachaManager>
     /// <summary>
     ///     各メッセージの確率
     /// </summary>
-    public IReadOnlyList<ReplyMessage> ReplyMessageTable => _replyMessageTable;
+    public IReadOnlyList<GachaProbability> ReplyMessageTable => _replyMessageTable;
 
     public bool IsTableEmpty => ReplyMessageTable.Count == 0;
 
@@ -24,16 +24,7 @@ public class GachaManager : Singleton<GachaManager>
 
         var probabilities = await app.GachaProbabilities.ToListAsync();
         _replyMessageTable.Clear();
-        foreach (var probability in probabilities)
-        {
-            var message = MasterManager.RandomMessageMaster.Find(probability.RandomMessageId);
-            if (message == null) continue;
-            _replyMessageTable.Add(new ReplyMessage
-            {
-                Rate = probability.Probability,
-                Message = message
-            });
-        }
+        _replyMessageTable.AddRange(probabilities.Where(x => x.RandomMessage != null));
 
         var rareReplyRatePermillage = await app.AppStates.GetIntAsync(AppStateType.RareReplyProbabilityPermillage);
         RareReplyRate = NumberUtility.GetPercentFromPermillage(rareReplyRatePermillage ?? 0);
@@ -44,11 +35,7 @@ public class GachaManager : Singleton<GachaManager>
         await using var app = AppService.CreateSession();
 
         app.GachaProbabilities.RemoveRange(app.GachaProbabilities);
-        app.GachaProbabilities.AddRange(_replyMessageTable.Select(x => new GachaProbability
-        {
-            RandomMessageId = x.Message.Id,
-            Probability = x.Rate
-        }));
+        app.GachaProbabilities.AddRange(_replyMessageTable);
 
         var rareReplyRatePermillage = NumberUtility.GetPermillageFromPercent(RareReplyRate);
         await app.AppStates.SetIntAsync(AppStateType.RareReplyProbabilityPermillage, rareReplyRatePermillage);
@@ -61,33 +48,37 @@ public class GachaManager : Singleton<GachaManager>
         _replyMessageTable.Clear();
         var messages = MasterManager.RandomMessageMaster
             .GetAll(x => x.Type == RandomMessageType.GeneralReply)
-            .Select(x => new ReplyMessage { Rate = 1f, Message = x });
+            .Select(x => new GachaProbability()
+            {
+                RandomMessageId = x.Id,
+                Probability = 1f
+            });
         _replyMessageTable.AddRange(messages);
     }
 
-    public RandomMessage? Roll()
+    public GachaProbability? Roll()
     {
         if (RandomUtility.IsHit(RareReplyRate) == false) return null;
         return GetRandomResult();
     }
 
-    public RandomMessage RollWithoutNone()
+    public GachaProbability RollWithoutNone()
     {
         return GetRandomResult();
     }
 
-    private RandomMessage GetRandomResult()
+    private GachaProbability GetRandomResult()
     {
-        var totalRate = _replyMessageTable.Sum(x => x.Rate);
+        var totalRate = _replyMessageTable.Sum(x => x.Probability);
         var value = RandomUtility.GetRandomFloat(totalRate);
 
         foreach (var element in _replyMessageTable)
         {
-            if (value < element.Rate) return element.Message;
-            value -= element.Rate;
+            if (value < element.Probability) return element;
+            value -= element.Probability;
         }
 
-        return _replyMessageTable[^1].Message;
+        return _replyMessageTable[^1];
     }
 
     public void ShuffleRareReplyRate()
@@ -109,16 +100,10 @@ public class GachaManager : Singleton<GachaManager>
         borders.Add(100);
         var randomIndices = Enumerable.Range(0, _replyMessageTable.Count).Shuffle().ToList();
 
-        _replyMessageTable[randomIndices[0]].Rate = borders[0] * 0.01f;
+        _replyMessageTable[randomIndices[0]].Probability = borders[0] * 0.01f;
         for (var i = 1; i < _replyMessageTable.Count; i++)
         {
-            _replyMessageTable[randomIndices[i]].Rate = (borders[i] - borders[i - 1]) * 0.01f;
+            _replyMessageTable[randomIndices[i]].Probability = (borders[i] - borders[i - 1]) * 0.01f;
         }
-    }
-
-    public class ReplyMessage
-    {
-        public float Rate { get; set; }
-        public RandomMessage Message { get; set; }
     }
 }
