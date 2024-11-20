@@ -16,7 +16,7 @@ public class RareReplyPresenter : DiscordMessagePresenterBase
         var message = user.RollGachaOnce();
         if (message != null)
         {
-            await SendReplyAsync(message.Content);
+            await SendReplyAsync(message.RandomMessage?.Content ?? MessageConst.MissingMessage);
         }
 
         await app.SaveChangesAsync();

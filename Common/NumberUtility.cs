@@ -7,6 +7,11 @@ public static class NumberUtility
         return new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
     }
 
+    public static bool IsApproximate(this float a, float b)
+    {
+        return Math.Abs(a - b) < float.Epsilon;
+    }
+
     public static float GetSecondsFromMilliseconds(float milliseconds)
     {
         return milliseconds / 1000f;

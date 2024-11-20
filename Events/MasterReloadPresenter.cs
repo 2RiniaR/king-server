@@ -16,9 +16,9 @@ public class MasterReloadPresenter : DiscordMessagePresenterBase
 
     private async Task UpdateGachaTableAsync()
     {
-        var beforeTable = GachaManager.Instance.ReplyMessageTable.Select(x => x.Message.Id).ToHashSet();
+        var beforeTable = GachaManager.Instance.ReplyMessageTable.Select(x => x.RandomMessageId).ToHashSet();
         GachaManager.Instance.RefreshMessageTable();
-        var afterTable = GachaManager.Instance.ReplyMessageTable.Select(x => x.Message.Id).ToHashSet();
+        var afterTable = GachaManager.Instance.ReplyMessageTable.Select(x => x.RandomMessageId).ToHashSet();
 
         // テーブルに差分がある場合は排出率を更新する
         var hasDiff = beforeTable.SetEquals(afterTable);
