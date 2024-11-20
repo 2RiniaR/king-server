@@ -25,6 +25,7 @@ public class MasterReloadPresenter : DiscordMessagePresenterBase
         if (hasDiff == false)
         {
             GachaManager.Instance.ShuffleMessageRates();
+            await GachaManager.Instance.SaveAsync();
 
             // 排出率を投稿する
             var guild = DiscordManager.Client.GetGuild(EnvironmentManager.DiscordTargetGuildId);
