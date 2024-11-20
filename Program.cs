@@ -14,26 +14,29 @@ public class Program
     private static async Task BuildAsync(string[] args)
     {
         await MasterManager.FetchAsync();
-        
-        GachaManager.Instance.Initialize();
+
+        await GachaManager.Instance.LoadAsync();
         SchedulerManager.Initialize();
         await DiscordManager.InitializeAsync();
 
-        // 起動時には強制的にガチャ確率を更新する
-        await new GachaRateUpdatePresenter().RunAsync();
+        if (GachaManager.Instance.IsTableEmpty)
+        {
+            // 起動時にデータがない場合、ガチャ確率を初期化する
+            await new GachaRateUpdatePresenter().RunAsync();
+        }
 
         DiscordManager.Client.MessageReceived += OnMessageReceived;
-        
-        var reset = TimeManager.DailyResetTime;
+
         SchedulerManager.RegisterDaily<GachaRateUpdatePresenter>(TimeManager.DailyResetTime);
         SchedulerManager.RegisterYearly<BirthPresenter>(TimeManager.Birthday + TimeManager.DailyResetTime +
                                                         TimeSpan.FromSeconds(1));
-        SchedulerManager.RegisterMonthly<MonthlyResetPresenter>(TimeManager.MonthlyResetDay, TimeManager.DailyResetTime);
+        SchedulerManager.RegisterMonthly<MonthlyResetPresenter>(TimeManager.MonthlyResetDay,
+            TimeManager.DailyResetTime);
 
         // 永久に待つ
         await Task.Delay(-1);
     }
-    
+
     private static bool IsContainsTriggerPhrase(string content, TriggerType triggerType)
     {
         return MasterManager.TriggerPhraseMaster
@@ -54,7 +57,7 @@ public class Program
                 await DiscordManager.ExecuteAsync<MasterReloadPresenter>(userMessage);
                 return;
             }
-            
+
             if (await TryExecuteMarugame(userMessage)) return;
 
             if (IsContainsTriggerPhrase(userMessage.Content, TriggerType.Silent))

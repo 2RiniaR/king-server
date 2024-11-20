@@ -7,8 +7,10 @@ public class GachaRateUpdatePresenter : SchedulerJobPresenterBase
     protected override async Task MainAsync()
     {
         // 排出確率を変える
+        GachaManager.Instance.RefreshMessageTable();
         GachaManager.Instance.ShuffleRareReplyRate();
         GachaManager.Instance.ShuffleMessageRates();
+        await GachaManager.Instance.SaveAsync();
 
         // 名前を更新する
         var guild = DiscordManager.Client.GetGuild(EnvironmentManager.DiscordTargetGuildId);

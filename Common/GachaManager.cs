@@ -1,4 +1,6 @@
-﻿namespace Approvers.King.Common;
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace Approvers.King.Common;
 
 public class GachaManager : Singleton<GachaManager>
 {
@@ -14,9 +16,44 @@ public class GachaManager : Singleton<GachaManager>
     /// </summary>
     public IReadOnlyList<ReplyMessage> ReplyMessageTable => _replyMessageTable;
 
-    public void Initialize()
+    public bool IsTableEmpty => ReplyMessageTable.Count == 0;
+
+    public async Task LoadAsync()
     {
-        RefreshMessageTable();
+        await using var app = AppService.CreateSession();
+
+        var probabilities = await app.GachaProbabilities.ToListAsync();
+        _replyMessageTable.Clear();
+        foreach (var probability in probabilities)
+        {
+            var message = MasterManager.RandomMessageMaster.Find(probability.RandomMessageId);
+            if (message == null) continue;
+            _replyMessageTable.Add(new ReplyMessage
+            {
+                Rate = probability.Probability,
+                Message = message
+            });
+        }
+
+        var rareReplyRatePermillage = await app.AppStates.GetIntAsync(AppStateType.RareReplyProbabilityPermillage);
+        RareReplyRate = NumberUtility.GetPercentFromPermillage(rareReplyRatePermillage ?? 0);
+    }
+
+    public async Task SaveAsync()
+    {
+        await using var app = AppService.CreateSession();
+
+        app.GachaProbabilities.RemoveRange(app.GachaProbabilities);
+        app.GachaProbabilities.AddRange(_replyMessageTable.Select(x => new GachaProbability
+        {
+            RandomMessageId = x.Message.Id,
+            Probability = x.Rate
+        }));
+
+        var rareReplyRatePermillage = NumberUtility.GetPermillageFromPercent(RareReplyRate);
+        await app.AppStates.SetIntAsync(AppStateType.RareReplyProbabilityPermillage, rareReplyRatePermillage);
+
+        await app.SaveChangesAsync();
     }
 
     public void RefreshMessageTable()
