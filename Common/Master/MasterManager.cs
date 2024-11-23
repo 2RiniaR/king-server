@@ -61,8 +61,7 @@ public class MasterManager : Singleton<MasterManager>
                     {
                         if (keyDictionary.TryGetValue(integerValueAttribute.KeyName, out var column) == false)
                         {
-                            LogManager.LogError("Key not found: " + sheet.SheetName + "/" +
-                                                integerValueAttribute.KeyName);
+                            LogManager.LogError("Key not found: " + sheet.SheetName + "/" + integerValueAttribute.KeyName);
                             continue;
                         }
 
@@ -71,8 +70,7 @@ public class MasterManager : Singleton<MasterManager>
                             var value = sheet.Get(row, column);
                             if (int.TryParse(value, out var intValue) == false)
                             {
-                                LogManager.LogError("Invalid value type (integer): " + sheet.SheetName + "/" +
-                                                    integerValueAttribute.KeyName + $"[{row}] = {value}");
+                                LogManager.LogError("Invalid value type (integer): " + sheet.SheetName + "/" + integerValueAttribute.KeyName + $"[{row}] = {value}");
                                 continue;
                             }
 
@@ -85,8 +83,7 @@ public class MasterManager : Singleton<MasterManager>
                     {
                         if (keyDictionary.TryGetValue(floatValueAttribute.KeyName, out var column) == false)
                         {
-                            LogManager.LogError("Key not found: " + sheet.SheetName + "/" +
-                                                floatValueAttribute.KeyName);
+                            LogManager.LogError("Key not found: " + sheet.SheetName + "/" + floatValueAttribute.KeyName);
                             continue;
                         }
 
@@ -95,8 +92,7 @@ public class MasterManager : Singleton<MasterManager>
                             var value = sheet.Get(row, column);
                             if (float.TryParse(value, out var floatValue) == false)
                             {
-                                LogManager.LogError("Invalid value type (float): " + sheet.SheetName + "/" +
-                                                    floatValueAttribute.KeyName + $"[{row}] = {value}");
+                                LogManager.LogError("Invalid value type (float): " + sheet.SheetName + "/" + floatValueAttribute.KeyName + $"[{row}] = {value}");
                                 continue;
                             }
 
@@ -109,8 +105,7 @@ public class MasterManager : Singleton<MasterManager>
                     {
                         if (keyDictionary.TryGetValue(stringValueAttribute.KeyName, out var column) == false)
                         {
-                            LogManager.LogError(
-                                "Key not found: " + sheet.SheetName + "/" + stringValueAttribute.KeyName);
+                            LogManager.LogError("Key not found: " + sheet.SheetName + "/" + stringValueAttribute.KeyName);
                             continue;
                         }
 
@@ -126,8 +121,7 @@ public class MasterManager : Singleton<MasterManager>
                     {
                         if (keyDictionary.TryGetValue(booleanValueAttribute.KeyName, out var column) == false)
                         {
-                            LogManager.LogError("Key not found: " + sheet.SheetName + "/" +
-                                                booleanValueAttribute.KeyName);
+                            LogManager.LogError("Key not found: " + sheet.SheetName + "/" + booleanValueAttribute.KeyName);
                             continue;
                         }
 
@@ -136,8 +130,7 @@ public class MasterManager : Singleton<MasterManager>
                             var value = sheet.Get(row, column);
                             if (bool.TryParse(value, out var boolValue) == false)
                             {
-                                LogManager.LogError("Invalid value type (bool): " + sheet.SheetName + "/" +
-                                                    booleanValueAttribute.KeyName + $"[{row}] = {value}");
+                                LogManager.LogError("Invalid value type (bool): " + sheet.SheetName + "/" + booleanValueAttribute.KeyName + $"[{row}] = {value}");
                                 continue;
                             }
 
@@ -159,9 +152,7 @@ public class MasterManager : Singleton<MasterManager>
                             var value = sheet.Get(row, column);
                             if (Enum.TryParse(enumValueAttribute.EnumType, value, out var enumValue) == false)
                             {
-                                LogManager.LogError($"Invalid value type ({enumValueAttribute.EnumType.Name}): " +
-                                                    sheet.SheetName + "/" + enumValueAttribute.KeyName +
-                                                    $"[{row}] = {value}");
+                                LogManager.LogError($"Invalid value type ({enumValueAttribute.EnumType.Name}): " + sheet.SheetName + "/" + enumValueAttribute.KeyName + $"[{row}] = {value}");
                                 continue;
                             }
 

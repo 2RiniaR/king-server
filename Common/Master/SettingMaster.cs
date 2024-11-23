@@ -55,7 +55,9 @@ public class SettingMaster : MasterTable<string, Setting>
 [SuppressMessage("ReSharper", "UnassignedGetOnlyAutoProperty")]
 public class Setting : MasterRecord<string>
 {
-    [field: MasterStringValue("key")] public override string Key { get; }
+    [field: MasterStringValue("key")]
+    public override string Key { get; }
 
-    [field: MasterStringValue("value")] public string Value { get; }
+    [field: MasterStringValue("value")]
+    public string Value { get; }
 }
