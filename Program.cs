@@ -68,8 +68,7 @@ public class Program
             if (IsContainsTriggerPhrase(userMessage.Content, TriggerType.Silent))
             {
                 // 黙らせる
-                new MonthlyResetPresenter().RunAsync().Run();
-                // DiscordManager.ExecuteAsync<SilentCommandPresenter>(userMessage).Run();
+                DiscordManager.ExecuteAsync<SilentCommandPresenter>(userMessage).Run();
                 return;
             }
 
