@@ -21,20 +21,20 @@ public class SlotManager : Singleton<SlotManager>
         {
             if (i == 0)
             {
-                reelItems[i] = _items[RandomUtility.GetRandomInt(itemCount)];
+                reelItems[i] = _items[RandomManager.GetRandomInt(itemCount)];
                 continue;
             }
 
             // 一定確率で直前と同じ出目が出る
             var repeatProbability = NumberUtility.GetProbabilityFromPermillage(reelItems[i - 1].RepeatPermillage);
-            var isRepeat = RandomUtility.IsHit(repeatProbability);
+            var isRepeat = RandomManager.IsHit(repeatProbability);
             if (isRepeat)
             {
                 reelItems[i] = reelItems[i - 1];
                 continue;
             }
 
-            reelItems[i] = _items[RandomUtility.GetRandomInt(itemCount)];
+            reelItems[i] = _items[RandomManager.GetRandomInt(itemCount)];
         }
 
         var isWin = reelItems.Select(x => x.Id).Distinct().Count() == 1;

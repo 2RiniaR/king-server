@@ -1,8 +1,8 @@
 ﻿namespace Approvers.King.Common;
 
-public static class RandomUtility
+public class RandomManager : Singleton<RandomManager>
 {
-    private static readonly Random Random = new((int)DateTime.Now.Ticks & 0x0000FFFF);
+    private readonly Random _random = new((int)DateTime.Now.Ticks & 0x0000FFFF);
 
     public static float GetRandomFloat(float max)
     {
@@ -11,7 +11,7 @@ public static class RandomUtility
 
     public static float GetRandomFloat(float min, float max)
     {
-        return (float)(min + (max - min) * Random.NextDouble());
+        return (float)(min + (max - min) * Instance._random.NextDouble());
     }
 
     public static int GetRandomInt(int max)
@@ -21,7 +21,7 @@ public static class RandomUtility
 
     public static int GetRandomInt(int min, int max)
     {
-        return Random.Next(min, max);
+        return Instance._random.Next(min, max);
     }
 
     public static bool IsHit(float probability)
@@ -29,13 +29,13 @@ public static class RandomUtility
         return GetRandomFloat(1f) <= probability;
     }
 
-    public static T PickRandom<T>(this IEnumerable<T> source)
+    public static T PickRandom<T>(IEnumerable<T> source)
     {
         var array = source.ToArray();
-        return array[Random.Next(array.Length)];
+        return array[Instance._random.Next(array.Length)];
     }
 
-    public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> list)
+    public static IEnumerable<T> Shuffle<T>(IEnumerable<T> list)
     {
         return list.OrderBy(_ => Guid.NewGuid());
     }
