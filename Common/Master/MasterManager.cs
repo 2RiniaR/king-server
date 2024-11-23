@@ -10,9 +10,12 @@ public class MasterManager : Singleton<MasterManager>
     [MasterTable("trigger_phrase")] private TriggerPhraseMaster _triggerPhraseMaster;
     public static TriggerPhraseMaster TriggerPhraseMaster => Instance._triggerPhraseMaster;
 
+    [MasterTable("slot_item")] private SlotItemMaster _slotItemMaster;
+    public static SlotItemMaster SlotItemMaster => Instance._slotItemMaster;
+
     [field: MasterTable("setting")] private SettingMaster _settingMaster;
     public static SettingMaster SettingMaster => Instance._settingMaster;
-    
+
     public static async Task FetchAsync()
     {
         var dict = new Dictionary<FieldInfo, string>();
@@ -23,6 +26,7 @@ public class MasterManager : Singleton<MasterManager>
             if (tableAttributes == null) continue;
             dict.Add(field, tableAttributes.KeyName);
         }
+
         var sheets = await GoogleSheetManager.GetAllSheetsAsync(dict.Values);
         foreach (var (field, sheetName) in dict)
         {
@@ -37,8 +41,8 @@ public class MasterManager : Singleton<MasterManager>
             field.SetValue(Instance, master);
         }
     }
-    
-    private static TMaster BuildMaster<TMaster, TKey, TRecord>(GoogleSheet sheet) 
+
+    private static TMaster BuildMaster<TMaster, TKey, TRecord>(GoogleSheet sheet)
         where TMaster : MasterTable<TKey, TRecord>, new()
         where TRecord : MasterRecord<TKey>, new()
         where TKey : notnull
@@ -60,6 +64,7 @@ public class MasterManager : Singleton<MasterManager>
                             LogManager.LogError("Key not found: " + sheet.SheetName + "/" + integerValueAttribute.KeyName);
                             continue;
                         }
+
                         for (var row = 1; row < sheet.RowCount; row++)
                         {
                             var value = sheet.Get(row, column);
@@ -68,8 +73,10 @@ public class MasterManager : Singleton<MasterManager>
                                 LogManager.LogError("Invalid value type (integer): " + sheet.SheetName + "/" + integerValueAttribute.KeyName + $"[{row}] = {value}");
                                 continue;
                             }
+
                             field.SetValue(records[row - 1], intValue);
                         }
+
                         break;
                     }
                     case MasterFloatValueAttribute floatValueAttribute:
@@ -79,6 +86,7 @@ public class MasterManager : Singleton<MasterManager>
                             LogManager.LogError("Key not found: " + sheet.SheetName + "/" + floatValueAttribute.KeyName);
                             continue;
                         }
+
                         for (var row = 1; row < sheet.RowCount; row++)
                         {
                             var value = sheet.Get(row, column);
@@ -87,8 +95,10 @@ public class MasterManager : Singleton<MasterManager>
                                 LogManager.LogError("Invalid value type (float): " + sheet.SheetName + "/" + floatValueAttribute.KeyName + $"[{row}] = {value}");
                                 continue;
                             }
+
                             field.SetValue(records[row - 1], floatValue);
                         }
+
                         break;
                     }
                     case MasterStringValueAttribute stringValueAttribute:
@@ -98,11 +108,13 @@ public class MasterManager : Singleton<MasterManager>
                             LogManager.LogError("Key not found: " + sheet.SheetName + "/" + stringValueAttribute.KeyName);
                             continue;
                         }
+
                         for (var row = 1; row < sheet.RowCount; row++)
                         {
                             var value = sheet.Get(row, column);
                             field.SetValue(records[row - 1], value);
                         }
+
                         break;
                     }
                     case MasterBoolValueAttribute booleanValueAttribute:
@@ -112,6 +124,7 @@ public class MasterManager : Singleton<MasterManager>
                             LogManager.LogError("Key not found: " + sheet.SheetName + "/" + booleanValueAttribute.KeyName);
                             continue;
                         }
+
                         for (var row = 1; row < sheet.RowCount; row++)
                         {
                             var value = sheet.Get(row, column);
@@ -120,8 +133,10 @@ public class MasterManager : Singleton<MasterManager>
                                 LogManager.LogError("Invalid value type (bool): " + sheet.SheetName + "/" + booleanValueAttribute.KeyName + $"[{row}] = {value}");
                                 continue;
                             }
+
                             field.SetValue(records[row - 1], boolValue);
                         }
+
                         break;
                     }
                     case MasterEnumValueAttribute enumValueAttribute:
@@ -131,6 +146,7 @@ public class MasterManager : Singleton<MasterManager>
                             LogManager.LogError("Key not found: " + sheet.SheetName + "/" + enumValueAttribute.KeyName);
                             continue;
                         }
+
                         for (var row = 1; row < sheet.RowCount; row++)
                         {
                             var value = sheet.Get(row, column);
@@ -139,13 +155,16 @@ public class MasterManager : Singleton<MasterManager>
                                 LogManager.LogError($"Invalid value type ({enumValueAttribute.EnumType.Name}): " + sheet.SheetName + "/" + enumValueAttribute.KeyName + $"[{row}] = {value}");
                                 continue;
                             }
+
                             field.SetValue(records[row - 1], enumValue);
                         }
+
                         break;
                     }
                 }
             }
         }
+
         var master = new TMaster();
         master.Set(records);
         return master;
@@ -158,8 +177,10 @@ public class MasterBoolValueAttribute : Attribute
     {
         KeyName = keyName;
     }
+
     public string KeyName { get; }
 }
+
 public class MasterEnumValueAttribute : Attribute
 {
     public MasterEnumValueAttribute(string keyName, Type enumType)
@@ -167,6 +188,7 @@ public class MasterEnumValueAttribute : Attribute
         KeyName = keyName;
         EnumType = enumType;
     }
+
     public string KeyName { get; }
     public Type EnumType { get; }
 }
@@ -177,6 +199,7 @@ public class MasterFloatValueAttribute : Attribute
     {
         KeyName = keyName;
     }
+
     public string KeyName { get; }
 }
 
@@ -186,6 +209,7 @@ public class MasterIntValueAttribute : Attribute
     {
         KeyName = keyName;
     }
+
     public string KeyName { get; }
 }
 
@@ -195,6 +219,7 @@ public class MasterStringValueAttribute : Attribute
     {
         KeyName = keyName;
     }
+
     public string KeyName { get; }
 }
 
@@ -204,6 +229,7 @@ public class MasterStringCollectionValueAttribute : Attribute
     {
         KeyName = keyName;
     }
+
     public string KeyName { get; }
 }
 

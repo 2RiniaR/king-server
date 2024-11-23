@@ -11,6 +11,7 @@ public class MasterReloadPresenter : DiscordMessagePresenterBase
         await MasterManager.FetchAsync();
         await Message.ReplyAsync("マスターをリロードしたぞ");
 
+        SlotManager.Instance.LoadMaster();
         await UpdateGachaTableAsync();
     }
 
