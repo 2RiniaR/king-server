@@ -33,8 +33,8 @@ public class GachaCommandPresenter : DiscordMessagePresenterBase
         if (results.All(x => x == null))
         {
             builder.AppendLine();
-            var failedMessage = MasterManager.RandomMessageMaster.GetAll(x => x.Type == RandomMessageType.GachaFailed)
-                .PickRandom().Content;
+            var messages = MasterManager.RandomMessageMaster.GetAll(x => x.Type == RandomMessageType.GachaFailed);
+            var failedMessage = RandomManager.PickRandom(messages).Content;
             builder.AppendLine(Format.Bold(Format.Italics(failedMessage)));
         }
 

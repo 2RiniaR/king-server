@@ -58,7 +58,7 @@ public class GachaManager : Singleton<GachaManager>
 
     public GachaProbability? Roll()
     {
-        if (RandomUtility.IsHit(RareReplyRate) == false) return null;
+        if (RandomManager.IsHit(RareReplyRate) == false) return null;
         return GetRandomResult();
     }
 
@@ -70,7 +70,7 @@ public class GachaManager : Singleton<GachaManager>
     private GachaProbability GetRandomResult()
     {
         var totalRate = _replyMessageTable.Sum(x => x.Probability);
-        var value = RandomUtility.GetRandomFloat(totalRate);
+        var value = RandomManager.GetRandomFloat(totalRate);
 
         foreach (var element in _replyMessageTable)
         {
@@ -85,20 +85,20 @@ public class GachaManager : Singleton<GachaManager>
     {
         var step = MasterManager.SettingMaster.RareReplyProbabilityStepPermillage;
         var max = MasterManager.SettingMaster.MaxRareReplyProbabilityPermillage;
-        RareReplyRate = Enumerable.Range(0, max / step)
-            .Select(i => NumberUtility.GetPercentFromPermillage((i + 1) * step))
-            .PickRandom();
+        var rates = Enumerable.Range(0, max / step)
+            .Select(i => NumberUtility.GetPercentFromPermillage((i + 1) * step));
+        RareReplyRate = RandomManager.PickRandom(rates);
     }
 
     public void ShuffleMessageRates()
     {
         var borders = Enumerable.Range(0, _replyMessageTable.Count - 1)
-            .Select(x => (float)Math.Pow(RandomUtility.GetRandomFloat(1f), 2))
+            .Select(x => (float)Math.Pow(RandomManager.GetRandomFloat(1f), 2))
             .Select(x => (int)Math.Floor(x * 100f))
             .OrderBy(x => x)
             .ToList();
         borders.Add(100);
-        var randomIndices = Enumerable.Range(0, _replyMessageTable.Count).Shuffle().ToList();
+        var randomIndices = RandomManager.Shuffle(Enumerable.Range(0, _replyMessageTable.Count)).ToList();
 
         _replyMessageTable[randomIndices[0]].Probability = borders[0] * 0.01f;
         for (var i = 1; i < _replyMessageTable.Count; i++)
