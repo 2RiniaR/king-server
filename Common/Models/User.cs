@@ -7,6 +7,12 @@ public class User
     [Key] public ulong DiscordID { get; set; }
     public int MonthlyPurchase { get; set; }
 
+    public User DeepCopy()
+    {
+        var user = (User)MemberwiseClone();
+        return user;
+    }
+
     public void ResetMonthlyPurchase()
     {
         MonthlyPurchase = 0;
