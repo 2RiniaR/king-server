@@ -6,10 +6,15 @@ namespace Approvers.King.Events;
 
 public class MarugamePresenter : DiscordMessagePresenterBase
 {
-    public string Content { get; set; }
+    public string? Content { get; set; }
 
     protected override async Task MainAsync()
     {
+        if (string.IsNullOrEmpty(Content))
+        {
+            return;
+        }
+
         var message = Format.Code(ConvertMessageToVertical(Content));
         await Message.ReplyAsync(message);
     }

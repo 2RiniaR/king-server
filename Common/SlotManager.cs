@@ -51,7 +51,7 @@ public class SlotManager : Singleton<SlotManager>
 
 public class SlotExecuteResult
 {
-    public SlotItem[] ReelItems { get; set; }
-    public bool IsWin { get; set; }
-    public int ResultRatePermillage { get; set; }
+    public required SlotItem[] ReelItems { get; init; }
+    public bool IsWin { get; init; }
+    public int ResultRatePermillage { get; init; }
 }

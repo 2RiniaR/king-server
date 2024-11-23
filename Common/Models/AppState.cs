@@ -49,7 +49,7 @@ public static class AppStateDbSetExtensions
 public class AppState
 {
     [Key] public AppStateType Type { get; set; }
-    public string Value { get; set; }
+    public string Value { get; set; } = null!;
 }
 
 public enum AppStateType
