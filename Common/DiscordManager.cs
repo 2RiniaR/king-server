@@ -3,12 +3,14 @@ using Discord.WebSocket;
 
 namespace Approvers.King.Common;
 
-public static class DiscordManager
+public class DiscordManager : Singleton<DiscordManager>
 {
-    public static readonly DiscordSocketClient Client = new(new DiscordSocketConfig
+    private readonly DiscordSocketClient _client = new(new DiscordSocketConfig
     {
         GatewayIntents = GatewayIntents.MessageContent | GatewayIntents.Guilds | GatewayIntents.GuildMessages,
     });
+
+    public static DiscordSocketClient Client => Instance._client;
 
     public static async Task InitializeAsync()
     {
@@ -22,6 +24,18 @@ public static class DiscordManager
     {
         Console.WriteLine(content.ToString());
         return Task.CompletedTask;
+    }
+
+    public static SocketGuildUser GetClientUser()
+    {
+        var guild = Client.GetGuild(EnvironmentManager.DiscordTargetGuildId);
+        return guild.CurrentUser;
+    }
+
+    public static SocketTextChannel GetMainChannel()
+    {
+        var guild = Client.GetGuild(EnvironmentManager.DiscordTargetGuildId);
+        return guild.GetTextChannel(EnvironmentManager.DiscordMainChannelId);
     }
 
     public static async Task ExecuteAsync<T>(SocketUserMessage message, Func<T, Task>? onInitializeAsync = null)

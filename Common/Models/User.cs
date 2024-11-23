@@ -6,6 +6,7 @@ public class User
 {
     [Key] public ulong DiscordID { get; set; }
     public int MonthlyPurchase { get; set; }
+    public int TodaySlotExecuteCount { get; set; }
 
     public User DeepCopy()
     {
@@ -16,6 +17,11 @@ public class User
     public void ResetMonthlyPurchase()
     {
         MonthlyPurchase = 0;
+    }
+
+    public void ResetDailySlotExecuteCount()
+    {
+        TodaySlotExecuteCount = 0;
     }
 
     public GachaProbability? RollGachaOnce()
@@ -39,9 +45,15 @@ public class User
 
     public SlotExecuteResult ExecuteSlot()
     {
+        if (TodaySlotExecuteCount >= MasterManager.SettingMaster.UserSlotExecuteLimitPerDay)
+        {
+            throw new AppException("今日はもう回せないぞカス");
+        }
+
         var price = MasterManager.SettingMaster.PricePerSlotOnce;
         var result = SlotManager.Instance.Execute();
         MonthlyPurchase += price - (int)(NumberUtility.GetPercentFromPermillage(result.ResultRatePermillage) * price);
+        TodaySlotExecuteCount++;
         return result;
     }
 }

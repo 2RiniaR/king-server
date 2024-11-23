@@ -52,6 +52,7 @@ public class SettingMaster : MasterTable<string, Setting>
     public int PricePerSlotOnce => GetInt(nameof(PricePerSlotOnce));
     public string SlotReelRollingFormat => GetString(nameof(SlotReelRollingFormat));
     public string SlotLeverFormat => GetString(nameof(SlotLeverFormat));
+    public int UserSlotExecuteLimitPerDay => GetInt(nameof(UserSlotExecuteLimitPerDay));
 }
 
 [SuppressMessage("ReSharper", "UnassignedGetOnlyAutoProperty")]

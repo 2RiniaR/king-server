@@ -23,7 +23,7 @@ public class Program
         if (GachaManager.Instance.IsTableEmpty)
         {
             // 起動時にデータがない場合、ガチャ確率を初期化する
-            await new GachaRateUpdatePresenter().RunAsync();
+            await new DailyResetPresenter().RunAsync();
         }
 
         DiscordManager.Client.MessageReceived += message =>
@@ -32,7 +32,7 @@ public class Program
             return Task.CompletedTask;
         };
 
-        SchedulerManager.RegisterDaily<GachaRateUpdatePresenter>(TimeManager.DailyResetTime);
+        SchedulerManager.RegisterDaily<DailyResetPresenter>(TimeManager.DailyResetTime);
         SchedulerManager.RegisterYearly<BirthPresenter>(TimeManager.Birthday + TimeManager.DailyResetTime +
                                                         TimeSpan.FromSeconds(1));
         SchedulerManager.RegisterMonthly<MonthlyResetPresenter>(TimeManager.MonthlyResetDay,

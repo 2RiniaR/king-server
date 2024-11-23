@@ -32,7 +32,6 @@ public class MonthlyResetPresenter : SchedulerJobPresenterBase
             .WithCurrentTimestamp()
             .Build();
 
-        var guild = DiscordManager.Client.GetGuild(EnvironmentManager.DiscordTargetGuildId);
-        await guild.GetTextChannel(EnvironmentManager.DiscordMainChannelId).SendMessageAsync(embed: embed);
+        await DiscordManager.GetMainChannel().SendMessageAsync(embed: embed);
     }
 }
