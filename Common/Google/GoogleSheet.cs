@@ -8,6 +8,7 @@ public class GoogleSheet
     public IList<IList<object>> Values { get; }
     public int RowCount { get; }
     public int ColumnCount { get; }
+
     public GoogleSheet(ValueRange valueRange)
     {
         SheetName = valueRange.Range.Split('!')[0].Replace("'", "");
@@ -15,6 +16,7 @@ public class GoogleSheet
         RowCount = Values.Count;
         ColumnCount = Values.Count > 0 ? Values[0].Count : 0;
     }
+
     public string Get(int row, int column)
     {
         return (string)Values[row][column];

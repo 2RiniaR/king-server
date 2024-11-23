@@ -1,4 +1,3 @@
-using System.Net.Mime;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Services;
 using Google.Apis.Sheets.v4;
@@ -9,7 +8,7 @@ public static class GoogleSheetManager
 {
     private static readonly string[] Scopes = [SheetsService.Scope.SpreadsheetsReadonly];
     private static ICredential? _credential;
-    
+
     public static async Task<IReadOnlyDictionary<string, GoogleSheet>> GetAllSheetsAsync(IEnumerable<string> sheetNames)
     {
         if (_credential == null)
@@ -17,6 +16,7 @@ public static class GoogleSheetManager
             await using var stream = new FileStream(EnvironmentManager.GoogleCredentialFilePath, FileMode.Open, FileAccess.Read);
             _credential = (await GoogleCredential.FromStreamAsync(stream, CancellationToken.None)).CreateScoped(Scopes).UnderlyingCredential;
         }
+
         var sheetService = new SheetsService(new BaseClientService.Initializer
         {
             HttpClientInitializer = _credential
