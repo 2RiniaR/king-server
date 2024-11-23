@@ -22,6 +22,11 @@ public static class NumberUtility
         return TimeSpan.FromMilliseconds(milliseconds);
     }
 
+    public static float GetProbabilityFromPermillage(int permillage)
+    {
+        return permillage / 100000f;
+    }
+
     public static float GetPercentFromPermillage(int permillage)
     {
         return permillage / 1000f;
