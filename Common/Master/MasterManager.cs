@@ -4,6 +4,8 @@ namespace Approvers.King.Common;
 
 public class MasterManager : Singleton<MasterManager>
 {
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value
     [MasterTable("random_message")] private RandomMessageMaster _randomMessageMaster;
     public static RandomMessageMaster RandomMessageMaster => Instance._randomMessageMaster;
 
@@ -15,6 +17,8 @@ public class MasterManager : Singleton<MasterManager>
 
     [field: MasterTable("setting")] private SettingMaster _settingMaster;
     public static SettingMaster SettingMaster => Instance._settingMaster;
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value
 
     public static async Task FetchAsync()
     {

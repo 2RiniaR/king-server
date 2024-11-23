@@ -4,7 +4,7 @@ namespace Approvers.King.Common;
 
 public class GachaProbability
 {
-    [Key] public string RandomMessageId { get; set; }
+    [Key] public string RandomMessageId { get; set; } = null!;
     public float Probability { get; set; }
 
     private RandomMessage? _randomMessage;
