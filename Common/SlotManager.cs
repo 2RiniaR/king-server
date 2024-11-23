@@ -19,12 +19,13 @@ public class SlotManager : Singleton<SlotManager>
             .Repeat(() => _items[RandomUtility.GetRandomInt(itemCount)], ReelCount)
             .ToArray();
 
-        var isReelSame = reelItems.Select(x => x.Id).Distinct().Count() == 1;
-        var resultRatePermillage = isReelSame ? reelItems[0].ReturnRatePermillage : 0;
+        var isWin = reelItems.Select(x => x.Id).Distinct().Count() == 1;
+        var resultRatePermillage = isWin ? reelItems[0].ReturnRatePermillage : 0;
 
         return new SlotExecuteResult()
         {
             ReelItems = reelItems,
+            IsWin = isWin,
             ResultRatePermillage = resultRatePermillage
         };
     }
@@ -33,5 +34,6 @@ public class SlotManager : Singleton<SlotManager>
 public class SlotExecuteResult
 {
     public SlotItem[] ReelItems { get; set; }
+    public bool IsWin { get; set; }
     public int ResultRatePermillage { get; set; }
 }
