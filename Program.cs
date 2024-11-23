@@ -26,7 +26,11 @@ public class Program
             await new GachaRateUpdatePresenter().RunAsync();
         }
 
-        DiscordManager.Client.MessageReceived += OnMessageReceived;
+        DiscordManager.Client.MessageReceived += message =>
+        {
+            OnMessageReceived(message);
+            return Task.CompletedTask;
+        };
 
         SchedulerManager.RegisterDaily<GachaRateUpdatePresenter>(TimeManager.DailyResetTime);
         SchedulerManager.RegisterYearly<BirthPresenter>(TimeManager.Birthday + TimeManager.DailyResetTime +
@@ -45,7 +49,7 @@ public class Program
             .Any(x => content.Contains(x.Phrase));
     }
 
-    private static async Task OnMessageReceived(SocketMessage message)
+    private static void OnMessageReceived(SocketMessage message)
     {
         // botは弾く
         if (message is not SocketUserMessage userMessage || userMessage.Author.IsBot) return;
@@ -55,57 +59,57 @@ public class Program
             if (message.Content.EndsWith("reload"))
             {
                 // マスタデータをリロード
-                await DiscordManager.ExecuteAsync<MasterReloadPresenter>(userMessage);
+                DiscordManager.ExecuteAsync<MasterReloadPresenter>(userMessage).Run();
                 return;
             }
 
-            if (await TryExecuteMarugame(userMessage)) return;
+            if (TryExecuteMarugame(userMessage)) return;
 
             if (IsContainsTriggerPhrase(userMessage.Content, TriggerType.Silent))
             {
                 // 黙らせる
-                await DiscordManager.ExecuteAsync<SilentCommandPresenter>(userMessage);
+                DiscordManager.ExecuteAsync<SilentCommandPresenter>(userMessage).Run();
                 return;
             }
 
             if (IsContainsTriggerPhrase(userMessage.Content, TriggerType.PurchaseGet))
             {
                 // 課金情報の表示
-                await DiscordManager.ExecuteAsync<PurchaseInfoCommandPresenter>(userMessage);
+                DiscordManager.ExecuteAsync<PurchaseInfoCommandPresenter>(userMessage).Run();
                 return;
             }
 
             if (IsContainsTriggerPhrase(userMessage.Content, TriggerType.GachaExecute))
             {
                 // 10連ガチャ
-                await DiscordManager.ExecuteAsync<GachaCommandPresenter>(userMessage);
+                DiscordManager.ExecuteAsync<GachaCommandPresenter>(userMessage).Run();
                 return;
             }
 
             if (IsContainsTriggerPhrase(userMessage.Content, TriggerType.GachaGet))
             {
                 // 排出率を投稿する
-                await DiscordManager.ExecuteAsync<GachaInfoCommandPresenter>(userMessage);
+                DiscordManager.ExecuteAsync<GachaInfoCommandPresenter>(userMessage).Run();
                 return;
             }
 
             if (IsContainsTriggerPhrase(userMessage.Content, TriggerType.SlotExecute))
             {
                 // スロットを回す
-                await DiscordManager.ExecuteAsync<SlotExecutePresenter>(userMessage);
+                DiscordManager.ExecuteAsync<SlotExecutePresenter>(userMessage).Run();
                 return;
             }
 
             // 返信
-            await DiscordManager.ExecuteAsync<InteractReplyPresenter>(userMessage);
+            DiscordManager.ExecuteAsync<InteractReplyPresenter>(userMessage).Run();
             return;
         }
 
         // 発言
-        await DiscordManager.ExecuteAsync<RareReplyPresenter>(userMessage);
+        DiscordManager.ExecuteAsync<RareReplyPresenter>(userMessage).Run();
     }
 
-    private static async Task<bool> TryExecuteMarugame(SocketUserMessage userMessage)
+    private static bool TryExecuteMarugame(SocketUserMessage userMessage)
     {
         // 「丸亀製麺」の次にある改行以降が対象
         var marugameTrigger =
@@ -120,11 +124,12 @@ public class Program
         if (contentIndex < 0) return false;
 
         // 丸亀製麺
-        await DiscordManager.ExecuteAsync<MarugamePresenter>(userMessage, presenter =>
+        DiscordManager.ExecuteAsync<MarugamePresenter>(userMessage, presenter =>
         {
             presenter.Content = subs[(contentIndex + 1)..];
             return Task.CompletedTask;
-        });
+        }).Run();
+
         return true;
     }
 }
