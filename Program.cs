@@ -16,6 +16,7 @@ public class Program
         await MasterManager.FetchAsync();
 
         await GachaManager.Instance.LoadAsync();
+        SlotManager.Instance.LoadMaster();
         SchedulerManager.Initialize();
         await DiscordManager.InitializeAsync();
 
@@ -85,6 +86,13 @@ public class Program
             {
                 // 排出率を投稿する
                 await DiscordManager.ExecuteAsync<GachaInfoCommandPresenter>(userMessage);
+                return;
+            }
+
+            if (IsContainsTriggerPhrase(userMessage.Content, TriggerType.SlotExecute))
+            {
+                // スロットを回す
+                await DiscordManager.ExecuteAsync<SlotExecutePresenter>(userMessage);
                 return;
             }
 

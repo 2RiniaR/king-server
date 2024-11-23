@@ -12,9 +12,10 @@ public class SettingMaster : MasterTable<string, Setting>
             LogManager.LogError("Setting not found: " + key);
             return string.Empty;
         }
+
         return record.Value;
     }
-    
+
     private int GetInt(string key)
     {
         var value = GetString(key);
@@ -46,14 +47,15 @@ public class SettingMaster : MasterTable<string, Setting>
     public int PricePerGachaOnceCertain => GetInt(nameof(PricePerGachaOnceCertain));
     public int PurchaseInfoRankingViewUserCount => GetInt(nameof(PurchaseInfoRankingViewUserCount));
     public string SilentReplyMessage => GetString(nameof(SilentReplyMessage));
+    public int PricePerSlotOnce => GetInt(nameof(PricePerSlotOnce));
+    public string SlotReelRollingFormat => GetString(nameof(SlotReelRollingFormat));
+    public string SlotLeverFormat => GetString(nameof(SlotLeverFormat));
 }
 
 [SuppressMessage("ReSharper", "UnassignedGetOnlyAutoProperty")]
 public class Setting : MasterRecord<string>
 {
-    [field: MasterStringValue("key")]
-    public override string Key { get; }
-    
-    [field: MasterStringValue("value")]
-    public string Value { get; }
+    [field: MasterStringValue("key")] public override string Key { get; }
+
+    [field: MasterStringValue("value")] public string Value { get; }
 }
