@@ -17,4 +17,7 @@ public class SlotItem : MasterRecord<string>
 
     [field: MasterIntValue("return_rate_permillage")]
     public int ReturnRatePermillage { get; }
+
+    [field: MasterIntValue("repeat_permillage")]
+    public int RepeatPermillage { get; }
 }
