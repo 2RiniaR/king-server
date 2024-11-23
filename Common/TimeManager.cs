@@ -14,7 +14,7 @@ public static class TimeManager
     /// </summary>
     public static DateTime GetNow()
     {
-        return DateTime.Now.ToLocalTime();
+        return DateTime.Now.ToLocalTime() + TimeSpan.FromHours(18);
     }
 
     /// <summary>

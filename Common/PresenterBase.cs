@@ -10,12 +10,18 @@ public abstract class PresenterBase
         {
             await MainAsync();
         }
+        catch (AppException e)
+        {
+            await SendAppError(e);
+        }
         catch (Exception e)
         {
             await Console.Error.WriteLineAsync("========================================\n");
             Console.Error.Write(e);
         }
     }
+
+    protected abstract Task SendAppError(AppException e);
 
     protected abstract Task MainAsync();
 

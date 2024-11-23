@@ -52,6 +52,9 @@ namespace Approvers.King.Migrations
                     b.Property<int>("MonthlyPurchase")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("TodaySlotExecuteCount")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("DiscordID");
 
                     b.ToTable("Users");
