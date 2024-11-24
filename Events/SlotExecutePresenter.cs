@@ -17,7 +17,7 @@ public class SlotExecutePresenter : DiscordMessagePresenterBase
 
         var slotMessage = await Message.ReplyAsync(CreateSlotMessage(result, 0));
         var purchaseMessage =
-            await slotMessage.Channel.SendMessageAsync(CreatePurchaseMessage(result, user.MonthlyPurchase, false));
+            await slotMessage.Channel.SendMessageAsync(CreatePurchaseMessage(result, user, false));
 
         await Task.Delay(TimeSpan.FromSeconds(1));
         var reelCount = result.ReelItems.Length;
@@ -31,7 +31,7 @@ public class SlotExecutePresenter : DiscordMessagePresenterBase
         }
 
         await purchaseMessage.ModifyAsync(prop =>
-            prop.Content = CreatePurchaseMessage(result, user.MonthlyPurchase, true));
+            prop.Content = CreatePurchaseMessage(result, user, true));
     }
 
     private static string CreateSlotMessage(SlotExecuteResult result, int openReelCount)
@@ -56,7 +56,7 @@ public class SlotExecutePresenter : DiscordMessagePresenterBase
         return sb.ToString();
     }
 
-    private static string CreatePurchaseMessage(SlotExecuteResult result, int monthlyPurchase, bool isOpen)
+    private static string CreatePurchaseMessage(SlotExecuteResult result, User user, bool isOpen)
     {
         var sb = new StringBuilder();
 
@@ -79,11 +79,11 @@ public class SlotExecutePresenter : DiscordMessagePresenterBase
 
         if (isOpen == false)
         {
-            sb.AppendLine("おまえの今月の課金額 → ???");
+            sb.AppendLine("おまえの今月の利益 → ???");
         }
         else
         {
-            sb.AppendLine($"おまえの今月の課金額 → {monthlyPurchase:N0}†カス†（税込）");
+            sb.AppendLine($"おまえの今月の利益 → {user.MonthlySlotReward:N0}†カス†（税込）");
         }
 
         return sb.ToString();
