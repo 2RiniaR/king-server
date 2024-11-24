@@ -6,6 +6,7 @@ public class User
 {
     [Key] public ulong DiscordID { get; set; }
     public int MonthlyPurchase { get; set; }
+    public int MonthlySlotReward { get; set; }
     public int TodaySlotExecuteCount { get; set; }
 
     public User DeepCopy()
@@ -14,12 +15,13 @@ public class User
         return user;
     }
 
-    public void ResetMonthlyPurchase()
+    public void ResetMonthlyState()
     {
         MonthlyPurchase = 0;
+        MonthlySlotReward = 0;
     }
 
-    public void ResetDailySlotExecuteCount()
+    public void ResetDailyState()
     {
         TodaySlotExecuteCount = 0;
     }
@@ -52,7 +54,9 @@ public class User
 
         var price = MasterManager.SettingMaster.PricePerSlotOnce;
         var result = SlotManager.Instance.Execute();
-        MonthlyPurchase += price - (int)(NumberUtility.GetPercentFromPermillage(result.ResultRatePermillage) * price);
+        var reward = (int)(NumberUtility.GetPercentFromPermillage(result.ResultRatePermillage) * price);
+        MonthlyPurchase += price;
+        MonthlySlotReward += reward;
         TodaySlotExecuteCount++;
         return result;
     }

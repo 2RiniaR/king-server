@@ -11,20 +11,25 @@ public class PurchaseInfoCommandPresenter : DiscordMessagePresenterBase
         await using var app = AppService.CreateSession();
 
         var selfUser = await app.FindOrCreateUserAsync(Message.Author.Id);
-        var rankingUsers = await app.Users
+        var purchaseRankingUsers = await app.Users
             .OrderByDescending(user => user.MonthlyPurchase)
             .Take(MasterManager.SettingMaster.PurchaseInfoRankingViewUserCount)
             .ToListAsync();
+        var slotRewardRankingUsers = await app.Users
+            .OrderByDescending(user => user.MonthlySlotReward)
+            .Take(MasterManager.SettingMaster.PurchaseInfoRankingViewUserCount)
+            .ToListAsync();
 
-        await SendReplyAsync(selfUser, rankingUsers);
+        await SendReplyAsync(selfUser, purchaseRankingUsers, slotRewardRankingUsers);
     }
 
-    private async Task SendReplyAsync(User selfUser, IReadOnlyList<User> rankingUsers)
+    private async Task SendReplyAsync(User selfUser, IReadOnlyList<User> purchaseRankingUsers, IReadOnlyList<User> slotRewardRankingUsers)
     {
         var embed = new EmbedBuilder()
             .WithColor(Color.LightOrange)
             .AddField("おまえの今月の課金額", $"{selfUser.MonthlyPurchase:N0}†カス†（税込）", inline: true)
-            .AddField("ランキング", PurchaseUtility.CreateRankingView(rankingUsers))
+            .AddField("課金額ランキング", RankingUtility.CreatePurchaseView(purchaseRankingUsers))
+            .AddField("利益ランキング", RankingUtility.CreateSlotRewardView(slotRewardRankingUsers))
             .WithCurrentTimestamp()
             .Build();
 

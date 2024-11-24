@@ -8,7 +8,7 @@ public class DailyResetPresenter : SchedulerJobPresenterBase
     protected override async Task MainAsync()
     {
         await using var app = AppService.CreateSession();
-        await app.Users.ForEachAsync(user => user.ResetDailySlotExecuteCount());
+        await app.Users.ForEachAsync(user => user.ResetDailyState());
         await app.SaveChangesAsync();
 
         // 排出確率を変える
