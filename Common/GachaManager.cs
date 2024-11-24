@@ -45,14 +45,16 @@ public class GachaManager : Singleton<GachaManager>
 
     public void RefreshMessageTable()
     {
-        _replyMessageTable.Clear();
         var messages = MasterManager.RandomMessageMaster
             .GetAll(x => x.Type == RandomMessageType.GeneralReply)
             .Select(x => new GachaProbability()
             {
                 RandomMessageId = x.Id,
-                Probability = 1f
-            });
+                Probability = _replyMessageTable.FirstOrDefault(m => m.RandomMessageId == x.Id)?.Probability ?? 0
+            })
+            .ToList();
+
+        _replyMessageTable.Clear();
         _replyMessageTable.AddRange(messages);
     }
 
@@ -70,6 +72,11 @@ public class GachaManager : Singleton<GachaManager>
     private GachaProbability GetRandomResult()
     {
         var totalRate = _replyMessageTable.Sum(x => x.Probability);
+        if (totalRate <= 0)
+        {
+            return _replyMessageTable[0];
+        }
+
         var value = RandomManager.GetRandomFloat(totalRate);
 
         foreach (var element in _replyMessageTable)
