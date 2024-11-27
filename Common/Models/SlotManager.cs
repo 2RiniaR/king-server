@@ -36,7 +36,6 @@ public class SlotManager : Singleton<SlotManager>
     public SlotExecuteResult Execute()
     {
         var itemCount = _items.Count;
-        LogManager.Log(_conditionOffsetPermillage);
 
         var reelItems = new SlotItem[ReelCount];
         for (var i = 0; i < ReelCount; i++)
