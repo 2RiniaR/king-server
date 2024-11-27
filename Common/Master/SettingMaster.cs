@@ -37,7 +37,6 @@ public class SettingMaster : MasterTable<string, Setting>
 
     public int ReplyMaxDuration => GetInt(nameof(ReplyMaxDuration));
     public int TypingMaxDuration => GetInt(nameof(TypingMaxDuration));
-    public int SilentDuration => GetInt(nameof(SilentDuration));
     public int DailyResetTime => GetInt(nameof(DailyResetTime));
     public int MonthlyResetDay => GetInt(nameof(MonthlyResetDay));
     public int BirthdayMonth => GetInt(nameof(BirthdayMonth));

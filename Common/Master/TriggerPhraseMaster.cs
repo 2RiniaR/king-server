@@ -9,7 +9,6 @@ public class TriggerPhraseMaster : MasterTable<string, TriggerPhrase>;
 public enum TriggerType
 {
     Unknown,
-    Silent,
     GachaExecute,
     GachaGet,
     Marugame,

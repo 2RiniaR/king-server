@@ -7,8 +7,10 @@ public class GachaRareReplyPresenter : DiscordMessagePresenterBase
 {
     protected override async Task MainAsync()
     {
-        if (SilentManager.IsSilent(Message.Author.Id) ||
-            Message.Channel.Id != EnvironmentManager.DiscordMainChannelId) return;
+        if (Message.Channel.Id != EnvironmentManager.DiscordMainChannelId)
+        {
+            return;
+        }
 
         await using var app = AppService.CreateSession();
         var user = await app.FindOrCreateUserAsync(Message.Author.Id);
