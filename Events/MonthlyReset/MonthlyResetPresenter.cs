@@ -11,12 +11,12 @@ public class MonthlyResetPresenter : SchedulerJobPresenterBase
         await using var app = AppService.CreateSession();
 
         var purchaseRankingUsers = await app.Users
-            .OrderByDescending(user => user.MonthlyPurchase)
+            .OrderByDescending(user => user.MonthlyGachaPurchasePrice)
             .Take(MasterManager.SettingMaster.PurchaseInfoRankingViewUserCount)
             .Select(x => x.DeepCopy())
             .ToListAsync();
         var slotRewardRankingUsers = await app.Users
-            .OrderByDescending(user => user.MonthlySlotReward)
+            .OrderByDescending(user => user.MonthlySlotProfitPrice)
             .Take(MasterManager.SettingMaster.PurchaseInfoRankingViewUserCount)
             .Select(x => x.DeepCopy())
             .ToListAsync();
@@ -33,8 +33,8 @@ public class MonthlyResetPresenter : SchedulerJobPresenterBase
             .WithColor(Color.LightOrange)
             .WithTitle(Format.Bold($"{IssoUtility.SmileStamp} †今月も貢げカス† {IssoUtility.SmileStamp}"))
             .WithDescription("月が変わったから課金額をリセットした")
-            .AddField("先月の課金額ランキング", PurchaseUtility.CreatePurchaseView(purchaseRankingUsers))
-            .AddField("先月の利益ランキング", PurchaseUtility.CreateSlotRewardView(slotRewardRankingUsers))
+            .AddField("先月の課金額ランキング", GachaUtility.CreateRankingView(purchaseRankingUsers))
+            .AddField("先月の利益ランキング", SlotUtility.CreateRankingView(slotRewardRankingUsers))
             .WithCurrentTimestamp()
             .Build();
 

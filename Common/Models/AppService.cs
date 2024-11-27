@@ -26,7 +26,7 @@ public class AppService : DbContext
             return user;
         }
 
-        user = new User { DiscordID = discordId };
+        user = new User { DiscordId = discordId };
         Add(user);
         return user;
     }

@@ -83,7 +83,7 @@ public class SlotExecutePresenter : DiscordMessagePresenterBase
         }
         else
         {
-            sb.AppendLine($"おまえの今月の利益 → {user.MonthlySlotReward:N0}†カス†（税込）");
+            sb.AppendLine($"おまえの今月の利益 → {user.MonthlySlotProfitPrice:N0}†カス†（税込）");
         }
 
         return sb.ToString();

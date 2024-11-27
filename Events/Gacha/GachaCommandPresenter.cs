@@ -39,7 +39,7 @@ public class GachaCommandPresenter : DiscordMessagePresenterBase
         }
 
         builder.AppendLine();
-        builder.AppendLine($"おまえの今月の課金額 → {user.MonthlyPurchase:N0}†カス†（税込）");
+        builder.AppendLine($"おまえの今月の課金額 → {user.MonthlyGachaPurchasePrice:N0}†カス†（税込）");
 
         await Message.ReplyAsync(builder.ToString());
     }

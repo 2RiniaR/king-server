@@ -45,7 +45,7 @@ public class DailyResetPresenter : SchedulerJobPresenterBase
         sb.AppendLine();
         foreach (var user in users)
         {
-            sb.AppendLine($"- {MentionUtils.MentionUser(user.DiscordID)}");
+            sb.AppendLine($"- {MentionUtils.MentionUser(user.DiscordId)}");
         }
 
         await DiscordManager.GetMainChannel().SendMessageAsync(sb.ToString());
