@@ -35,7 +35,7 @@ public static class Program
 
         SchedulerManager.RegisterDaily<DailyResetPresenter>(TimeManager.DailyResetTime);
         SchedulerManager.RegisterYearly<DailyResetBirthPresenter>(TimeManager.Birthday + TimeManager.DailyResetTime +
-                                                        TimeSpan.FromSeconds(1));
+                                                                  TimeSpan.FromSeconds(1));
         SchedulerManager.RegisterMonthly<MonthlyResetPresenter>(TimeManager.MonthlyResetDay,
             TimeManager.DailyResetTime);
 
@@ -64,12 +64,8 @@ public static class Program
                 return;
             }
 
-            if (TryExecuteMarugame(userMessage)) return;
-
-            if (IsContainsTriggerPhrase(userMessage.Content, TriggerType.Silent))
+            if (TryExecuteMarugame(userMessage))
             {
-                // 黙らせる
-                DiscordManager.ExecuteAsync<GachaRareReplySupressPresenter>(userMessage).Run();
                 return;
             }
 
