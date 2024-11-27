@@ -17,7 +17,7 @@ public class DiscordManager : Singleton<DiscordManager>
         Client.Log += OnLog;
         await Client.LoginAsync(TokenType.Bot, EnvironmentManager.DiscordSecret);
         await Client.StartAsync();
-        await EventUtility.WaitAsync(h => Client.Ready += h, h => Client.Ready -= h);
+        await TaskUtility.WaitAsync(h => Client.Ready += h, h => Client.Ready -= h);
     }
 
     private static Task OnLog(LogMessage content)

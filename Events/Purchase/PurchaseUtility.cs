@@ -4,7 +4,7 @@ using Discord;
 
 namespace Approvers.King.Events;
 
-public static class RankingUtility
+public static class PurchaseUtility
 {
     public static string CreatePurchaseView(IReadOnlyList<User> rankingUsers)
     {

@@ -1,6 +1,6 @@
 ﻿namespace Approvers.King.Common;
 
-public static class EventUtility
+public static class TaskUtility
 {
     public static Task WaitAsync(Action<Func<Task>> register, Action<Func<Task>> unregister,
         CancellationToken ct = default)

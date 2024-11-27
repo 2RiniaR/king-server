@@ -4,7 +4,7 @@ using Discord.WebSocket;
 
 namespace Approvers.King;
 
-public class Program
+public static class Program
 {
     private static void Main(string[] args)
     {
@@ -34,7 +34,7 @@ public class Program
         };
 
         SchedulerManager.RegisterDaily<DailyResetPresenter>(TimeManager.DailyResetTime);
-        SchedulerManager.RegisterYearly<BirthPresenter>(TimeManager.Birthday + TimeManager.DailyResetTime +
+        SchedulerManager.RegisterYearly<DailyResetBirthPresenter>(TimeManager.Birthday + TimeManager.DailyResetTime +
                                                         TimeSpan.FromSeconds(1));
         SchedulerManager.RegisterMonthly<MonthlyResetPresenter>(TimeManager.MonthlyResetDay,
             TimeManager.DailyResetTime);
@@ -60,7 +60,7 @@ public class Program
             if (message.Content.EndsWith("reload"))
             {
                 // マスタデータをリロード
-                DiscordManager.ExecuteAsync<MasterReloadPresenter>(userMessage).Run();
+                DiscordManager.ExecuteAsync<AdminMasterReloadPresenter>(userMessage).Run();
                 return;
             }
 
@@ -69,14 +69,14 @@ public class Program
             if (IsContainsTriggerPhrase(userMessage.Content, TriggerType.Silent))
             {
                 // 黙らせる
-                DiscordManager.ExecuteAsync<SilentCommandPresenter>(userMessage).Run();
+                DiscordManager.ExecuteAsync<GachaRareReplySupressPresenter>(userMessage).Run();
                 return;
             }
 
             if (IsContainsTriggerPhrase(userMessage.Content, TriggerType.PurchaseGet))
             {
                 // 課金情報の表示
-                DiscordManager.ExecuteAsync<PurchaseInfoCommandPresenter>(userMessage).Run();
+                DiscordManager.ExecuteAsync<PurchaseShowPresenter>(userMessage).Run();
                 return;
             }
 
@@ -102,12 +102,12 @@ public class Program
             }
 
             // 返信
-            DiscordManager.ExecuteAsync<InteractReplyPresenter>(userMessage).Run();
+            DiscordManager.ExecuteAsync<GachaInteractReplyPresenter>(userMessage).Run();
             return;
         }
 
         // 発言
-        DiscordManager.ExecuteAsync<RareReplyPresenter>(userMessage).Run();
+        DiscordManager.ExecuteAsync<GachaRareReplyPresenter>(userMessage).Run();
     }
 
     private static bool TryExecuteMarugame(SocketUserMessage userMessage)

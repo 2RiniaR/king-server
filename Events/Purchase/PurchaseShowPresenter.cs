@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Approvers.King.Events;
 
-public class PurchaseInfoCommandPresenter : DiscordMessagePresenterBase
+public class PurchaseShowPresenter : DiscordMessagePresenterBase
 {
     protected override async Task MainAsync()
     {
@@ -28,8 +28,8 @@ public class PurchaseInfoCommandPresenter : DiscordMessagePresenterBase
         var embed = new EmbedBuilder()
             .WithColor(Color.LightOrange)
             .AddField("おまえの今月の課金額", $"{selfUser.MonthlyPurchase:N0}†カス†（税込）", inline: true)
-            .AddField("課金額ランキング", RankingUtility.CreatePurchaseView(purchaseRankingUsers))
-            .AddField("利益ランキング", RankingUtility.CreateSlotRewardView(slotRewardRankingUsers))
+            .AddField("課金額ランキング", PurchaseUtility.CreatePurchaseView(purchaseRankingUsers))
+            .AddField("利益ランキング", PurchaseUtility.CreateSlotRewardView(slotRewardRankingUsers))
             .WithCurrentTimestamp()
             .Build();
 

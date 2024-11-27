@@ -3,7 +3,7 @@ using Discord;
 
 namespace Approvers.King.Events;
 
-public class MasterReloadPresenter : DiscordMessagePresenterBase
+public class AdminMasterReloadPresenter : DiscordMessagePresenterBase
 {
     protected override async Task MainAsync()
     {
