@@ -3,7 +3,7 @@ using Discord;
 
 namespace Approvers.King.Events;
 
-public class InteractReplyPresenter : DiscordMessagePresenterBase
+public class GachaInteractReplyPresenter : DiscordMessagePresenterBase
 {
     protected override async Task MainAsync()
     {

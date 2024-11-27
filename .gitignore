@@ -488,3 +488,5 @@ FodyWeavers.xsd
 *.sln.iml
 
 .env
+!Common/Log
+!Common/Environment

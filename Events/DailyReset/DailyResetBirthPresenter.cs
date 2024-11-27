@@ -2,7 +2,7 @@
 
 namespace Approvers.King.Events;
 
-public class BirthPresenter : SchedulerJobPresenterBase
+public class DailyResetBirthPresenter : SchedulerJobPresenterBase
 {
     private static readonly string Message = $"""
                                               {string.Join("", EnumerableUtility.Repeat(IssoUtility.SmileStamp, 16))}

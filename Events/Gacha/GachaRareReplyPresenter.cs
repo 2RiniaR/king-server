@@ -3,7 +3,7 @@ using Discord;
 
 namespace Approvers.King.Events;
 
-public class RareReplyPresenter : DiscordMessagePresenterBase
+public class GachaRareReplyPresenter : DiscordMessagePresenterBase
 {
     protected override async Task MainAsync()
     {
