@@ -3,6 +3,7 @@ namespace Approvers.King.Common;
 public class SlotManager : Singleton<SlotManager>
 {
     private readonly List<SlotItem> _items = [];
+    private int _conditionOffsetPermillage;
     private const int ReelCount = 3;
 
     public void LoadMaster()
@@ -12,9 +13,30 @@ public class SlotManager : Singleton<SlotManager>
         _items.AddRange(items);
     }
 
+    public async Task LoadAsync()
+    {
+        await using var app = AppService.CreateSession();
+        _conditionOffsetPermillage = await app.AppStates.GetIntAsync(AppStateType.SlotConditionOffsetPermillage) ?? 0;
+    }
+
+    public async Task SaveAsync()
+    {
+        await using var app = AppService.CreateSession();
+        await app.AppStates.SetIntAsync(AppStateType.SlotConditionOffsetPermillage, _conditionOffsetPermillage);
+        await app.SaveChangesAsync();
+    }
+
+    public void RefreshCondition()
+    {
+        var max = MasterManager.SettingMaster.SlotMaxConditionOffsetPermillage;
+        var min = MasterManager.SettingMaster.SlotMinConditionOffsetPermillage;
+        _conditionOffsetPermillage = RandomManager.GetRandomInt(min, max + 1);
+    }
+
     public SlotExecuteResult Execute()
     {
         var itemCount = _items.Count;
+        LogManager.Log(_conditionOffsetPermillage);
 
         var reelItems = new SlotItem[ReelCount];
         for (var i = 0; i < ReelCount; i++)
@@ -26,7 +48,8 @@ public class SlotManager : Singleton<SlotManager>
             }
 
             // 一定確率で直前と同じ出目が出る
-            var repeatProbability = NumberUtility.GetProbabilityFromPermillage(reelItems[i - 1].RepeatPermillage);
+            var repeatPermillage = Math.Clamp(reelItems[i - 1].RepeatPermillage + _conditionOffsetPermillage, 0, MasterManager.SettingMaster.SlotRepeatPermillageUpperBound);
+            var repeatProbability = NumberUtility.GetProbabilityFromPermillage(repeatPermillage);
             var isRepeat = RandomManager.IsHit(repeatProbability);
             if (isRepeat)
             {

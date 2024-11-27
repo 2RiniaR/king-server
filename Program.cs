@@ -17,8 +17,12 @@ public static class Program
         await MasterManager.FetchAsync();
 
         await GachaManager.Instance.LoadAsync();
+
         SlotManager.Instance.LoadMaster();
+        await SlotManager.Instance.LoadAsync();
+
         SchedulerManager.Initialize();
+
         await DiscordManager.InitializeAsync();
 
         if (GachaManager.Instance.IsTableEmpty)
@@ -38,6 +42,7 @@ public static class Program
                                                                   TimeSpan.FromSeconds(1));
         SchedulerManager.RegisterMonthly<MonthlyResetPresenter>(TimeManager.MonthlyResetDay,
             TimeManager.DailyResetTime);
+        SchedulerManager.RegisterOn<SlotConditionRefreshPresenter>(x => x.Minute is 0);
 
         // 永久に待つ
         await Task.Delay(-1);

@@ -18,8 +18,26 @@ public static class SchedulerManager
     {
         var now = TimeManager.GetNow();
         foreach (var runner in Runners)
-            if (runner.Predicate != null && runner.Predicate(now))
-                runner.Run();
+        {
+            var condition = runner.Predicate != null && runner.Predicate(now);
+
+            if (runner.OnRiseOnly == false)
+            {
+                if (condition)
+                {
+                    runner.Run();
+                }
+            }
+            else
+            {
+                if (runner.PreviousCondition is false && condition)
+                {
+                    runner.Run();
+                }
+            }
+
+            runner.PreviousCondition = condition;
+        }
     }
 
     public static void RegisterDaily<T>(TimeSpan time) where T : SchedulerJobPresenterBase, new()
@@ -52,6 +70,15 @@ public static class SchedulerManager
                              x.Hour == datetime.Hour &&
                              x.Minute == datetime.Minute &&
                              x.Second == datetime.Second
+        });
+    }
+
+    public static void RegisterOn<T>(Predicate<DateTime> predicate) where T : SchedulerJobPresenterBase, new()
+    {
+        Runners.Add(new SchedulerJobRunner<T>
+        {
+            Predicate = predicate,
+            OnRiseOnly = true
         });
     }
 }

@@ -47,11 +47,13 @@ public class SettingMaster : MasterTable<string, Setting>
     public int PricePerGachaTenTimes => GetInt(nameof(PricePerGachaTenTimes));
     public int PricePerGachaOnceCertain => GetInt(nameof(PricePerGachaOnceCertain));
     public int PurchaseInfoRankingViewUserCount => GetInt(nameof(PurchaseInfoRankingViewUserCount));
-    public string SilentReplyMessage => GetString(nameof(SilentReplyMessage));
     public int PricePerSlotOnce => GetInt(nameof(PricePerSlotOnce));
     public string SlotReelRollingFormat => GetString(nameof(SlotReelRollingFormat));
     public string SlotLeverFormat => GetString(nameof(SlotLeverFormat));
     public int UserSlotExecuteLimitPerDay => GetInt(nameof(UserSlotExecuteLimitPerDay));
+    public int SlotMaxConditionOffsetPermillage => GetInt(nameof(SlotMaxConditionOffsetPermillage));
+    public int SlotMinConditionOffsetPermillage => GetInt(nameof(SlotMinConditionOffsetPermillage));
+    public int SlotRepeatPermillageUpperBound => GetInt(nameof(SlotRepeatPermillageUpperBound));
 }
 
 [SuppressMessage("ReSharper", "UnassignedGetOnlyAutoProperty")]

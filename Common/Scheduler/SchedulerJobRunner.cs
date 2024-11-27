@@ -2,6 +2,8 @@
 
 public abstract class SchedulerJobRunner
 {
+    public bool OnRiseOnly { get; set; }
+    public bool? PreviousCondition = null;
     public Predicate<DateTime>? Predicate { get; init; }
     public abstract void Run();
 }
