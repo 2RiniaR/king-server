@@ -69,10 +69,17 @@ public static class Program
                 return;
             }
 
-            if (IsContainsTriggerPhrase(userMessage.Content, TriggerType.PurchaseGet))
+            if (IsContainsTriggerPhrase(userMessage.Content, TriggerType.GachaRanking))
             {
-                // 課金情報の表示
-                DiscordManager.ExecuteAsync<PurchaseShowPresenter>(userMessage).Run();
+                // ガチャランキングの表示
+                DiscordManager.ExecuteAsync<GachaRankingPresenter>(userMessage).Run();
+                return;
+            }
+
+            if (IsContainsTriggerPhrase(userMessage.Content, TriggerType.SlotRanking))
+            {
+                // スロットランキングの表示
+                DiscordManager.ExecuteAsync<SlotRankingPresenter>(userMessage).Run();
                 return;
             }
 
