@@ -1,4 +1,6 @@
-﻿using Approvers.King.Common;
+﻿using System.Text;
+using Approvers.King.Common;
+using Discord;
 using Microsoft.EntityFrameworkCore;
 
 namespace Approvers.King.Events;
@@ -8,6 +10,10 @@ public class DailyResetPresenter : SchedulerJobPresenterBase
     protected override async Task MainAsync()
     {
         await using var app = AppService.CreateSession();
+        var slotMaxUsers = await app.Users
+            .Where(x => x.TodaySlotExecuteCount >= MasterManager.SettingMaster.UserSlotExecuteLimitPerDay)
+            .Select(x => x.DeepCopy())
+            .ToListAsync();
         await app.Users.ForEachAsync(user => user.ResetDailyState());
         await app.SaveChangesAsync();
 
@@ -22,5 +28,26 @@ public class DailyResetPresenter : SchedulerJobPresenterBase
 
         // 排出率を投稿する
         await DiscordManager.GetMainChannel().SendMessageAsync(embed: GachaUtility.GetInfoEmbedBuilder().Build());
+
+        // スロットの実行回数が最大になったユーザーを通知する
+        await NotifySlotMaxUsers(slotMaxUsers);
+    }
+
+    private async Task NotifySlotMaxUsers(IReadOnlyList<User> users)
+    {
+        if (users.Count == 0)
+        {
+            return;
+        }
+
+        var sb = new StringBuilder();
+        sb.AppendLine("**\u2b07\ufe0e\u2b07\ufe0e\u2b07\ufe0e 昨日のスロカス一覧がこちらw \u2b07\ufe0e\u2b07\ufe0e\u2b07\ufe0e**");
+        sb.AppendLine();
+        foreach (var user in users)
+        {
+            sb.AppendLine($"- {MentionUtils.MentionUser(user.DiscordID)}");
+        }
+
+        await DiscordManager.GetMainChannel().SendMessageAsync(sb.ToString());
     }
 }
