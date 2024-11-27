@@ -17,10 +17,15 @@ public class EnvironmentManager
     public static string GoogleCredentialFilePath => Get("GoogleCredentialFilePath");
     public static string GoogleMasterSheetId => Get("GoogleMasterSheetId");
     public static string SqliteConnectionString => Get("SqliteConnectionString");
+    public static string? DebugDateTime => GetOrDefault("DebugDateTime");
 
     private static string Get(string name)
     {
-        return Configuration[name] ??
-               throw new Exception($"Environment variable {name} is not set.");
+        return Configuration[name] ?? throw new Exception($"Environment variable {name} is not set.");
+    }
+
+    private static string? GetOrDefault(string name)
+    {
+        return Configuration[name] ?? default;
     }
 }

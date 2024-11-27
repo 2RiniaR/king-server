@@ -1,19 +1,23 @@
 ﻿namespace Approvers.King.Common;
 
-public static class TimeManager
+public class TimeManager : Singleton<TimeManager>
 {
     public static TimeSpan DailyResetTime => TimeSpan.FromMilliseconds(MasterManager.SettingMaster.DailyResetTime);
     public static int MonthlyResetDay => MasterManager.SettingMaster.MonthlyResetDay;
+    public static DateTime Birthday => new(1, MasterManager.SettingMaster.BirthdayMonth, MasterManager.SettingMaster.BirthdayDay);
 
-    public static DateTime Birthday => new DateTime(1, MasterManager.SettingMaster.BirthdayMonth,
-        MasterManager.SettingMaster.BirthdayDay);
+    private DateTime? _debugBaseTime;
+    private TimeSpan _debugTimeOffset;
 
-    private static readonly DateTime? DebugBaseTime = null;
-    private static TimeSpan _debugTimeOffset;
-
-    public static void Initialize()
+    public void Initialize()
     {
-        _debugTimeOffset = DebugBaseTime.HasValue ? DebugBaseTime.Value - DateTime.Now.ToLocalTime() : TimeSpan.Zero;
+        var debugDateTime = EnvironmentManager.DebugDateTime;
+        if (string.IsNullOrEmpty(debugDateTime) == false)
+        {
+            _debugBaseTime = DateTime.Parse(debugDateTime);
+        }
+
+        _debugTimeOffset = _debugBaseTime.HasValue ? _debugBaseTime.Value - DateTime.Now.ToLocalTime() : TimeSpan.Zero;
     }
 
     /// <summary>
@@ -22,7 +26,7 @@ public static class TimeManager
     /// </summary>
     public static DateTime GetNow()
     {
-        return DateTime.Now.ToLocalTime() + _debugTimeOffset;
+        return DateTime.Now.ToLocalTime() + Instance._debugTimeOffset;
     }
 
     /// <summary>
