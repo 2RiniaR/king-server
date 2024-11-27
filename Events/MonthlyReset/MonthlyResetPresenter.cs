@@ -11,12 +11,12 @@ public class MonthlyResetPresenter : SchedulerJobPresenterBase
         await using var app = AppService.CreateSession();
 
         var purchaseRankingUsers = await app.Users
-            .OrderByDescending(user => user.MonthlyPurchase)
+            .OrderByDescending(user => user.MonthlyGachaPurchasePrice)
             .Take(MasterManager.SettingMaster.PurchaseInfoRankingViewUserCount)
             .Select(x => x.DeepCopy())
             .ToListAsync();
         var slotRewardRankingUsers = await app.Users
-            .OrderByDescending(user => user.MonthlySlotReward)
+            .OrderByDescending(user => user.MonthlySlotProfitPrice)
             .Take(MasterManager.SettingMaster.PurchaseInfoRankingViewUserCount)
             .Select(x => x.DeepCopy())
             .ToListAsync();
