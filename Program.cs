@@ -13,7 +13,7 @@ public class Program
 
     private static async Task BuildAsync(string[] args)
     {
-        TimeManager.Initialize();
+        TimeManager.Instance.Initialize();
         await MasterManager.FetchAsync();
 
         await GachaManager.Instance.LoadAsync();
