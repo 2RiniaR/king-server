@@ -7,6 +7,11 @@ public static class LogManager
         return DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
     }
 
+    public static void Log(object message)
+    {
+        Console.WriteLine($"{CreateTimestamp()}: [INFO] {message}");
+    }
+
     public static void Log(string message)
     {
         Console.WriteLine($"{CreateTimestamp()}: [INFO] {message}");
