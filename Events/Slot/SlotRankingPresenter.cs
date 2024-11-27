@@ -23,7 +23,7 @@ public class SlotRankingPresenter : DiscordMessagePresenterBase
     {
         var embed = new EmbedBuilder()
             .WithColor(Color.LightOrange)
-            .AddField("おまえの今月のスロット利益額", $"{selfUser.MonthlyGachaPurchasePrice:N0}†カス†（税込）", inline: true)
+            .AddField("おまえの今月のスロット利益額", $"{selfUser.MonthlySlotProfitPrice:N0}†カス†（税込）", inline: true)
             .AddField("スロット利益額ランキング", SlotUtility.CreateRankingView(users))
             .WithCurrentTimestamp()
             .Build();
