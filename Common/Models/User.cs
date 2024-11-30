@@ -57,15 +57,15 @@ public class User
     /// <summary>
     /// スロットを回す
     /// </summary>
-    public SlotExecuteResult ExecuteSlot()
+    public SlotExecuteResult ExecuteSlot(Slot slot)
     {
         if (TodaySlotExecuteCount >= MasterManager.SettingMaster.UserSlotExecuteLimitPerDay)
         {
             throw new AppException("今日はもう回せないぞカス");
         }
 
-        var price = MasterManager.SettingMaster.PricePerSlotOnce;
-        var result = SlotManager.Instance.Execute();
+        var price = slot.ExecutePrice;
+        var result = slot.Execute();
         var reward = (int)(NumberUtility.GetPercentFromPermillage(result.ResultRatePermillage) * price);
         MonthlySlotProfitPrice += reward - price;
         TodaySlotExecuteCount++;

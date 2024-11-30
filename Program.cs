@@ -20,8 +20,6 @@ public static class Program
         TimeManager.Instance.Initialize();
         await MasterManager.FetchAsync();
         await GachaManager.Instance.LoadAsync();
-        SlotManager.Instance.LoadMaster();
-        await SlotManager.Instance.LoadAsync();
         SchedulerManager.Initialize();
         await DiscordManager.InitializeAsync();
 

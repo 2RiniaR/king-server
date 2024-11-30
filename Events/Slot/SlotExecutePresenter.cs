@@ -14,7 +14,8 @@ public class SlotExecutePresenter : DiscordMessagePresenterBase
         await using var app = AppService.CreateSession();
 
         var user = await app.FindOrCreateUserAsync(Message.Author.Id);
-        var result = user.ExecuteSlot();
+        var slot = await app.GetDefaultSlotAsync();
+        var result = user.ExecuteSlot(slot);
 
         await app.SaveChangesAsync();
 

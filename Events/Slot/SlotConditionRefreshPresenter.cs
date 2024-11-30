@@ -9,7 +9,11 @@ public class SlotConditionRefreshPresenter : SchedulerJobPresenterBase
 {
     protected override async Task MainAsync()
     {
-        SlotManager.Instance.ShuffleCondition();
-        await SlotManager.Instance.SaveAsync();
+        await using var app = AppService.CreateSession();
+
+        var slot = await app.GetDefaultSlotAsync();
+        slot.ShuffleCondition();
+
+        await app.SaveChangesAsync();
     }
 }
