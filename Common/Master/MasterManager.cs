@@ -2,6 +2,9 @@
 
 namespace Approvers.King.Common;
 
+/// <summary>
+/// マスタデータを管理する
+/// </summary>
 public class MasterManager : Singleton<MasterManager>
 {
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -20,6 +23,9 @@ public class MasterManager : Singleton<MasterManager>
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value
 
+    /// <summary>
+    /// マスタデータをスプレッドシートから読み込んで更新する
+    /// </summary>
     public static async Task FetchAsync()
     {
         var dict = new Dictionary<FieldInfo, string>();

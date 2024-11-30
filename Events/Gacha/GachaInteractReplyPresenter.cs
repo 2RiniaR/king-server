@@ -3,6 +3,9 @@ using Discord;
 
 namespace Approvers.King.Events;
 
+/// <summary>
+/// 確定ガチャを回すイベント
+/// </summary>
 public class GachaInteractReplyPresenter : DiscordMessagePresenterBase
 {
     protected override async Task MainAsync()

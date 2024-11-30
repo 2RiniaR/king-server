@@ -3,6 +3,9 @@ using Timer = System.Timers.Timer;
 
 namespace Approvers.King.Common;
 
+/// <summary>
+/// 時間で実行されるイベントを管理する
+/// </summary>
 public static class SchedulerManager
 {
     private static readonly Timer Timer = new(TimeSpan.FromSeconds(1));
@@ -40,6 +43,9 @@ public static class SchedulerManager
         }
     }
 
+    /// <summary>
+    /// 毎日のイベントを登録する
+    /// </summary>
     public static void RegisterDaily<T>(TimeSpan time) where T : SchedulerJobPresenterBase, new()
     {
         Runners.Add(new SchedulerJobRunner<T>
@@ -50,6 +56,9 @@ public static class SchedulerManager
         });
     }
 
+    /// <summary>
+    /// 毎月のイベントを登録する
+    /// </summary>
     public static void RegisterMonthly<T>(int day, TimeSpan time) where T : SchedulerJobPresenterBase, new()
     {
         Runners.Add(new SchedulerJobRunner<T>
@@ -61,6 +70,9 @@ public static class SchedulerManager
         });
     }
 
+    /// <summary>
+    /// 毎年のイベントを登録する
+    /// </summary>
     public static void RegisterYearly<T>(DateTime datetime) where T : SchedulerJobPresenterBase, new()
     {
         Runners.Add(new SchedulerJobRunner<T>
@@ -73,6 +85,9 @@ public static class SchedulerManager
         });
     }
 
+    /// <summary>
+    /// 条件を満たしたタイミングで実行するイベントを登録する
+    /// </summary>
     public static void RegisterOn<T>(Predicate<DateTime> predicate) where T : SchedulerJobPresenterBase, new()
     {
         Runners.Add(new SchedulerJobRunner<T>

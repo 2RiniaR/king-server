@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Approvers.King.Events;
 
+/// <summary>
+/// ガチャの課金額ランキングを表示するイベント
+/// </summary>
 public class GachaRankingPresenter : DiscordMessagePresenterBase
 {
     protected override async Task MainAsync()

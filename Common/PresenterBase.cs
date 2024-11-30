@@ -21,8 +21,14 @@ public abstract class PresenterBase
         }
     }
 
+    /// <summary>
+    /// アプリ内エラーが発生した時の処理
+    /// </summary>
     protected abstract Task SendAppError(AppException e);
 
+    /// <summary>
+    /// メインで実行される処理
+    /// </summary>
     protected abstract Task MainAsync();
 
     public static Embed ErrorEmbed(string message)

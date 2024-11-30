@@ -17,6 +17,9 @@ public enum TriggerType
     SlotRanking,
 }
 
+/// <summary>
+/// discordのメッセージからイベントを発動する文言
+/// </summary>
 [SuppressMessage("ReSharper", "UnassignedGetOnlyAutoProperty")]
 public class TriggerPhrase : MasterRecord<string>
 {

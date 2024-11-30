@@ -4,6 +4,9 @@ using Discord;
 
 namespace Approvers.King.Events;
 
+/// <summary>
+/// スロットを実行するイベント
+/// </summary>
 public class SlotExecutePresenter : DiscordMessagePresenterBase
 {
     protected override async Task MainAsync()

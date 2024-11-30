@@ -4,6 +4,9 @@ using Discord;
 
 namespace Approvers.King.Events;
 
+/// <summary>
+/// 丸亀構文を出力するイベント
+/// </summary>
 public class MarugamePresenter : DiscordMessagePresenterBase
 {
     public string? Content { get; set; }

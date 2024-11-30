@@ -46,6 +46,9 @@ public static class AppStateDbSetExtensions
     }
 }
 
+/// <summary>
+/// アプリ全体の状態
+/// </summary>
 public class AppState
 {
     [Key] public AppStateType Type { get; set; }

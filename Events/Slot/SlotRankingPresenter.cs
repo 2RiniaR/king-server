@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Approvers.King.Events;
 
+/// <summary>
+/// スロットの利益ランキングを表示するイベント
+/// </summary>
 public class SlotRankingPresenter : DiscordMessagePresenterBase
 {
     protected override async Task MainAsync()

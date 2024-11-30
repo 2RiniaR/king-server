@@ -21,8 +21,8 @@ public class TimeManager : Singleton<TimeManager>
     }
 
     /// <summary>
-    ///     アプリ内の現在時刻を取得する
-    ///     デバッグ機能により操作されることがある
+    /// アプリ内の現在時刻を取得する
+    /// デバッグ機能により操作されることがある
     /// </summary>
     public static DateTime GetNow()
     {
@@ -30,7 +30,7 @@ public class TimeManager : Singleton<TimeManager>
     }
 
     /// <summary>
-    ///     過ぎていればtrue
+    /// 時間を過ぎていればtrue
     /// </summary>
     public static bool IsExpired(DateTime time)
     {

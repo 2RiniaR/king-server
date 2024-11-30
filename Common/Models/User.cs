@@ -26,18 +26,27 @@ public class User
         TodaySlotExecuteCount = 0;
     }
 
+    /// <summary>
+    /// 単発ガチャを回す
+    /// </summary>
     public GachaProbability? RollGachaOnce()
     {
         MonthlyGachaPurchasePrice += MasterManager.SettingMaster.PricePerGachaOnce;
         return GachaManager.Instance.Roll();
     }
 
+    /// <summary>
+    /// 単発確定ガチャを回す
+    /// </summary>
     public GachaProbability RollGachaOnceCertain()
     {
         MonthlyGachaPurchasePrice += MasterManager.SettingMaster.PricePerGachaOnceCertain;
         return GachaManager.Instance.RollWithoutNone();
     }
 
+    /// <summary>
+    /// 10連ガチャを回す
+    /// </summary>
     public List<GachaProbability?> RollGachaTenTimes()
     {
         const int pickCount = 10;
@@ -45,6 +54,9 @@ public class User
         return Enumerable.Range(0, pickCount).Select(_ => GachaManager.Instance.Roll()).ToList();
     }
 
+    /// <summary>
+    /// スロットを回す
+    /// </summary>
     public SlotExecuteResult ExecuteSlot()
     {
         if (TodaySlotExecuteCount >= MasterManager.SettingMaster.UserSlotExecuteLimitPerDay)
