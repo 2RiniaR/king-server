@@ -58,5 +58,4 @@ public class AppState
 public enum AppStateType
 {
     RareReplyProbabilityPermillage,
-    SlotConditionOffsetPermillage,
 }
