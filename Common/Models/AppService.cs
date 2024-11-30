@@ -8,6 +8,7 @@ namespace Approvers.King.Common;
 public class AppService : DbContext
 {
     public DbSet<AppState> AppStates { get; set; }
+    public DbSet<Slot> Slots { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<GachaProbability> GachaProbabilities { get; set; }
 
@@ -39,5 +40,18 @@ public class AppService : DbContext
         user = new User { DiscordId = discordId };
         Add(user);
         return user;
+    }
+    
+    public async Task<Slot> GetDefaultSlotAsync()
+    {
+        var slot = await Slots.FirstOrDefaultAsync();
+        if (slot != null)
+        {
+            return slot;
+        }
+
+        slot = new Slot { Id = Guid.NewGuid() };
+        Add(slot);
+        return slot;
     }
 }
