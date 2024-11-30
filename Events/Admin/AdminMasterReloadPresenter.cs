@@ -3,6 +3,9 @@ using Discord;
 
 namespace Approvers.King.Events;
 
+/// <summary>
+/// マスタデータのリセットを行うイベント
+/// </summary>
 public class AdminMasterReloadPresenter : DiscordMessagePresenterBase
 {
     protected override async Task MainAsync()
@@ -18,7 +21,7 @@ public class AdminMasterReloadPresenter : DiscordMessagePresenterBase
     private async Task UpdateGachaTableAsync()
     {
         var beforeTable = GachaManager.Instance.ReplyMessageTable.Select(x => x.RandomMessageId).ToHashSet();
-        GachaManager.Instance.RefreshMessageTable();
+        GachaManager.Instance.LoadMaster();
         var afterTable = GachaManager.Instance.ReplyMessageTable.Select(x => x.RandomMessageId).ToHashSet();
 
         // テーブルに差分がある場合は排出率を更新する

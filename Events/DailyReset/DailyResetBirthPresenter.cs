@@ -2,6 +2,9 @@
 
 namespace Approvers.King.Events;
 
+/// <summary>
+/// 誕生日に発火するイベント
+/// </summary>
 public class DailyResetBirthPresenter : SchedulerJobPresenterBase
 {
     private static readonly string Message = $"""

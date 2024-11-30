@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Approvers.King.Events;
 
+/// <summary>
+/// 毎月のリセットを行うイベント
+/// </summary>
 public class MonthlyResetPresenter : SchedulerJobPresenterBase
 {
     protected override async Task MainAsync()

@@ -2,6 +2,9 @@
 
 namespace Approvers.King.Events;
 
+/// <summary>
+/// ガチャの分布を表示するイベント
+/// </summary>
 public class GachaInfoCommandPresenter : DiscordMessagePresenterBase
 {
     protected override async Task MainAsync()

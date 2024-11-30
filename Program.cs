@@ -6,6 +6,9 @@ namespace Approvers.King;
 
 public static class Program
 {
+    /// <summary>
+    /// エントリーポイント
+    /// </summary>
     private static void Main(string[] args)
     {
         BuildAsync(args).GetAwaiter().GetResult();
@@ -13,16 +16,13 @@ public static class Program
 
     private static async Task BuildAsync(string[] args)
     {
+        // 共通基盤系を初期化する
         TimeManager.Instance.Initialize();
         await MasterManager.FetchAsync();
-
         await GachaManager.Instance.LoadAsync();
-
         SlotManager.Instance.LoadMaster();
         await SlotManager.Instance.LoadAsync();
-
         SchedulerManager.Initialize();
-
         await DiscordManager.InitializeAsync();
 
         if (GachaManager.Instance.IsTableEmpty)
@@ -31,6 +31,7 @@ public static class Program
             await new DailyResetPresenter().RunAsync();
         }
 
+        // ここからイベント登録
         DiscordManager.Client.MessageReceived += message =>
         {
             OnMessageReceived(message);
@@ -38,16 +39,17 @@ public static class Program
         };
 
         SchedulerManager.RegisterDaily<DailyResetPresenter>(TimeManager.DailyResetTime);
-        SchedulerManager.RegisterYearly<DailyResetBirthPresenter>(TimeManager.Birthday + TimeManager.DailyResetTime +
-                                                                  TimeSpan.FromSeconds(1));
-        SchedulerManager.RegisterMonthly<MonthlyResetPresenter>(TimeManager.MonthlyResetDay,
-            TimeManager.DailyResetTime);
+        SchedulerManager.RegisterYearly<DailyResetBirthPresenter>(TimeManager.Birthday + TimeManager.DailyResetTime + TimeSpan.FromSeconds(1));
+        SchedulerManager.RegisterMonthly<MonthlyResetPresenter>(TimeManager.MonthlyResetDay, TimeManager.DailyResetTime);
         SchedulerManager.RegisterOn<SlotConditionRefreshPresenter>(x => x.Minute is 0);
 
         // 永久に待つ
         await Task.Delay(-1);
     }
 
+    /// <summary>
+    /// トリガーとなる文言を含んでいるか
+    /// </summary>
     private static bool IsContainsTriggerPhrase(string content, TriggerType triggerType)
     {
         return MasterManager.TriggerPhraseMaster

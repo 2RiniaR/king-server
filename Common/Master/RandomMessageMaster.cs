@@ -13,6 +13,9 @@ public enum RandomMessageType
     GachaFailed,
 }
 
+/// <summary>
+/// discordに送信するランダムなメッセージ
+/// </summary>
 [SuppressMessage("ReSharper", "UnassignedGetOnlyAutoProperty")]
 public class RandomMessage : MasterRecord<string>
 {

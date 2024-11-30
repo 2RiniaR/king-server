@@ -1,5 +1,9 @@
 namespace Approvers.King.Common;
 
+/// <summary>
+/// マスタデータのテーブル
+/// スプレッドシートのシートに相当
+/// </summary>
 public abstract class MasterTable<TKey, TRecord> where TRecord : MasterRecord<TKey> where TKey : notnull
 {
     private readonly Dictionary<TKey, TRecord> _records = [];

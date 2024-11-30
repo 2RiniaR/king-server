@@ -5,6 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Approvers.King.Events;
 
+/// <summary>
+/// 毎日のリセットを行うイベント
+/// </summary>
 public class DailyResetPresenter : SchedulerJobPresenterBase
 {
     protected override async Task MainAsync()
@@ -18,7 +21,7 @@ public class DailyResetPresenter : SchedulerJobPresenterBase
         await app.SaveChangesAsync();
 
         // 排出確率を変える
-        GachaManager.Instance.RefreshMessageTable();
+        GachaManager.Instance.LoadMaster();
         GachaManager.Instance.ShuffleRareReplyRate();
         GachaManager.Instance.ShuffleMessageRates();
         await GachaManager.Instance.SaveAsync();

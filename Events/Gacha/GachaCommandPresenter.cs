@@ -4,6 +4,9 @@ using Discord;
 
 namespace Approvers.King.Events;
 
+/// <summary>
+/// 10連ガチャを回すイベント
+/// </summary>
 public class GachaCommandPresenter : DiscordMessagePresenterBase
 {
     protected override async Task MainAsync()
