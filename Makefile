@@ -7,10 +7,6 @@ migrate:
 run:
 	dotnet run
 
-.PHONY: docker-build
-docker-build:
+.PHONY: push
 	docker build . -t $(app_name)
-
-.PHONY: docker-push
-docker-push:
 	docker push $(app_name)
