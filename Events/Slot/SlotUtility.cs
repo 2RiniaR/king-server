@@ -14,9 +14,7 @@ public static class SlotUtility
         {
             var scoreText = Math.Min(999_999_999, user.MonthlySlotProfitPrice).ToString("N0");
             var whiteSpace = Math.Max(0, 11 - scoreText.Length);
-            var line =
-                Format.Code($"#{order:D2} - {"".PadLeft(whiteSpace, ' ')}{scoreText}†カス†（税込）") + "  " +
-                MentionUtils.MentionUser(user.DiscordId);
+            var line = $"#{order:D2} - {"".PadLeft(whiteSpace, ' ')}{scoreText}†カス†（税込）".Custom("c") + "  " + MentionUtils.MentionUser(user.DiscordId);
             embedBuilder.AppendLine(line);
             order++;
         }

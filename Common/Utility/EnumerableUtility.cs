@@ -6,9 +6,4 @@ public static class EnumerableUtility
     {
         for (var i = 0; i < count; i++) yield return value;
     }
-
-    public static IEnumerable<T> Repeat<T>(Func<T> value, int count)
-    {
-        for (var i = 0; i < count; i++) yield return value();
-    }
 }

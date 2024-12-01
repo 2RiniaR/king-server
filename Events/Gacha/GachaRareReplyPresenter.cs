@@ -3,6 +3,8 @@ using Discord;
 
 namespace Approvers.King.Events;
 
+using F = DiscordFormatUtility;
+
 /// <summary>
 /// 単発ガチャを回すイベント
 /// </summary>
@@ -22,7 +24,7 @@ public class GachaRareReplyPresenter : DiscordMessagePresenterBase
         var message = user.RollGachaOnce(gacha);
         if (message != null)
         {
-            await SendReplyAsync(message.RandomMessage?.Content ?? MessageConst.MissingMessage);
+            await SendReplyAsync(message.RandomMessage?.Content ?? F.Missing);
         }
 
         await app.SaveChangesAsync();

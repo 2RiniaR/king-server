@@ -10,8 +10,7 @@ public class AdminMasterReloadPresenter : DiscordMessagePresenterBase
 {
     protected override async Task MainAsync()
     {
-        await Message.ReplyAsync("マスターをリロードするぞ");
         await MasterManager.FetchAsync();
-        await Message.ReplyAsync("マスターをリロードしたぞ");
+        await Message.ReplyAsync("done(ドゥーン)");
     }
 }

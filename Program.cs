@@ -65,7 +65,6 @@ public static class Program
         };
 
         SchedulerManager.RegisterDaily<DailyResetPresenter>(TimeManager.DailyResetTime);
-        SchedulerManager.RegisterYearly<DailyResetBirthPresenter>(TimeManager.Birthday + TimeManager.DailyResetTime + TimeSpan.FromSeconds(1));
         SchedulerManager.RegisterMonthly<MonthlyResetPresenter>(TimeManager.MonthlyResetDay, TimeManager.DailyResetTime);
         SchedulerManager.RegisterOn<SlotConditionRefreshPresenter>(x => x.Minute is 0);
     }
