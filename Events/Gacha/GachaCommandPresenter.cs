@@ -13,14 +13,15 @@ public class GachaCommandPresenter : DiscordMessagePresenterBase
     {
         await using var app = AppService.CreateSession();
         var user = await app.FindOrCreateUserAsync(Message.Author.Id);
+        var gacha = await app.GetDefaultGachaAsync();
 
-        var results = user.RollGachaTenTimes();
+        var results = user.RollGachaTenTimes(gacha);
         await SendReplyAsync(user, results);
 
         await app.SaveChangesAsync();
     }
 
-    private async Task SendReplyAsync(User user, IReadOnlyList<GachaProbability?> results)
+    private async Task SendReplyAsync(User user, IReadOnlyList<GachaItem?> results)
     {
         var builder = new StringBuilder();
         builder.AppendLine($"↓↓↓ いっそう{results.Count}連おみくじ ↓↓↓");
@@ -28,7 +29,7 @@ public class GachaCommandPresenter : DiscordMessagePresenterBase
         {
             builder.AppendLine(result != null
                 ? Format.Bold(
-                    $"・{result.RandomMessage?.Content ?? MessageConst.MissingMessage} ({result.Probability:P0})")
+                    $"・{result.RandomMessage?.Content ?? MessageConst.MissingMessage} ({result.Probability.Rate:P0})")
                 : Format.Code("x"));
         }
 

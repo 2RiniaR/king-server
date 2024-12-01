@@ -6,20 +6,21 @@ namespace Approvers.King.Events;
 
 public static class GachaUtility
 {
-    public static EmbedBuilder GetInfoEmbedBuilder()
+    public static EmbedBuilder GetInfoEmbedBuilder(Gacha gacha)
     {
-        var records = GachaManager.Instance.ReplyMessageTable
+        var minProbability = Multiplier.FromPercent(1);
+        var records = gacha.GachaItems
             .OrderByDescending(x => x.Probability)
-            .Where(x => x.Probability.IsApproximate(0f) == false)
-            .Select(x => (x.RandomMessage?.Content ?? MessageConst.MissingMessage, x.Probability.ToString("P0")));
+            .Where(x => x.Probability > minProbability)
+            .Select(x => (x.RandomMessage?.Content ?? MessageConst.MissingMessage, x.Probability.Rate.ToString("P0")));
         return new EmbedBuilder()
             .WithTitle(
                 $"{IssoUtility.SmileStamp}{IssoUtility.SmileStamp}{IssoUtility.SmileStamp} 本日のいっそう {IssoUtility.SmileStamp}{IssoUtility.SmileStamp}{IssoUtility.SmileStamp}")
             .WithColor(new Color(0xf1, 0xc4, 0x0f))
-            .WithDescription($"本日は {Format.Bold($"{GachaManager.Instance.RareReplyRate:P0}")} の確率で反応します")
+            .WithDescription($"本日は {Format.Bold($"{gacha.HitProbability.Rate:P0}")} の確率で反応します")
             .AddField("排出確率", DiscordMessageUtility.Table(records));
     }
-    
+
     public static string CreateRankingView(IReadOnlyList<User> rankingUsers)
     {
         var embedBuilder = new StringBuilder();

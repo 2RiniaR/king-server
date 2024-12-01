@@ -12,8 +12,9 @@ public class GachaInteractReplyPresenter : DiscordMessagePresenterBase
     {
         await using var app = AppService.CreateSession();
         var user = await app.FindOrCreateUserAsync(Message.Author.Id);
+        var gacha = await app.GetDefaultGachaAsync();
 
-        var message = user.RollGachaOnceCertain();
+        var message = user.RollGachaOnceCertain(gacha);
         await SendReplyAsync(message.RandomMessage?.Content ?? MessageConst.MissingMessage);
 
         await app.SaveChangesAsync();

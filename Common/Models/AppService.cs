@@ -7,10 +7,10 @@ namespace Approvers.King.Common;
 /// </summary>
 public class AppService : DbContext
 {
-    public DbSet<AppState> AppStates { get; set; }
     public DbSet<Slot> Slots { get; set; }
+    public DbSet<Gacha> Gachas { get; set; }
     public DbSet<User> Users { get; set; }
-    public DbSet<GachaProbability> GachaProbabilities { get; set; }
+    public DbSet<GachaItem> GachaItems { get; set; }
 
     /// <summary>
     /// セッションを作成する
@@ -41,7 +41,7 @@ public class AppService : DbContext
         Add(user);
         return user;
     }
-    
+
     public async Task<Slot> GetDefaultSlotAsync()
     {
         var slot = await Slots.FirstOrDefaultAsync();
@@ -53,5 +53,18 @@ public class AppService : DbContext
         slot = new Slot { Id = Guid.NewGuid() };
         Add(slot);
         return slot;
+    }
+
+    public async Task<Gacha> GetDefaultGachaAsync()
+    {
+        var gacha = await Gachas.Include(x => x.GachaItems).FirstOrDefaultAsync();
+        if (gacha != null)
+        {
+            return gacha;
+        }
+
+        gacha = new Gacha { Id = Guid.NewGuid() };
+        Add(gacha);
+        return gacha;
     }
 }

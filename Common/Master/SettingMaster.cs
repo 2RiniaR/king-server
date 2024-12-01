@@ -70,10 +70,14 @@ public class SettingMaster : MasterTable<string, Setting>
     /// </summary>
     public int MaxRareReplyProbabilityPermillage => GetInt(nameof(MaxRareReplyProbabilityPermillage));
 
+    public Multiplier MaxRareReplyProbability => Multiplier.FromPermillage(MaxRareReplyProbabilityPermillage);
+
     /// <summary>
     /// 確率返信の抽選単位(千分率)
     /// </summary>
     public int RareReplyProbabilityStepPermillage => GetInt(nameof(RareReplyProbabilityStepPermillage));
+
+    public Multiplier RareReplyProbabilityStep => Multiplier.FromPermillage(RareReplyProbabilityStepPermillage);
 
     /// <summary>
     /// 単発ガチャ1回の価格
@@ -120,15 +124,21 @@ public class SettingMaster : MasterTable<string, Setting>
     /// </summary>
     public int SlotMaxConditionOffsetPermillage => GetInt(nameof(SlotMaxConditionOffsetPermillage));
 
+    public Multiplier SlotMaxConditionOffset => Multiplier.FromPermillage(SlotMaxConditionOffsetPermillage);
+
     /// <summary>
     /// スロットの調子の最小値(千分率)
     /// </summary>
     public int SlotMinConditionOffsetPermillage => GetInt(nameof(SlotMinConditionOffsetPermillage));
 
+    public Multiplier SlotMinConditionOffset => Multiplier.FromPermillage(SlotMinConditionOffsetPermillage);
+
     /// <summary>
     /// スロットの次に同じ出目が確定する確率の最大値(千分率)
     /// </summary>
     public int SlotRepeatPermillageUpperBound => GetInt(nameof(SlotRepeatPermillageUpperBound));
+
+    public Multiplier SlotRepeatUpperBound => Multiplier.FromPermillage(SlotRepeatPermillageUpperBound);
 }
 
 [SuppressMessage("ReSharper", "UnassignedGetOnlyAutoProperty")]

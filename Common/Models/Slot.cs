@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Approvers.King.Common;
 
@@ -8,10 +9,17 @@ public class Slot
 
     [Key] public Guid Id { get; set; }
 
+    public int ConditionPermillage { get; set; }
+
     /// <summary>
     /// 調子(千分率)
     /// </summary>
-    public int ConditionPermillage { get; set; }
+    [NotMapped]
+    public Multiplier Condition
+    {
+        get => Multiplier.FromPermillage(ConditionPermillage);
+        set => ConditionPermillage = value.Permillage;
+    }
 
     public int ExecutePrice => MasterManager.SettingMaster.PricePerSlotOnce;
 
@@ -20,9 +28,9 @@ public class Slot
     /// </summary>
     public void ShuffleCondition()
     {
-        var max = MasterManager.SettingMaster.SlotMaxConditionOffsetPermillage;
-        var min = MasterManager.SettingMaster.SlotMinConditionOffsetPermillage;
-        ConditionPermillage = RandomManager.GetRandomInt(min, max + 1);
+        var max = MasterManager.SettingMaster.SlotMaxConditionOffset;
+        var min = MasterManager.SettingMaster.SlotMinConditionOffset;
+        Condition = RandomManager.GetRandomMultiplier(min, max);
     }
 
     /// <summary>
@@ -44,8 +52,7 @@ public class Slot
 
             // 一定確率で直前と同じ出目が出る
             // 確率はマスタデータの設定値に加え、調子により変動する
-            var repeatPermillage = Math.Clamp(reelItems[i - 1].RepeatPermillage + ConditionPermillage, 0, MasterManager.SettingMaster.SlotRepeatPermillageUpperBound);
-            var repeatProbability = NumberUtility.GetProbabilityFromPermillage(repeatPermillage);
+            var repeatProbability = (reelItems[i - 1].RepeatProbability + Condition).Clamp(Multiplier.Zero, MasterManager.SettingMaster.SlotRepeatUpperBound);
             var isRepeat = RandomManager.IsHit(repeatProbability);
             if (isRepeat)
             {
@@ -57,13 +64,13 @@ public class Slot
         }
 
         var isWin = reelItems.Select(x => x.Id).Distinct().Count() == 1;
-        var resultRatePermillage = isWin ? reelItems[0].ReturnRatePermillage : 0;
+        var resultRate = isWin ? reelItems[0].ReturnRate : Multiplier.Zero;
 
         return new SlotExecuteResult()
         {
             ReelItems = reelItems,
             IsWin = isWin,
-            ResultRatePermillage = resultRatePermillage
+            ResultRate = resultRate
         };
     }
 }
@@ -81,7 +88,7 @@ public class SlotExecuteResult
     public bool IsWin { get; init; }
 
     /// <summary>
-    /// キャッシュバック倍率(千分率)
+    /// キャッシュバック倍率
     /// </summary>
-    public int ResultRatePermillage { get; init; }
+    public Multiplier ResultRate { get; init; }
 }

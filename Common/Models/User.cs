@@ -29,29 +29,29 @@ public class User
     /// <summary>
     /// 単発ガチャを回す
     /// </summary>
-    public GachaProbability? RollGachaOnce()
+    public GachaItem? RollGachaOnce(Gacha gacha)
     {
         MonthlyGachaPurchasePrice += MasterManager.SettingMaster.PricePerGachaOnce;
-        return GachaManager.Instance.Roll();
+        return gacha.RollOnce();
     }
 
     /// <summary>
     /// 単発確定ガチャを回す
     /// </summary>
-    public GachaProbability RollGachaOnceCertain()
+    public GachaItem RollGachaOnceCertain(Gacha gacha)
     {
         MonthlyGachaPurchasePrice += MasterManager.SettingMaster.PricePerGachaOnceCertain;
-        return GachaManager.Instance.RollWithoutNone();
+        return gacha.RollOnceCertain();
     }
 
     /// <summary>
     /// 10連ガチャを回す
     /// </summary>
-    public List<GachaProbability?> RollGachaTenTimes()
+    public List<GachaItem?> RollGachaTenTimes(Gacha gacha)
     {
         const int pickCount = 10;
         MonthlyGachaPurchasePrice += MasterManager.SettingMaster.PricePerGachaTenTimes;
-        return Enumerable.Range(0, pickCount).Select(_ => GachaManager.Instance.Roll()).ToList();
+        return Enumerable.Range(0, pickCount).Select(_ => gacha.RollOnce()).ToList();
     }
 
     /// <summary>
@@ -66,7 +66,7 @@ public class User
 
         var price = slot.ExecutePrice;
         var result = slot.Execute();
-        var reward = (int)(NumberUtility.GetPercentFromPermillage(result.ResultRatePermillage) * price);
+        var reward = (int)(price * result.ResultRate);
         MonthlySlotProfitPrice += reward - price;
         TodaySlotExecuteCount++;
         return result;

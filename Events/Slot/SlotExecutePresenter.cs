@@ -72,8 +72,7 @@ public class SlotExecutePresenter : DiscordMessagePresenterBase
         {
             if (result.IsWin)
             {
-                var rate = NumberUtility.GetPercentFromPermillage(result.ResultRatePermillage);
-                sb.AppendLine(Format.Bold($"Y O U   W I N ! !   x{rate:F1}"));
+                sb.AppendLine(Format.Bold($"Y O U   W I N ! !   x{result.ResultRate.Rate:F1}"));
             }
             else
             {
