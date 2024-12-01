@@ -29,9 +29,13 @@ public class SlotItem : MasterRecord<string>
     [field: MasterIntValue("return_rate_permillage")]
     public int ReturnRatePermillage { get; }
 
+    public Multiplier ReturnRate => Multiplier.FromPermillage(ReturnRatePermillage);
+
     /// <summary>
     /// 次に同じ出目が確定する確率(千分率)
     /// </summary>
     [field: MasterIntValue("repeat_permillage")]
     public int RepeatPermillage { get; }
+
+    public Multiplier RepeatProbability => Multiplier.FromPermillage(RepeatPermillage);
 }

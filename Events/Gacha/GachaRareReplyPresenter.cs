@@ -17,8 +17,9 @@ public class GachaRareReplyPresenter : DiscordMessagePresenterBase
 
         await using var app = AppService.CreateSession();
         var user = await app.FindOrCreateUserAsync(Message.Author.Id);
+        var gacha = await app.GetDefaultGachaAsync();
 
-        var message = user.RollGachaOnce();
+        var message = user.RollGachaOnce(gacha);
         if (message != null)
         {
             await SendReplyAsync(message.RandomMessage?.Content ?? MessageConst.MissingMessage);

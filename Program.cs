@@ -16,20 +16,48 @@ public static class Program
 
     private static async Task BuildAsync(string[] args)
     {
-        // 共通基盤系を初期化する
+        await InitializeModulesAsync();
+        await InitializeStatesAsync();
+        RegisterEvents();
+
+        // 永久に待つ
+        await Task.Delay(-1);
+    }
+
+    /// <summary>
+    /// 共通基盤系を初期化する
+    /// </summary>
+    private static async Task InitializeModulesAsync()
+    {
         TimeManager.Instance.Initialize();
         await MasterManager.FetchAsync();
-        await GachaManager.Instance.LoadAsync();
         SchedulerManager.Initialize();
         await DiscordManager.InitializeAsync();
+    }
 
-        if (GachaManager.Instance.IsTableEmpty)
+    private static async Task InitializeStatesAsync()
+    {
+        await using var app = AppService.CreateSession();
+
+        var gacha = await app.GetDefaultGachaAsync();
+        if (gacha.GachaItems.Count == 0)
         {
-            // 起動時にデータがない場合、ガチャ確率を初期化する
-            await new DailyResetPresenter().RunAsync();
+            gacha.ShuffleMessageRates();
         }
 
-        // ここからイベント登録
+        if (gacha.HitProbability == Multiplier.Zero)
+        {
+            gacha.ShuffleRareReplyRate();
+        }
+
+        await app.SaveChangesAsync();
+    }
+
+    /// <summary>
+    /// 全てのイベントを登録する
+    /// </summary>
+    private static void RegisterEvents()
+    {
         DiscordManager.Client.MessageReceived += message =>
         {
             OnMessageReceived(message);
@@ -40,9 +68,6 @@ public static class Program
         SchedulerManager.RegisterYearly<DailyResetBirthPresenter>(TimeManager.Birthday + TimeManager.DailyResetTime + TimeSpan.FromSeconds(1));
         SchedulerManager.RegisterMonthly<MonthlyResetPresenter>(TimeManager.MonthlyResetDay, TimeManager.DailyResetTime);
         SchedulerManager.RegisterOn<SlotConditionRefreshPresenter>(x => x.Minute is 0);
-
-        // 永久に待つ
-        await Task.Delay(-1);
     }
 
     /// <summary>
