@@ -18,7 +18,7 @@ public class MarugamePresenter : DiscordMessagePresenterBase
             return;
         }
 
-        var message = Format.Code(ConvertMessageToVertical(Content));
+        var message = ConvertMessageToVertical(Content).Custom("c");
         await Message.ReplyAsync(message);
     }
 

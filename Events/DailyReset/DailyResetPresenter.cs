@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Approvers.King.Events;
 
+using F = DiscordFormatUtility;
+
 /// <summary>
 /// 毎日のリセットを行うイベント
 /// </summary>
@@ -12,6 +14,8 @@ public class DailyResetPresenter : SchedulerJobPresenterBase
 {
     protected override async Task MainAsync()
     {
+        var now = TimeManager.GetNow();
+
         await using var app = AppService.CreateSession();
 
         var slotMaxUsers = await app.Users
@@ -33,6 +37,13 @@ public class DailyResetPresenter : SchedulerJobPresenterBase
         // 排出率を投稿する
         await DiscordManager.GetMainChannel().SendMessageAsync(embed: GachaUtility.GetInfoEmbedBuilder(gacha).Build());
 
+        // 誕生日なら祝わせる
+        var isBirthday = now.Month == MasterManager.SettingMaster.BirthdayMonth && now.Day == MasterManager.SettingMaster.BirthdayDay;
+        if (isBirthday)
+        {
+            await SendBirthdayMessageAsync();
+        }
+
         // スロットの実行回数が最大になったユーザーを通知する
         await NotifySlotMaxUsers(slotMaxUsers);
     }
@@ -45,7 +56,7 @@ public class DailyResetPresenter : SchedulerJobPresenterBase
         }
 
         var sb = new StringBuilder();
-        sb.AppendLine("**\u2b07\ufe0e\u2b07\ufe0e\u2b07\ufe0e 昨日のスロカス一覧がこちらw \u2b07\ufe0e\u2b07\ufe0e\u2b07\ufe0e**");
+        sb.AppendLine("\u2b07\ufe0e\u2b07\ufe0e\u2b07\ufe0e 昨日のスロカス一覧がこちらw \u2b07\ufe0e\u2b07\ufe0e\u2b07\ufe0e".Custom("b"));
         sb.AppendLine();
         foreach (var user in users)
         {
@@ -53,5 +64,19 @@ public class DailyResetPresenter : SchedulerJobPresenterBase
         }
 
         await DiscordManager.GetMainChannel().SendMessageAsync(sb.ToString());
+    }
+
+    private async Task SendBirthdayMessageAsync()
+    {
+        var message = $"""
+                       {F.Smile.Repeat(16)}
+                       {F.Smile}　　　　　　　　　　　　　　　　　　　 {F.Smile}
+                       {F.Smile}    ***†　誕　生　日　だ　祝　え　カ　ス　†***   {F.Smile}
+                       {F.Smile}　　　　　　　　　　　　　　　　　　　 {F.Smile}
+                       {F.Smile.Repeat(16)}
+                       """;
+
+        // 誕生日を祝わせる
+        await DiscordManager.GetMainChannel().SendMessageAsync(message);
     }
 }

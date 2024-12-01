@@ -4,6 +4,8 @@ using Discord;
 
 namespace Approvers.King.Events;
 
+using F = DiscordFormatUtility;
+
 /// <summary>
 /// 10連ガチャを回すイベント
 /// </summary>
@@ -28,9 +30,8 @@ public class GachaCommandPresenter : DiscordMessagePresenterBase
         foreach (var result in results)
         {
             builder.AppendLine(result != null
-                ? Format.Bold(
-                    $"・{result.RandomMessage?.Content ?? MessageConst.MissingMessage} ({result.Probability.Rate:P0})")
-                : Format.Code("x"));
+                ? $"・{result.RandomMessage?.Content ?? F.Missing} ({result.Probability.Rate:P0})".Custom("b")
+                : "x".Custom("c"));
         }
 
         // 爆死してたら煽る
@@ -39,7 +40,7 @@ public class GachaCommandPresenter : DiscordMessagePresenterBase
             builder.AppendLine();
             var messages = MasterManager.RandomMessageMaster.GetAll(x => x.Type == RandomMessageType.GachaFailed);
             var failedMessage = RandomManager.PickRandom(messages).Content;
-            builder.AppendLine(Format.Bold(Format.Italics(failedMessage)));
+            builder.AppendLine(failedMessage.Custom("bi"));
         }
 
         builder.AppendLine();

@@ -139,6 +139,16 @@ public class SettingMaster : MasterTable<string, Setting>
     public int SlotRepeatPermillageUpperBound => GetInt(nameof(SlotRepeatPermillageUpperBound));
 
     public Multiplier SlotRepeatUpperBound => Multiplier.FromPermillage(SlotRepeatPermillageUpperBound);
+
+    /// <summary>
+    /// 汎用的な笑顔の絵文字フォーマット
+    /// </summary>
+    public string CommonSmileFormat => GetString(nameof(CommonSmileFormat));
+
+    /// <summary>
+    /// 汎用的な存在しないメッセージ
+    /// </summary>
+    public string CommonMissingMessage => GetString(nameof(CommonMissingMessage));
 }
 
 [SuppressMessage("ReSharper", "UnassignedGetOnlyAutoProperty")]

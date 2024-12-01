@@ -4,7 +4,6 @@ public class TimeManager : Singleton<TimeManager>
 {
     public static TimeSpan DailyResetTime => TimeSpan.FromMilliseconds(MasterManager.SettingMaster.DailyResetTime);
     public static int MonthlyResetDay => MasterManager.SettingMaster.MonthlyResetDay;
-    public static DateTime Birthday => new(1, MasterManager.SettingMaster.BirthdayMonth, MasterManager.SettingMaster.BirthdayDay);
 
     private DateTime? _debugBaseTime;
     private TimeSpan _debugTimeOffset;
@@ -27,13 +26,5 @@ public class TimeManager : Singleton<TimeManager>
     public static DateTime GetNow()
     {
         return DateTime.Now.ToLocalTime() + Instance._debugTimeOffset;
-    }
-
-    /// <summary>
-    /// 時間を過ぎていればtrue
-    /// </summary>
-    public static bool IsExpired(DateTime time)
-    {
-        return GetNow() > time;
     }
 }

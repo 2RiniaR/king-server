@@ -72,11 +72,11 @@ public class SlotExecutePresenter : DiscordMessagePresenterBase
         {
             if (result.IsWin)
             {
-                sb.AppendLine(Format.Bold($"Y O U   W I N ! !   x{result.ResultRate.Rate:F1}"));
+                sb.AppendLine($"Y O U   W I N ! !   x{result.ResultRate.Rate:F1}".Custom("b"));
             }
             else
             {
-                sb.AppendLine(Format.Bold($"Y O U   L O S E"));
+                sb.AppendLine($"Y O U   L O S E".Custom("b"));
             }
         }
 
