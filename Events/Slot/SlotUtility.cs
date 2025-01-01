@@ -8,6 +8,11 @@ public static class SlotUtility
 {
     public static string CreateRankingView(IReadOnlyList<User> rankingUsers)
     {
+        if (rankingUsers.Count == 0)
+        {
+            return "ランキングはまだありません";
+        }
+
         var embedBuilder = new StringBuilder();
         var order = 1;
         foreach (var user in rankingUsers)

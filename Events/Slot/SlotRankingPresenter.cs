@@ -15,6 +15,7 @@ public class SlotRankingPresenter : DiscordMessagePresenterBase
 
         var selfUser = await app.FindOrCreateUserAsync(Message.Author.Id);
         var users = await app.Users
+            .Where(x => x.MonthlySlotProfitPrice != 0)
             .OrderByDescending(user => user.MonthlySlotProfitPrice)
             .Take(MasterManager.SettingMaster.PurchaseInfoRankingViewUserCount)
             .ToListAsync();
