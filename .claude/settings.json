@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dotnet:*)",
+      "Bash(git:*)",
+      "Read(**)",
+      "Edit(**)",
+      "WebFetch(domain:*)"
+    ]
+  },
+  "cleanupPeriodDays": 60
+}

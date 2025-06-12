@@ -26,5 +26,9 @@
         <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="7.0.0"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Content Include=".claude\settings.json" />
+    </ItemGroup>
+
 
 </Project>
