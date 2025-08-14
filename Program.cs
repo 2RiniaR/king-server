@@ -84,6 +84,12 @@ public static class Program
         // botは弾く
         if (message is not SocketUserMessage userMessage || userMessage.Author.IsBot) return;
 
+        // メッセージリンクが含まれている場合の処理
+        if (userMessage.Content.Contains("discord.com/channels/") || userMessage.Content.Contains("discordapp.com/channels/"))
+        {
+            DiscordManager.ExecuteAsync<MessageLinkPresenter>(userMessage).Run();
+        }
+
         if (userMessage.MentionedUsers.Any(x => x.Id == DiscordManager.Client.CurrentUser.Id))
         {
             if (message.Content.EndsWith("reload"))
