@@ -149,6 +149,11 @@ public class SettingMaster : MasterTable<string, Setting>
     /// 汎用的な存在しないメッセージ
     /// </summary>
     public string CommonMissingMessage => GetString(nameof(CommonMissingMessage));
+    
+    /// <summary>
+    /// 汎用的な怒り表現のフォーマット
+    /// </summary>
+    public string CommonAngryFormat => GetString(nameof(CommonAngryFormat));
 }
 
 [SuppressMessage("ReSharper", "UnassignedGetOnlyAutoProperty")]
