@@ -144,8 +144,32 @@ public static class Program
             return;
         }
 
+        // 発言（Angry機能）
+        if (TryExecuteAngry(userMessage))
+        {
+            return;
+        }
+        
         // 発言
         DiscordManager.ExecuteAsync<GachaRareReplyPresenter>(userMessage).Run();
+    }
+
+    private static bool TryExecuteAngry(SocketUserMessage userMessage)
+    {
+        var messageContent = userMessage.Content.ToLower();
+        
+        // すべてのAngryエントリをチェックし、一致するものがあるかを確認
+        var hasMatch = MasterManager.AngryMaster
+            .GetAll(angry => messageContent.Contains(angry.Key.ToLower()))
+            .Any();
+
+        if (hasMatch)
+        {
+            DiscordManager.ExecuteAsync<AngryPresenter>(userMessage).Run();
+            return true;
+        }
+
+        return false;
     }
 
     private static bool TryExecuteMarugame(SocketUserMessage userMessage)
