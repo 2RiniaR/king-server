@@ -82,11 +82,16 @@ public class MessageLinkPresenter : DiscordMessagePresenterBase
 
     private Embed CreateMessageEmbed(IMessage message, ITextChannel channel, IGuild guild)
     {
+        // サーバープロフィールを取得
+        var guildUser = message.Author as IGuildUser;
+        var displayName = guildUser?.DisplayName ?? message.Author.Username;
+        var avatarUrl = guildUser?.GetGuildAvatarUrl() ?? message.Author.GetAvatarUrl() ?? message.Author.GetDefaultAvatarUrl();
+        
         var embedBuilder = new EmbedBuilder()
             .WithColor(new Color(0x7289da)) // Discord風の青色
             .WithAuthor(
-                name: message.Author.Username,
-                iconUrl: message.Author.GetAvatarUrl() ?? message.Author.GetDefaultAvatarUrl()
+                name: displayName,
+                iconUrl: avatarUrl
             )
             .WithDescription(string.IsNullOrWhiteSpace(message.Content) 
                 ? "*（メッセージ内容なし）*" 
