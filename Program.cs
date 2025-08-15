@@ -84,11 +84,19 @@ public static class Program
         // botは弾く
         if (message is not SocketUserMessage userMessage || userMessage.Author.IsBot) return;
 
+        // チャンネルがutil_onlyの場合、MessageLink以外の機能を無効化
+        var channelId = userMessage.Channel.Id.ToString();
+        var channel = MasterManager.ChannelMaster.Find(channelId);
+        var isUtilOnlyChannel = channel?.IsUtilOnly ?? false;
+
         // メッセージリンクが含まれている場合の処理
         if (userMessage.Content.Contains("discord.com/channels/") || userMessage.Content.Contains("discordapp.com/channels/"))
         {
             DiscordManager.ExecuteAsync<MessageLinkPresenter>(userMessage).Run();
         }
+
+        // util_onlyチャンネルの場合、これ以降の処理をスキップ
+        if (isUtilOnlyChannel) return;
 
         if (userMessage.MentionedUsers.Any(x => x.Id == DiscordManager.Client.CurrentUser.Id))
         {

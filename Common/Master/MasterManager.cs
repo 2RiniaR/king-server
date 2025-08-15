@@ -12,6 +12,9 @@ public class MasterManager : Singleton<MasterManager>
     [MasterTable("angry")] private AngryMaster _angryMaster;
     public static AngryMaster AngryMaster => Instance._angryMaster;
 
+    [MasterTable("channel")] private ChannelMaster _channelMaster;
+    public static ChannelMaster ChannelMaster => Instance._channelMaster;
+
     [MasterTable("random_message")] private RandomMessageMaster _randomMessageMaster;
     public static RandomMessageMaster RandomMessageMaster => Instance._randomMessageMaster;
 
