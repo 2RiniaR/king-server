@@ -84,7 +84,7 @@ public static class Program
         // botは弾く
         if (message is not SocketUserMessage userMessage || userMessage.Author.IsBot) return;
 
-        // チャンネルがutil_onlyの場合、MessageLink以外の機能を無効化
+        // チャンネルがutil_onlyの場合の判定
         var channelId = userMessage.Channel.Id.ToString();
         var channel = MasterManager.ChannelMaster.Find(channelId);
         var isUtilOnlyChannel = channel?.IsUtilOnly ?? false;
@@ -94,9 +94,6 @@ public static class Program
         {
             DiscordManager.ExecuteAsync<MessageLinkPresenter>(userMessage).Run();
         }
-
-        // util_onlyチャンネルの場合、これ以降の処理をスキップ
-        if (isUtilOnlyChannel) return;
 
         if (userMessage.MentionedUsers.Any(x => x.Id == DiscordManager.Client.CurrentUser.Id))
         {
@@ -158,6 +155,9 @@ public static class Program
             DiscordManager.ExecuteAsync<GachaInteractReplyPresenter>(userMessage).Run();
             return;
         }
+
+        // util_onlyチャンネルの場合、メンションなしの機能をスキップ
+        if (isUtilOnlyChannel) return;
 
         // 発言（Angry機能）
         if (TryExecuteAngry(userMessage))
