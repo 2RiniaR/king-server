@@ -147,6 +147,13 @@ public static class Program
                 return;
             }
 
+            if (IsContainsTriggerPhrase(userMessage.Content, TriggerType.MasterShortcut))
+            {
+                // マスターデータのURL表示
+                DiscordManager.ExecuteAsync<MasterShortcutPresenter>(userMessage).Run();
+                return;
+            }
+
             // 返信
             DiscordManager.ExecuteAsync<GachaInteractReplyPresenter>(userMessage).Run();
             return;

@@ -154,6 +154,10 @@ public class SettingMaster : MasterTable<string, Setting>
     /// 汎用的な怒り表現のフォーマット
     /// </summary>
     public string CommonAngryFormat => GetString(nameof(CommonAngryFormat));
+    /// <summary>
+    /// マスターデータのスプレッドシートURL
+    /// </summary>
+    public string MasterDataUrl => GetString(nameof(MasterDataUrl));
 }
 
 [SuppressMessage("ReSharper", "UnassignedGetOnlyAutoProperty")]

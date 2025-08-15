@@ -15,6 +15,7 @@ public enum TriggerType
     GachaRanking,
     SlotExecute,
     SlotRanking,
+    MasterShortcut,
 }
 
 /// <summary>
