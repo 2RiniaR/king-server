@@ -1,48 +1,23 @@
-﻿using Discord;
-using Discord.WebSocket;
+﻿using Approvers.King.Common.Instances;
 
 namespace Approvers.King.Common;
 
 public class DiscordManager : Singleton<DiscordManager>
 {
-    private readonly DiscordSocketClient _client = new(new DiscordSocketConfig
-    {
-        GatewayIntents = GatewayIntents.MessageContent | GatewayIntents.Guilds | GatewayIntents.GuildMessages,
-    });
+    private IssoBotInstance _issoBot = null!;
+    public static IssoBotInstance IssoBot => Instance._issoBot;
 
-    public static DiscordSocketClient Client => Instance._client;
+    private EyesBotInstance _eyesBot = null!;
+    public static EyesBotInstance EyesBot => Instance._eyesBot;
 
     public static async Task InitializeAsync()
     {
-        Client.Log += OnLog;
-        await Client.LoginAsync(TokenType.Bot, EnvironmentManager.DiscordSecret);
-        await Client.StartAsync();
-        await TaskUtility.WaitAsync(h => Client.Ready += h, h => Client.Ready -= h);
-    }
+        Instance._issoBot = new IssoBotInstance();
+        Instance._eyesBot = new EyesBotInstance();
 
-    private static Task OnLog(LogMessage content)
-    {
-        Console.WriteLine(content.ToString());
-        return Task.CompletedTask;
-    }
-
-    public static SocketGuildUser GetClientUser()
-    {
-        var guild = Client.GetGuild(EnvironmentManager.DiscordTargetGuildId);
-        return guild.CurrentUser;
-    }
-
-    public static SocketTextChannel GetMainChannel()
-    {
-        var guild = Client.GetGuild(EnvironmentManager.DiscordTargetGuildId);
-        return guild.GetTextChannel(EnvironmentManager.DiscordMainChannelId);
-    }
-
-    public static async Task ExecuteAsync<T>(SocketUserMessage message, Func<T, Task>? onInitializeAsync = null)
-        where T : DiscordMessagePresenterBase, new()
-    {
-        var presenter = new T { Message = message };
-        if (onInitializeAsync != null) await onInitializeAsync.Invoke(presenter);
-        await presenter.RunAsync();
+        await Task.WhenAll(
+            Instance._issoBot.InitializeAsync(),
+            Instance._eyesBot.InitializeAsync()
+        );
     }
 }

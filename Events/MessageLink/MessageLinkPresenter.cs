@@ -44,7 +44,7 @@ public class MessageLinkPresenter : DiscordMessagePresenterBase
             }
 
             // ギルドの取得
-            var guild = DiscordManager.Client.GetGuild(guildId);
+            var guild = DiscordManager.IssoBot.Client.GetGuild(guildId);
             if (guild == null)
             {
                 await originalMessage.ReplyAsync(embed: ErrorEmbed("参照先のサーバーにアクセスできません。"));

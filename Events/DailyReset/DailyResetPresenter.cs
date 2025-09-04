@@ -32,10 +32,10 @@ public class DailyResetPresenter : SchedulerJobPresenterBase
         await app.SaveChangesAsync();
 
         // 名前を更新する
-        await DiscordManager.GetClientUser().ModifyAsync(x => x.Nickname = $"{gacha.HitProbability.Rate:P0}の確率でわかってくれる創造主");
+        await DiscordManager.IssoBot.GetClientUser().ModifyAsync(x => x.Nickname = $"{gacha.HitProbability.Rate:P0}の確率でわかってくれる創造主");
 
         // 排出率を投稿する
-        await DiscordManager.GetMainChannel().SendMessageAsync(embed: GachaUtility.GetInfoEmbedBuilder(gacha).Build());
+        await DiscordManager.IssoBot.GetMainChannel().SendMessageAsync(embed: GachaUtility.GetInfoEmbedBuilder(gacha).Build());
 
         // 誕生日なら祝わせる
         var isBirthday = now.Month == MasterManager.SettingMaster.BirthdayMonth && now.Day == MasterManager.SettingMaster.BirthdayDay;
@@ -63,7 +63,7 @@ public class DailyResetPresenter : SchedulerJobPresenterBase
             sb.AppendLine($"- {MentionUtils.MentionUser(user.DiscordId)}");
         }
 
-        await DiscordManager.GetMainChannel().SendMessageAsync(sb.ToString());
+        await DiscordManager.IssoBot.GetMainChannel().SendMessageAsync(sb.ToString());
     }
 
     private async Task SendBirthdayMessageAsync()
@@ -77,6 +77,6 @@ public class DailyResetPresenter : SchedulerJobPresenterBase
                        """;
 
         // 誕生日を祝わせる
-        await DiscordManager.GetMainChannel().SendMessageAsync(message);
+        await DiscordManager.IssoBot.GetMainChannel().SendMessageAsync(message);
     }
 }

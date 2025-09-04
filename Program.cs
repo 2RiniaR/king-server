@@ -58,7 +58,7 @@ public static class Program
     /// </summary>
     private static void RegisterEvents()
     {
-        DiscordManager.Client.MessageReceived += message =>
+        DiscordManager.IssoBot.Client.MessageReceived += message =>
         {
             OnMessageReceived(message);
             return Task.CompletedTask;
@@ -92,15 +92,15 @@ public static class Program
         // メッセージリンクが含まれている場合の処理
         if (userMessage.Content.Contains("discord.com/channels/") || userMessage.Content.Contains("discordapp.com/channels/"))
         {
-            DiscordManager.ExecuteAsync<MessageLinkPresenter>(userMessage).Run();
+            DiscordManager.IssoBot.ExecuteAsync<MessageLinkPresenter>(userMessage).Run();
         }
 
-        if (userMessage.MentionedUsers.Any(x => x.Id == DiscordManager.Client.CurrentUser.Id))
+        if (userMessage.MentionedUsers.Any(x => x.Id == DiscordManager.IssoBot.Client.CurrentUser.Id))
         {
             if (message.Content.EndsWith("reload"))
             {
                 // マスタデータをリロード
-                DiscordManager.ExecuteAsync<AdminMasterReloadPresenter>(userMessage).Run();
+                DiscordManager.IssoBot.ExecuteAsync<AdminMasterReloadPresenter>(userMessage).Run();
                 return;
             }
 
@@ -112,47 +112,47 @@ public static class Program
             if (IsContainsTriggerPhrase(userMessage.Content, TriggerType.GachaRanking))
             {
                 // ガチャランキングの表示
-                DiscordManager.ExecuteAsync<GachaRankingPresenter>(userMessage).Run();
+                DiscordManager.IssoBot.ExecuteAsync<GachaRankingPresenter>(userMessage).Run();
                 return;
             }
 
             if (IsContainsTriggerPhrase(userMessage.Content, TriggerType.SlotRanking))
             {
                 // スロットランキングの表示
-                DiscordManager.ExecuteAsync<SlotRankingPresenter>(userMessage).Run();
+                DiscordManager.IssoBot.ExecuteAsync<SlotRankingPresenter>(userMessage).Run();
                 return;
             }
 
             if (IsContainsTriggerPhrase(userMessage.Content, TriggerType.GachaExecute))
             {
                 // 10連ガチャ
-                DiscordManager.ExecuteAsync<GachaCommandPresenter>(userMessage).Run();
+                DiscordManager.IssoBot.ExecuteAsync<GachaCommandPresenter>(userMessage).Run();
                 return;
             }
 
             if (IsContainsTriggerPhrase(userMessage.Content, TriggerType.GachaGet))
             {
                 // 排出率を投稿する
-                DiscordManager.ExecuteAsync<GachaInfoCommandPresenter>(userMessage).Run();
+                DiscordManager.IssoBot.ExecuteAsync<GachaInfoCommandPresenter>(userMessage).Run();
                 return;
             }
 
             if (IsContainsTriggerPhrase(userMessage.Content, TriggerType.SlotExecute))
             {
                 // スロットを回す
-                DiscordManager.ExecuteAsync<SlotExecutePresenter>(userMessage).Run();
+                DiscordManager.IssoBot.ExecuteAsync<SlotExecutePresenter>(userMessage).Run();
                 return;
             }
 
             if (IsContainsTriggerPhrase(userMessage.Content, TriggerType.MasterShortcut))
             {
                 // マスターデータのURL表示
-                DiscordManager.ExecuteAsync<MasterShortcutPresenter>(userMessage).Run();
+                DiscordManager.IssoBot.ExecuteAsync<MasterShortcutPresenter>(userMessage).Run();
                 return;
             }
 
             // 返信
-            DiscordManager.ExecuteAsync<GachaInteractReplyPresenter>(userMessage).Run();
+            DiscordManager.IssoBot.ExecuteAsync<GachaInteractReplyPresenter>(userMessage).Run();
             return;
         }
 
@@ -164,15 +164,15 @@ public static class Program
         {
             return;
         }
-        
+
         // 発言
-        DiscordManager.ExecuteAsync<GachaRareReplyPresenter>(userMessage).Run();
+        DiscordManager.IssoBot.ExecuteAsync<GachaRareReplyPresenter>(userMessage).Run();
     }
 
     private static bool TryExecuteAngry(SocketUserMessage userMessage)
     {
         var messageContent = userMessage.Content.ToLower();
-        
+
         // すべてのAngryエントリをチェックし、一致するものがあるかを確認
         var hasMatch = MasterManager.AngryMaster
             .GetAll(angry => messageContent.Contains(angry.Key.ToLower()))
@@ -180,7 +180,7 @@ public static class Program
 
         if (hasMatch)
         {
-            DiscordManager.ExecuteAsync<AngryPresenter>(userMessage).Run();
+            DiscordManager.IssoBot.ExecuteAsync<AngryPresenter>(userMessage).Run();
             return true;
         }
 
@@ -202,7 +202,7 @@ public static class Program
         if (contentIndex < 0) return false;
 
         // 丸亀製麺
-        DiscordManager.ExecuteAsync<MarugamePresenter>(userMessage, presenter =>
+        DiscordManager.IssoBot.ExecuteAsync<MarugamePresenter>(userMessage, presenter =>
         {
             presenter.Content = subs[(contentIndex + 1)..];
             return Task.CompletedTask;

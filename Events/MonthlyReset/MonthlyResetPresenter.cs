@@ -43,6 +43,6 @@ public class MonthlyResetPresenter : SchedulerJobPresenterBase
             .WithCurrentTimestamp()
             .Build();
 
-        await DiscordManager.GetMainChannel().SendMessageAsync(embed: embed);
+        await DiscordManager.IssoBot.GetMainChannel().SendMessageAsync(embed: embed);
     }
 }

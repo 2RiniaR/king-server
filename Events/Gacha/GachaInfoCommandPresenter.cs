@@ -13,7 +13,7 @@ public class GachaInfoCommandPresenter : DiscordMessagePresenterBase
         var gacha = await app.GetDefaultGachaAsync();
 
         // 排出率を投稿する
-        await DiscordManager.Client
+        await DiscordManager.IssoBot.Client
             .GetGuild(EnvironmentManager.DiscordTargetGuildId)
             .GetTextChannel(EnvironmentManager.DiscordMainChannelId)
             .SendMessageAsync(embed: GachaUtility.GetInfoEmbedBuilder(gacha).Build());
