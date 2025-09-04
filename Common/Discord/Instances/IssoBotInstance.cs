@@ -9,9 +9,9 @@ public class IssoBotInstance : DiscordBotInstanceBase
 {
     public IssoBotInstance() : base(new DiscordSocketConfig
     {
-        GatewayIntents = GatewayIntents.AllUnprivileged |
-                         GatewayIntents.MessageContent |
-                         GatewayIntents.GuildMembers
+        GatewayIntents = GatewayIntents.MessageContent |
+                         GatewayIntents.Guilds |
+                         GatewayIntents.GuildMessages
     })
     {
     }
