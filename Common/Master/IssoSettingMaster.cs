@@ -2,8 +2,37 @@
 
 namespace Approvers.King.Common;
 
-public class IssoSettingMaster : SettingMasterBase
+public class IssoSettingMaster : MasterTable<string, Setting>
 {
+    protected string GetString(string key)
+    {
+        var record = Find(key);
+        if (record == null)
+        {
+            LogManager.LogError("Setting not found: " + key);
+            return string.Empty;
+        }
+
+        return record.Value;
+    }
+
+    protected int GetInt(string key)
+    {
+        var value = GetString(key);
+        if (string.IsNullOrEmpty(value))
+        {
+            return 0;
+        }
+
+        if (int.TryParse(value, out var result) == false)
+        {
+            LogManager.LogError("Failed to parse setting: " + key);
+            return 0;
+        }
+
+        return result;
+    }
+    
     /// <summary>
     /// botの返信を遅延させる最大時間(ms)
     /// </summary>
