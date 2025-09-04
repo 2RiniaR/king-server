@@ -1,5 +1,5 @@
-﻿using System.Timers;
-using Timer = System.Timers.Timer;
+﻿using Approvers.King.Events;
+using Approvers.King.Events.Isso;
 
 namespace Approvers.King.Common;
 
@@ -8,92 +8,17 @@ namespace Approvers.King.Common;
 /// </summary>
 public static class SchedulerManager
 {
-    private static readonly Timer Timer = new(TimeSpan.FromSeconds(1));
-    private static readonly List<SchedulerJobRunner> Runners = new();
+    private static readonly SchedulerTimer _timer = new();
 
     public static void Initialize()
     {
-        Timer.Elapsed += OnEverySecond;
-        Timer.Start();
+        _timer.Initialize();
     }
 
-    private static void OnEverySecond(object? sender, ElapsedEventArgs e)
+    public static void RegisterEvents()
     {
-        var now = TimeManager.GetNow();
-        foreach (var runner in Runners)
-        {
-            var condition = runner.Predicate != null && runner.Predicate(now);
-
-            if (runner.OnRiseOnly == false)
-            {
-                if (condition)
-                {
-                    runner.Run();
-                }
-            }
-            else
-            {
-                if (runner.PreviousCondition is false && condition)
-                {
-                    runner.Run();
-                }
-            }
-
-            runner.PreviousCondition = condition;
-        }
-    }
-
-    /// <summary>
-    /// 毎日のイベントを登録する
-    /// </summary>
-    public static void RegisterDaily<T>(TimeSpan time) where T : SchedulerJobPresenterBase, new()
-    {
-        Runners.Add(new SchedulerJobRunner<T>
-        {
-            Predicate = x => x.Hour == time.Hours &&
-                             x.Minute == time.Minutes &&
-                             x.Second == time.Seconds
-        });
-    }
-
-    /// <summary>
-    /// 毎月のイベントを登録する
-    /// </summary>
-    public static void RegisterMonthly<T>(int day, TimeSpan time) where T : SchedulerJobPresenterBase, new()
-    {
-        Runners.Add(new SchedulerJobRunner<T>
-        {
-            Predicate = x => x.Day == day &&
-                             x.Hour == time.Hours &&
-                             x.Minute == time.Minutes &&
-                             x.Second == time.Seconds
-        });
-    }
-
-    /// <summary>
-    /// 毎年のイベントを登録する
-    /// </summary>
-    public static void RegisterYearly<T>(DateTime datetime) where T : SchedulerJobPresenterBase, new()
-    {
-        Runners.Add(new SchedulerJobRunner<T>
-        {
-            Predicate = x => x.Month == datetime.Month &&
-                             x.Day == datetime.Day &&
-                             x.Hour == datetime.Hour &&
-                             x.Minute == datetime.Minute &&
-                             x.Second == datetime.Second
-        });
-    }
-
-    /// <summary>
-    /// 条件を満たしたタイミングで実行するイベントを登録する
-    /// </summary>
-    public static void RegisterOn<T>(Predicate<DateTime> predicate) where T : SchedulerJobPresenterBase, new()
-    {
-        Runners.Add(new SchedulerJobRunner<T>
-        {
-            Predicate = predicate,
-            OnRiseOnly = true
-        });
+        _timer.RegisterDaily<DailyResetPresenter>(TimeManager.DailyResetTime);
+        _timer.RegisterMonthly<MonthlyResetPresenter>(TimeManager.MonthlyResetDay, TimeManager.DailyResetTime);
+        _timer.RegisterOn<SlotConditionRefreshPresenter>(x => x.Minute is 0);
     }
 }

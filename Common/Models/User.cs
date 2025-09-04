@@ -31,7 +31,7 @@ public class User
     /// </summary>
     public GachaItem? RollGachaOnce(Gacha gacha)
     {
-        MonthlyGachaPurchasePrice += MasterManager.SettingMaster.PricePerGachaOnce;
+        MonthlyGachaPurchasePrice += MasterManager.IssoSettingMaster.PricePerGachaOnce;
         return gacha.RollOnce();
     }
 
@@ -40,7 +40,7 @@ public class User
     /// </summary>
     public GachaItem RollGachaOnceCertain(Gacha gacha)
     {
-        MonthlyGachaPurchasePrice += MasterManager.SettingMaster.PricePerGachaOnceCertain;
+        MonthlyGachaPurchasePrice += MasterManager.IssoSettingMaster.PricePerGachaOnceCertain;
         return gacha.RollOnceCertain();
     }
 
@@ -50,7 +50,7 @@ public class User
     public List<GachaItem?> RollGachaTenTimes(Gacha gacha)
     {
         const int pickCount = 10;
-        MonthlyGachaPurchasePrice += MasterManager.SettingMaster.PricePerGachaTenTimes;
+        MonthlyGachaPurchasePrice += MasterManager.IssoSettingMaster.PricePerGachaTenTimes;
         return Enumerable.Range(0, pickCount).Select(_ => gacha.RollOnce()).ToList();
     }
 
@@ -59,7 +59,7 @@ public class User
     /// </summary>
     public SlotExecuteResult ExecuteSlot(Slot slot)
     {
-        if (TodaySlotExecuteCount >= MasterManager.SettingMaster.UserSlotExecuteLimitPerDay)
+        if (TodaySlotExecuteCount >= MasterManager.IssoSettingMaster.UserSlotExecuteLimitPerDay)
         {
             throw new AppException("今日はもう回せないぞカス");
         }

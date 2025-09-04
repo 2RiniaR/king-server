@@ -19,9 +19,9 @@ public class GachaItem
         set => ProbabilityPermillage = value.Permillage;
     }
 
-    private RandomMessage? _randomMessage;
+    private IssoRandomMessage? _randomMessage;
 
-    public RandomMessage? RandomMessage => _randomMessage == null || _randomMessage.Id != RandomMessageId
-        ? _randomMessage = MasterManager.RandomMessageMaster.Find(RandomMessageId)
+    public IssoRandomMessage? RandomMessage => _randomMessage == null || _randomMessage.Id != RandomMessageId
+        ? _randomMessage = MasterManager.IssoRandomMessageMaster.Find(RandomMessageId)
         : _randomMessage;
 }

@@ -24,7 +24,10 @@ public abstract class PresenterBase
     /// <summary>
     /// アプリ内エラーが発生した時の処理
     /// </summary>
-    protected abstract Task SendAppError(AppException e);
+    protected virtual async Task SendAppError(AppException e)
+    {
+        await DiscordManager.IssoBot.GetMainChannel().SendMessageAsync(e.Message);
+    }
 
     /// <summary>
     /// メインで実行される処理

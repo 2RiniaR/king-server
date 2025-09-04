@@ -30,5 +30,10 @@
       <Content Include=".claude\settings.json" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Events\Common\" />
+      <Folder Include="Events\Isso\" />
+    </ItemGroup>
+
 
 </Project>

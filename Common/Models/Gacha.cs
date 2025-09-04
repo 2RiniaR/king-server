@@ -70,8 +70,8 @@ public class Gacha
     public void ShuffleRareReplyRate()
     {
         // 確率は step の単位で max まで変動（ただし0にはならない）
-        var step = MasterManager.SettingMaster.RareReplyProbabilityStep;
-        var max = MasterManager.SettingMaster.MaxRareReplyProbability;
+        var step = MasterManager.IssoSettingMaster.RareReplyProbabilityStep;
+        var max = MasterManager.IssoSettingMaster.MaxRareReplyProbability;
         var rates = Enumerable.Range(0, max.Permillage / step.Permillage).Select(i => step * (i + 1));
         HitProbability = RandomManager.PickRandom(rates);
     }
@@ -81,7 +81,7 @@ public class Gacha
     /// </summary>
     public void ShuffleMessageRates()
     {
-        var items = MasterManager.RandomMessageMaster
+        var items = MasterManager.IssoRandomMessageMaster
             .GetAll(x => x.Type == RandomMessageType.GeneralReply)
             .Select(randomMessage => GachaItems.FirstOrDefault(item => item.RandomMessageId == randomMessage.Id) ?? new GachaItem()
             {
