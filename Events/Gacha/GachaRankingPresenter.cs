@@ -16,7 +16,7 @@ public class GachaRankingPresenter : DiscordMessagePresenterBase
         var selfUser = await app.FindOrCreateUserAsync(Message.Author.Id);
         var users = await app.Users
             .OrderByDescending(user => user.MonthlyGachaPurchasePrice)
-            .Take(MasterManager.SettingMaster.PurchaseInfoRankingViewUserCount)
+            .Take(MasterManager.IssoSettingMaster.PurchaseInfoRankingViewUserCount)
             .ToListAsync();
 
         await SendReplyAsync(selfUser, users);

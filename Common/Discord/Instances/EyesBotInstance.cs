@@ -21,4 +21,8 @@ public class EyesBotInstance : DiscordBotInstanceBase
     {
         return EnvironmentManager.DiscordSecretEyes;
     }
+
+    public void RegisterEvents()
+    {
+    }
 }

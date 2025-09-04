@@ -1,40 +1,9 @@
-using System.Diagnostics.CodeAnalysis;
-
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
 namespace Approvers.King.Common;
 
-public class SettingMaster : MasterTable<string, Setting>
+public class IssoSettingMaster : SettingMasterBase
 {
-    private string GetString(string key)
-    {
-        var record = Find(key);
-        if (record == null)
-        {
-            LogManager.LogError("Setting not found: " + key);
-            return string.Empty;
-        }
-
-        return record.Value;
-    }
-
-    private int GetInt(string key)
-    {
-        var value = GetString(key);
-        if (string.IsNullOrEmpty(value))
-        {
-            return 0;
-        }
-
-        if (int.TryParse(value, out var result) == false)
-        {
-            LogManager.LogError("Failed to parse setting: " + key);
-            return 0;
-        }
-
-        return result;
-    }
-
     /// <summary>
     /// botの返信を遅延させる最大時間(ms)
     /// </summary>
@@ -149,23 +118,9 @@ public class SettingMaster : MasterTable<string, Setting>
     /// 汎用的な存在しないメッセージ
     /// </summary>
     public string CommonMissingMessage => GetString(nameof(CommonMissingMessage));
-    
+
     /// <summary>
     /// 汎用的な怒り表現のフォーマット
     /// </summary>
     public string CommonAngryFormat => GetString(nameof(CommonAngryFormat));
-    /// <summary>
-    /// マスターデータのスプレッドシートURL
-    /// </summary>
-    public string MasterDataUrl => GetString(nameof(MasterDataUrl));
-}
-
-[SuppressMessage("ReSharper", "UnassignedGetOnlyAutoProperty")]
-public class Setting : MasterRecord<string>
-{
-    [field: MasterStringValue("key")]
-    public override string Key { get; }
-
-    [field: MasterStringValue("value")]
-    public string Value { get; }
 }

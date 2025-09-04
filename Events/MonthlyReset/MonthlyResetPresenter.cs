@@ -17,12 +17,12 @@ public class MonthlyResetPresenter : SchedulerJobPresenterBase
 
         var purchaseRankingUsers = await app.Users
             .OrderByDescending(user => user.MonthlyGachaPurchasePrice)
-            .Take(MasterManager.SettingMaster.PurchaseInfoRankingViewUserCount)
+            .Take(MasterManager.IssoSettingMaster.PurchaseInfoRankingViewUserCount)
             .Select(x => x.DeepCopy())
             .ToListAsync();
         var slotRewardRankingUsers = await app.Users
             .OrderByDescending(user => user.MonthlySlotProfitPrice)
-            .Take(MasterManager.SettingMaster.PurchaseInfoRankingViewUserCount)
+            .Take(MasterManager.IssoSettingMaster.PurchaseInfoRankingViewUserCount)
             .Select(x => x.DeepCopy())
             .ToListAsync();
 

@@ -5,8 +5,8 @@ namespace Approvers.King.Common;
 
 public static class DiscordFormatUtility
 {
-    public static string Smile => MasterManager.SettingMaster.CommonSmileFormat;
-    public static string Missing => MasterManager.SettingMaster.CommonMissingMessage;
+    public static string Smile => MasterManager.IssoSettingMaster.CommonSmileFormat;
+    public static string Missing => MasterManager.IssoSettingMaster.CommonMissingMessage;
 
     public static string Repeat(this string value, int count, string separator = "")
     {

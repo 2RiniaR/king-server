@@ -21,15 +21,15 @@ public class Slot
         set => ConditionPermillage = value.Permillage;
     }
 
-    public int ExecutePrice => MasterManager.SettingMaster.PricePerSlotOnce;
+    public int ExecutePrice => MasterManager.IssoSettingMaster.PricePerSlotOnce;
 
     /// <summary>
     /// 調子を再抽選する
     /// </summary>
     public void ShuffleCondition()
     {
-        var max = MasterManager.SettingMaster.SlotMaxConditionOffset;
-        var min = MasterManager.SettingMaster.SlotMinConditionOffset;
+        var max = MasterManager.IssoSettingMaster.SlotMaxConditionOffset;
+        var min = MasterManager.IssoSettingMaster.SlotMinConditionOffset;
         Condition = RandomManager.GetRandomMultiplier(min, max);
     }
 
@@ -52,7 +52,7 @@ public class Slot
 
             // 一定確率で直前と同じ出目が出る
             // 確率はマスタデータの設定値に加え、調子により変動する
-            var repeatProbability = (reelItems[i - 1].RepeatProbability + Condition).Clamp(Multiplier.Zero, MasterManager.SettingMaster.SlotRepeatUpperBound);
+            var repeatProbability = (reelItems[i - 1].RepeatProbability + Condition).Clamp(Multiplier.Zero, MasterManager.IssoSettingMaster.SlotRepeatUpperBound);
             var isRepeat = RandomManager.IsHit(repeatProbability);
             if (isRepeat)
             {

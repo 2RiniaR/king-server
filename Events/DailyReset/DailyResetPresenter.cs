@@ -19,7 +19,7 @@ public class DailyResetPresenter : SchedulerJobPresenterBase
         await using var app = AppService.CreateSession();
 
         var slotMaxUsers = await app.Users
-            .Where(x => x.TodaySlotExecuteCount >= MasterManager.SettingMaster.UserSlotExecuteLimitPerDay)
+            .Where(x => x.TodaySlotExecuteCount >= MasterManager.IssoSettingMaster.UserSlotExecuteLimitPerDay)
             .Select(x => x.DeepCopy())
             .ToListAsync();
         await app.Users.ForEachAsync(user => user.ResetDailyState());
@@ -38,7 +38,7 @@ public class DailyResetPresenter : SchedulerJobPresenterBase
         await DiscordManager.IssoBot.GetMainChannel().SendMessageAsync(embed: GachaUtility.GetInfoEmbedBuilder(gacha).Build());
 
         // 誕生日なら祝わせる
-        var isBirthday = now.Month == MasterManager.SettingMaster.BirthdayMonth && now.Day == MasterManager.SettingMaster.BirthdayDay;
+        var isBirthday = now.Month == MasterManager.IssoSettingMaster.BirthdayMonth && now.Day == MasterManager.IssoSettingMaster.BirthdayDay;
         if (isBirthday)
         {
             await SendBirthdayMessageAsync();

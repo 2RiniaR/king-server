@@ -17,7 +17,7 @@ public class SlotRankingPresenter : DiscordMessagePresenterBase
         var users = await app.Users
             .Where(x => x.MonthlySlotProfitPrice != 0)
             .OrderByDescending(user => user.MonthlySlotProfitPrice)
-            .Take(MasterManager.SettingMaster.PurchaseInfoRankingViewUserCount)
+            .Take(MasterManager.IssoSettingMaster.PurchaseInfoRankingViewUserCount)
             .ToListAsync();
 
         await SendReplyAsync(selfUser, users);

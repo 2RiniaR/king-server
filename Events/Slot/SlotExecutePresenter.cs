@@ -51,11 +51,11 @@ public class SlotExecutePresenter : DiscordMessagePresenterBase
             }
             else
             {
-                sb.Append(MasterManager.SettingMaster.SlotReelRollingFormat);
+                sb.Append(MasterManager.IssoSettingMaster.SlotReelRollingFormat);
             }
         }
 
-        sb.Append(MasterManager.SettingMaster.SlotLeverFormat);
+        sb.Append(MasterManager.IssoSettingMaster.SlotLeverFormat);
 
         return sb.ToString();
     }

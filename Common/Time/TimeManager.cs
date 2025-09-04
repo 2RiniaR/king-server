@@ -2,8 +2,8 @@
 
 public class TimeManager : Singleton<TimeManager>
 {
-    public static TimeSpan DailyResetTime => TimeSpan.FromMilliseconds(MasterManager.SettingMaster.DailyResetTime);
-    public static int MonthlyResetDay => MasterManager.SettingMaster.MonthlyResetDay;
+    public static TimeSpan DailyResetTime => TimeSpan.FromMilliseconds(MasterManager.IssoSettingMaster.DailyResetTime);
+    public static int MonthlyResetDay => MasterManager.IssoSettingMaster.MonthlyResetDay;
 
     private DateTime? _debugBaseTime;
     private TimeSpan _debugTimeOffset;

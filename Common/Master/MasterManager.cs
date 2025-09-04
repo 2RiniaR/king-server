@@ -24,8 +24,14 @@ public class MasterManager : Singleton<MasterManager>
     [MasterTable("slot_item")] private SlotItemMaster _slotItemMaster;
     public static SlotItemMaster SlotItemMaster => Instance._slotItemMaster;
 
-    [field: MasterTable("setting")] private SettingMaster _settingMaster;
-    public static SettingMaster SettingMaster => Instance._settingMaster;
+    [field: MasterTable("common_setting")] private CommonSettingMaster _commonSettingMaster;
+    public static CommonSettingMaster CommonSettingMaster => Instance._commonSettingMaster;
+
+    [field: MasterTable("isso_setting")] private IssoSettingMaster _issoSettingMaster;
+    public static IssoSettingMaster IssoSettingMaster => Instance._issoSettingMaster;
+
+    [field: MasterTable("eyes_setting")] private EyesSettingMaster _eyesSettingMaster;
+    public static EyesSettingMaster EyesSettingMaster => Instance._eyesSettingMaster;
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value
 
