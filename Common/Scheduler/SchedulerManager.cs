@@ -1,4 +1,5 @@
 ﻿using Approvers.King.Events;
+using Approvers.King.Events.Isso;
 
 namespace Approvers.King.Common;
 

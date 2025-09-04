@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Approvers.King.Common;
 
-public class RandomMessageMaster : MasterTable<string, RandomMessage>;
+public class IssoRandomMessageMaster : MasterTable<string, IssoRandomMessage>;
 
 public enum RandomMessageType
 {
@@ -17,7 +17,7 @@ public enum RandomMessageType
 /// discordに送信するランダムなメッセージ
 /// </summary>
 [SuppressMessage("ReSharper", "UnassignedGetOnlyAutoProperty")]
-public class RandomMessage : MasterRecord<string>
+public class IssoRandomMessage : MasterRecord<string>
 {
     public override string Key => Id;
 

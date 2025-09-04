@@ -1,7 +1,7 @@
 using Approvers.King.Common;
 using Discord;
 
-namespace Approvers.King.Events;
+namespace Approvers.King.Events.Common;
 
 /// <summary>
 /// マスタデータのリセットを行うイベント

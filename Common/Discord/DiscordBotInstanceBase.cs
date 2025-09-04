@@ -42,10 +42,18 @@ public abstract class DiscordBotInstanceBase
         return guild.GetTextChannel(EnvironmentManager.DiscordMainChannelId);
     }
 
-    public async Task ExecuteAsync<T>(SocketUserMessage message, Func<T, Task>? onInitializeAsync = null)
+    public async Task ExecuteMessageEventAsync<T>(SocketUserMessage message, Func<T, Task>? onInitializeAsync = null)
         where T : DiscordMessagePresenterBase, new()
     {
         var presenter = new T { Message = message };
+        if (onInitializeAsync != null) await onInitializeAsync.Invoke(presenter);
+        await presenter.RunAsync();
+    }
+
+    public async Task ExecuteTypingEventAsync<T>(SocketUser user, ISocketMessageChannel channel, Func<T, Task>? onInitializeAsync = null)
+        where T : DiscordTypingPresenterBase, new()
+    {
+        var presenter = new T { User = user, Channel = channel };
         if (onInitializeAsync != null) await onInitializeAsync.Invoke(presenter);
         await presenter.RunAsync();
     }

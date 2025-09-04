@@ -1,7 +1,7 @@
 using Approvers.King.Common;
 using Discord;
 
-namespace Approvers.King.Events;
+namespace Approvers.King.Events.Isso;
 
 public class AngryPresenter : DiscordMessagePresenterBase
 {
@@ -11,7 +11,7 @@ public class AngryPresenter : DiscordMessagePresenterBase
 
         // すべてのAngryエントリをチェックし、最もorderが高いものを適用
         // (Program.csで既に一致チェック済みのため、ここではFirstOrDefaultで取得)
-        var matchedAngry = MasterManager.AngryMaster
+        var matchedAngry = MasterManager.IssoAngryMaster
             .GetAll(angry => messageContent.Contains(angry.Key.ToLower()))
             .OrderByDescending(angry => angry.Order)
             .First();

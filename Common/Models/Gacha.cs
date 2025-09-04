@@ -81,7 +81,7 @@ public class Gacha
     /// </summary>
     public void ShuffleMessageRates()
     {
-        var items = MasterManager.RandomMessageMaster
+        var items = MasterManager.IssoRandomMessageMaster
             .GetAll(x => x.Type == RandomMessageType.GeneralReply)
             .Select(randomMessage => GachaItems.FirstOrDefault(item => item.RandomMessageId == randomMessage.Id) ?? new GachaItem()
             {

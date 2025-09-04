@@ -3,7 +3,7 @@ using Approvers.King.Common;
 using Discord;
 using Discord.WebSocket;
 
-namespace Approvers.King.Events;
+namespace Approvers.King.Events.Isso;
 
 public class MessageLinkPresenter : DiscordMessagePresenterBase
 {

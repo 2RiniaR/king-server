@@ -2,7 +2,7 @@
 using Approvers.King.Common;
 using Discord;
 
-namespace Approvers.King.Events;
+namespace Approvers.King.Events.Isso;
 
 /// <summary>
 /// 丸亀構文を出力するイベント

@@ -3,12 +3,12 @@ using System.Diagnostics.CodeAnalysis;
 namespace Approvers.King.Common;
 
 [MasterTable("angry")]
-public class AngryMaster : MasterTable<string, Angry>
+public class IssoAngryMaster : MasterTable<string, IssoAngry>
 {
 }
 
 [SuppressMessage("ReSharper", "UnassignedGetOnlyAutoProperty")]
-public class Angry : MasterRecord<string>
+public class IssoAngry : MasterRecord<string>
 {
     [field: MasterStringValue("target")]
     public override string Key { get; }

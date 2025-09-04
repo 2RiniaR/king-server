@@ -4,13 +4,13 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Approvers.King.Common;
 
-public class SlotItemMaster : MasterTable<string, SlotItem>;
+public class IssoSlotItemMaster : MasterTable<string, IssoSlotItem>;
 
 /// <summary>
 /// スロットの出目
 /// </summary>
 [SuppressMessage("ReSharper", "UnassignedGetOnlyAutoProperty")]
-public class SlotItem : MasterRecord<string>
+public class IssoSlotItem : MasterRecord<string>
 {
     public override string Key => Id;
 

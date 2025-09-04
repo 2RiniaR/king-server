@@ -23,4 +23,9 @@ public class EyesSettingMaster : SettingMasterBase
     /// 反応までの最大の遅延時間（秒）
     /// </summary>
     public int MaxStandByTime => GetInt(nameof(MaxStandByTime));
+
+    /// <summary>
+    /// 反応メッセージ
+    /// </summary>
+    public string MessageContent => GetString(nameof(MessageContent));
 }

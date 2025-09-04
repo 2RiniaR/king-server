@@ -9,20 +9,20 @@ public class MasterManager : Singleton<MasterManager>
 {
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value
-    [MasterTable("angry")] private AngryMaster _angryMaster;
-    public static AngryMaster AngryMaster => Instance._angryMaster;
+    [MasterTable("isso_angry")] private IssoAngryMaster _issoAngryMaster;
+    public static IssoAngryMaster IssoAngryMaster => Instance._issoAngryMaster;
 
     [MasterTable("channel")] private ChannelMaster _channelMaster;
     public static ChannelMaster ChannelMaster => Instance._channelMaster;
 
-    [MasterTable("random_message")] private RandomMessageMaster _randomMessageMaster;
-    public static RandomMessageMaster RandomMessageMaster => Instance._randomMessageMaster;
+    [MasterTable("isso_random_message")] private IssoRandomMessageMaster _issoRandomMessageMaster;
+    public static IssoRandomMessageMaster IssoRandomMessageMaster => Instance._issoRandomMessageMaster;
 
-    [MasterTable("trigger_phrase")] private TriggerPhraseMaster _triggerPhraseMaster;
-    public static TriggerPhraseMaster TriggerPhraseMaster => Instance._triggerPhraseMaster;
+    [MasterTable("isso_trigger_phrase")] private IssoTriggerPhraseMaster _issoTriggerPhraseMaster;
+    public static IssoTriggerPhraseMaster IssoTriggerPhraseMaster => Instance._issoTriggerPhraseMaster;
 
-    [MasterTable("slot_item")] private SlotItemMaster _slotItemMaster;
-    public static SlotItemMaster SlotItemMaster => Instance._slotItemMaster;
+    [MasterTable("isso_slot_item")] private IssoSlotItemMaster _issoSlotItemMaster;
+    public static IssoSlotItemMaster IssoSlotItemMaster => Instance._issoSlotItemMaster;
 
     [field: MasterTable("common_setting")] private CommonSettingMaster _commonSettingMaster;
     public static CommonSettingMaster CommonSettingMaster => Instance._commonSettingMaster;

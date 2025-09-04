@@ -1,6 +1,6 @@
 using Approvers.King.Common;
 
-namespace Approvers.King.Events;
+namespace Approvers.King.Events.Isso;
 
 /// <summary>
 /// スロットの調子を再抽選するイベント

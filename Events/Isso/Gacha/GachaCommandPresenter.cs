@@ -2,7 +2,7 @@
 using Approvers.King.Common;
 using Discord;
 
-namespace Approvers.King.Events;
+namespace Approvers.King.Events.Isso;
 
 using F = DiscordFormatUtility;
 
@@ -38,7 +38,7 @@ public class GachaCommandPresenter : DiscordMessagePresenterBase
         if (results.All(x => x == null))
         {
             builder.AppendLine();
-            var messages = MasterManager.RandomMessageMaster.GetAll(x => x.Type == RandomMessageType.GachaFailed);
+            var messages = MasterManager.IssoRandomMessageMaster.GetAll(x => x.Type == RandomMessageType.GachaFailed);
             var failedMessage = RandomManager.PickRandom(messages).Content;
             builder.AppendLine(failedMessage.Custom("bi"));
         }

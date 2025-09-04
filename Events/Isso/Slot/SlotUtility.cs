@@ -2,7 +2,7 @@ using System.Text;
 using Approvers.King.Common;
 using Discord;
 
-namespace Approvers.King.Events;
+namespace Approvers.King.Events.Isso;
 
 public static class SlotUtility
 {

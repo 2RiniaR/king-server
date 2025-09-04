@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Approvers.King.Common;
 
-public class TriggerPhraseMaster : MasterTable<string, TriggerPhrase>;
+public class IssoTriggerPhraseMaster : MasterTable<string, IssoTriggerPhrase>;
 
 public enum TriggerType
 {
@@ -22,7 +22,7 @@ public enum TriggerType
 /// discordのメッセージからイベントを発動する文言
 /// </summary>
 [SuppressMessage("ReSharper", "UnassignedGetOnlyAutoProperty")]
-public class TriggerPhrase : MasterRecord<string>
+public class IssoTriggerPhrase : MasterRecord<string>
 {
     public override string Key => Id;
 

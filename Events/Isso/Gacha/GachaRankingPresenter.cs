@@ -2,7 +2,7 @@ using Approvers.King.Common;
 using Discord;
 using Microsoft.EntityFrameworkCore;
 
-namespace Approvers.King.Events;
+namespace Approvers.King.Events.Isso;
 
 /// <summary>
 /// ガチャの課金額ランキングを表示するイベント

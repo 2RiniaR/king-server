@@ -38,10 +38,10 @@ public class Slot
     /// </summary>
     public SlotExecuteResult Execute()
     {
-        var items = MasterManager.SlotItemMaster.GetAll().ToList();
+        var items = MasterManager.IssoSlotItemMaster.GetAll().ToList();
         var itemCount = items.Count;
 
-        var reelItems = new SlotItem[ReelCount];
+        var reelItems = new IssoSlotItem[ReelCount];
         for (var i = 0; i < ReelCount; i++)
         {
             if (i == 0)
@@ -80,7 +80,7 @@ public class SlotExecuteResult
     /// <summary>
     /// 出目
     /// </summary>
-    public required SlotItem[] ReelItems { get; init; }
+    public required IssoSlotItem[] ReelItems { get; init; }
 
     /// <summary>
     /// 出目が揃ったかどうか
