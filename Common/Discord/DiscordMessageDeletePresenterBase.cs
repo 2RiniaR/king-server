@@ -3,7 +3,7 @@
 namespace Approvers.King.Common;
 
 /// <summary>
-/// discordのメッセージをトリガーとするイベント
+/// discordのメッセージ削除をトリガーとするイベント
 /// </summary>
 public abstract class DiscordMessageDeletePresenterBase : PresenterBase
 {
