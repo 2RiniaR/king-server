@@ -58,6 +58,7 @@ public static class Program
     {
         DiscordManager.IssoBot.RegisterEvents();
         DiscordManager.EyesBot.RegisterEvents();
+        DiscordManager.YouBot.RegisterEvents();
         SchedulerManager.RegisterEvents();
     }
 }
