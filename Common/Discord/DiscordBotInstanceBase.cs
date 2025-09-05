@@ -50,6 +50,14 @@ public abstract class DiscordBotInstanceBase
         await presenter.RunAsync();
     }
 
+    public async Task ExecuteMessageDeleteEventAsync<T>(IMessage message, IMessageChannel channel, Func<T, Task>? onInitializeAsync = null)
+        where T : DiscordMessageDeletePresenterBase, new()
+    {
+        var presenter = new T { Message = message, Channel = channel };
+        if (onInitializeAsync != null) await onInitializeAsync.Invoke(presenter);
+        await presenter.RunAsync();
+    }
+
     public async Task ExecuteTypingEventAsync<T>(SocketUser user, ISocketMessageChannel channel, Func<T, Task>? onInitializeAsync = null)
         where T : DiscordTypingPresenterBase, new()
     {
