@@ -79,6 +79,10 @@ public class LoxyBotInstance : DiscordBotInstanceBase
         if (!AllowedCharsPattern.IsMatch(content))
             return false;
 
+        // マスタの除外リストに含まれている場合は除外
+        if (MasterManager.LoxyIgnoreEnglishMaster.GetAll().Any(x => content.Contains(x.Value)))
+            return false;
+
         // 最低1つの英単語（2文字以上の英字の連続）が含まれていることを再確認
         return EnglishWordPattern.IsMatch(content);
     }
