@@ -23,6 +23,7 @@ public class LoxyBotInstance : DiscordBotInstanceBase
     private static readonly Regex EnglishLettersPattern = new(@"[a-zA-Z]{2,}", RegexOptions.Compiled);
     private static readonly Regex AllowedCharsPattern = new(@"^[a-zA-Z0-9\s\.\,\!\?\'\-\(\)\[\]\{\}\:\;""]+$", RegexOptions.Compiled);
     private static readonly Regex EnglishWordPattern = new(@"\b[a-zA-Z]{2,}\b", RegexOptions.Compiled);
+    private static readonly Regex CodePatternSyntax = new(@"[{}\[\];=<>_\+\-/\|:]", RegexOptions.Compiled);
 
     public override string DisplayName => "Loxy";
 
@@ -63,6 +64,10 @@ public class LoxyBotInstance : DiscordBotInstanceBase
 
         // 数字のみの文字列は除外
         if (NumberOnlyPattern.IsMatch(content))
+            return false;
+
+        // プログラミング言語の構文記号が含まれている（括弧、セミコロン、演算子など）
+        if (CodePatternSyntax.IsMatch(content))
             return false;
 
         // 2文字以上の連続した英字が含まれているかチェック
