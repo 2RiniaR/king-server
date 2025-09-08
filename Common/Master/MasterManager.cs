@@ -35,6 +35,9 @@ public class MasterManager : Singleton<MasterManager>
 
     [field: MasterTable("you_setting")] private YouSettingMaster _youSettingMaster;
     public static YouSettingMaster YouSettingMaster => Instance._youSettingMaster;
+
+    [field: MasterTable("loxy_setting")] private LoxySettingMaster _loxySettingMaster;
+    public static LoxySettingMaster LoxySettingMaster => Instance._loxySettingMaster;
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 #pragma warning restore CS0649 // Field is never assigned to, and will always have its default value
 
