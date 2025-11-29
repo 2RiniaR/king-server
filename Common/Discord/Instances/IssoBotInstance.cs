@@ -11,7 +11,8 @@ public class IssoBotInstance : DiscordBotInstanceBase
     {
         GatewayIntents = GatewayIntents.MessageContent |
                          GatewayIntents.Guilds |
-                         GatewayIntents.GuildMessages
+                         GatewayIntents.GuildMessages |
+                         GatewayIntents.GuildVoiceStates
     })
     {
     }
@@ -28,6 +29,12 @@ public class IssoBotInstance : DiscordBotInstanceBase
         Client.MessageReceived += message =>
         {
             OnMessageReceived(message);
+            return Task.CompletedTask;
+        };
+
+        Client.UserVoiceStateUpdated += (user, before, after) =>
+        {
+            OnUserVoiceStateUpdated(user, before, after);
             return Task.CompletedTask;
         };
     }
@@ -172,5 +179,16 @@ public class IssoBotInstance : DiscordBotInstanceBase
         }).Run();
 
         return true;
+    }
+
+
+    private void OnUserVoiceStateUpdated(SocketUser user, SocketVoiceState before, SocketVoiceState after)
+    {
+        new VoiceNotificationPresenter
+        {
+            User = user,
+            Before = before,
+            After = after
+        }.RunAsync().Run();
     }
 }

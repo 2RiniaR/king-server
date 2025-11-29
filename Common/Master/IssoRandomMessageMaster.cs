@@ -11,6 +11,8 @@ public enum RandomMessageType
     Unknown,
     GeneralReply,
     GachaFailed,
+    VoiceDiffJoin,
+    VoiceDiffLeave,
 }
 
 /// <summary>
