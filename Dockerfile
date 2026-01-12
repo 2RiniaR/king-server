@@ -5,6 +5,7 @@ RUN dotnet restore
 RUN dotnet publish -c Release -o out
 ENV PATH="$PATH:/root/.dotnet/tools"
 RUN dotnet tool install --global dotnet-ef --version 8.0.10
+ENV SqliteConnectionString="Data Source=dummy.db"
 RUN dotnet ef migrations bundle -o out/efbundle --self-contained -r linux-x64
 RUN chmod 755 out/efbundle
 
