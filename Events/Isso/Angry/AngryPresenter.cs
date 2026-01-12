@@ -38,24 +38,32 @@ public class AngryPresenter : DiscordMessagePresenterBase
 
     /// <summary>
     /// ミスリード抽選を行い、当たったエントリを返す（外れた場合はnull）
+    /// 全エントリのmislead_permillageを集計して一回で抽選する
     /// </summary>
     private static IssoAngry? TryMisleadLottery()
     {
-        var angryEntries = MasterManager.IssoAngryMaster
+        var candidates = MasterManager.IssoAngryMaster
             .GetAll()
-            .OrderByDescending(angry => angry.Order);
+            .Where(angry => angry.MisleadPermillage > 0)
+            .ToList();
 
-        foreach (var angry in angryEntries)
+        if (candidates.Count == 0) return null;
+
+        // 0-999の乱数を生成
+        var roll = RandomManager.GetRandomInt(1000);
+
+        // 各エントリの確率範囲をチェック
+        var threshold = 0;
+        foreach (var angry in candidates)
         {
-            if (angry.MisleadPermillage <= 0) continue;
-
-            var probability = Multiplier.FromPermillage(angry.MisleadPermillage);
-            if (RandomManager.IsHit(probability))
+            threshold += angry.MisleadPermillage;
+            if (roll < threshold)
             {
                 return angry;
             }
         }
 
+        // 外れ
         return null;
     }
 
