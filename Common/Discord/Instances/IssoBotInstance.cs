@@ -143,15 +143,38 @@ public class IssoBotInstance : DiscordBotInstanceBase
     {
         var messageContent = userMessage.Content.ToLower();
 
-        // すべてのAngryエントリをチェックし、一致するものがあるかを確認
+        // まず通常のマッチを確認（文字列が含まれているか）
         var hasMatch = MasterManager.IssoAngryMaster
             .GetAll(angry => messageContent.Contains(angry.Key.ToLower()))
             .Any();
 
         if (hasMatch)
         {
+            // 1つのメッセージに対して1つのみトリガー
             ExecuteMessageEventAsync<AngryPresenter>(userMessage).Run();
             return true;
+        }
+
+        // マッチしなかった場合、orderが大きい順にミスリード抽選を行う
+        var angryEntries = MasterManager.IssoAngryMaster
+            .GetAll()
+            .OrderByDescending(angry => angry.Order);
+
+        foreach (var angry in angryEntries)
+        {
+            if (angry.Permillage <= 0) continue;
+
+            var probability = Multiplier.FromPermillage(angry.Permillage);
+            if (RandomManager.IsHit(probability))
+            {
+                // 抽選に当たったらそのエントリでAngryPresenterを実行
+                ExecuteMessageEventAsync<AngryPresenter>(userMessage, presenter =>
+                {
+                    presenter.SpecifiedAngry = angry;
+                    return Task.CompletedTask;
+                }).Run();
+                return true;
+            }
         }
 
         return false;

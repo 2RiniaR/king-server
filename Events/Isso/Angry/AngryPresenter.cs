@@ -5,16 +5,29 @@ namespace Approvers.King.Events.Isso;
 
 public class AngryPresenter : DiscordMessagePresenterBase
 {
+    /// <summary>
+    /// 外部から指定されたAngryエントリ（ミスリード発動時に使用）
+    /// </summary>
+    public IssoAngry? SpecifiedAngry { get; set; }
+
     protected override async Task MainAsync()
     {
-        var messageContent = Message.Content.ToLower();
+        IssoAngry matchedAngry;
 
-        // すべてのAngryエントリをチェックし、最もorderが高いものを適用
-        // (Program.csで既に一致チェック済みのため、ここではFirstOrDefaultで取得)
-        var matchedAngry = MasterManager.IssoAngryMaster
-            .GetAll(angry => messageContent.Contains(angry.Key.ToLower()))
-            .OrderByDescending(angry => angry.Order)
-            .First();
+        if (SpecifiedAngry != null)
+        {
+            // 外部から指定されたエントリを使用（ミスリード発動時）
+            matchedAngry = SpecifiedAngry;
+        }
+        else
+        {
+            // メッセージ内容からマッチするエントリを探す（通常発動時）
+            var messageContent = Message.Content.ToLower();
+            matchedAngry = MasterManager.IssoAngryMaster
+                .GetAll(angry => messageContent.Contains(angry.Key.ToLower()))
+                .OrderByDescending(angry => angry.Order)
+                .First();
+        }
 
         var replyMessage = $"今 ***\"{matchedAngry.Word}\"*** って言ったか？{MasterManager.IssoSettingMaster.CommonAngryFormat}";
         await SendReplyAsync(replyMessage);
