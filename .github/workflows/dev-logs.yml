@@ -1,0 +1,29 @@
+name: Get Dev Logs
+
+on:
+  workflow_dispatch:
+    inputs:
+      lines:
+        description: 'Number of log lines to retrieve'
+        required: false
+        default: '100'
+
+jobs:
+  get-logs:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Get container status and logs
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USERNAME }}
+        key: ${{ secrets.VPS_SSH_KEY }}
+        port: ${{ secrets.VPS_PORT }}
+        script: |
+          cd ~/services/king-dev
+          echo "=== Container Status ==="
+          docker compose ps
+          echo ""
+          echo "=== Container Logs (last ${{ github.event.inputs.lines }} lines) ==="
+          docker compose logs --tail ${{ github.event.inputs.lines }}
