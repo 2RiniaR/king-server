@@ -60,3 +60,21 @@ jobs:
         script: |
           cd ~/services/king-dev
           make deploy
+
+    - name: Wait for container startup
+      run: sleep 10
+
+    - name: Get container logs
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USERNAME }}
+        key: ${{ secrets.VPS_SSH_KEY }}
+        port: ${{ secrets.VPS_PORT }}
+        script: |
+          cd ~/services/king-dev
+          echo "=== Container Status ==="
+          docker compose ps
+          echo ""
+          echo "=== Container Logs (last 100 lines) ==="
+          docker compose logs --tail 100
