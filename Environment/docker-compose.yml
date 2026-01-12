@@ -2,6 +2,6 @@
 
 services:
   app:
-    image: [ docker_user_id ]/king-server:latest
+    image: [ docker_user_id ]/king-server:prd
     environment:
       TZ: Asia/Tokyo
