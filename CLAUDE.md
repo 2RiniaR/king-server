@@ -18,6 +18,38 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `docker build . -t <docker_user_id>/king-server` - Build Docker image
 - `docker push <docker_user_id>/king-server` - Push Docker image to registry
 
+### Dev Environment Deployment (GitHub Actions)
+
+Dev環境へのデプロイとログ取得はGitHub Actions経由で行う。
+
+**デプロイ:**
+```bash
+gh workflow run deploy-dev.yml --ref <branch-name>
+```
+
+**ログ取得:**
+```bash
+gh workflow run dev-logs.yml --ref <branch-name>
+# 取得行数を指定する場合
+gh workflow run dev-logs.yml --ref <branch-name> -f lines=200
+```
+
+**実行結果の確認:**
+```bash
+# 最新の実行を監視
+gh run list --workflow=<workflow-name>.yml --limit 1
+gh run watch <run-id>
+
+# ログを表示
+gh run view <run-id> --log
+```
+
+Dev環境の設定:
+- VPS: `/home/rinia/services/king-dev`
+- Docker image tag: `ghcr.io/2riniar/king-server:dev`
+- Discord設定: `Environment/appsettings.json`
+- Google Sheet: dev用の別シート
+
 ## Architecture Overview
 
 This is a Discord bot application built with .NET 8 and Entity Framework Core that manages gacha (lottery) and slot game systems.
