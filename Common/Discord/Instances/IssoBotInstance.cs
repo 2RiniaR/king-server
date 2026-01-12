@@ -162,9 +162,9 @@ public class IssoBotInstance : DiscordBotInstanceBase
 
         foreach (var angry in angryEntries)
         {
-            if (angry.Permillage <= 0) continue;
+            if (angry.MisleadPermillage <= 0) continue;
 
-            var probability = Multiplier.FromPermillage(angry.Permillage);
+            var probability = Multiplier.FromPermillage(angry.MisleadPermillage);
             if (RandomManager.IsHit(probability))
             {
                 // 抽選に当たったらそのエントリでAngryPresenterを実行

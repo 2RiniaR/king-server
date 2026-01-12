@@ -24,6 +24,6 @@ public class IssoAngry : MasterRecord<string>
     /// <summary>
     /// ミスリード確率（千分率）：対象文字列が含まれていない時に発動する確率
     /// </summary>
-    [field: MasterIntValue("permillage")]
-    public int Permillage { get; }
+    [field: MasterIntValue("mislead_permillage")]
+    public int MisleadPermillage { get; }
 }
