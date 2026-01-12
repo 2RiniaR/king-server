@@ -5,36 +5,34 @@ namespace Approvers.King.Events.Isso;
 
 public class AngryPresenter : DiscordMessagePresenterBase
 {
-    /// <summary>
-    /// ミスリードモードで実行するかどうか（通常マッチがない場合にtrue）
-    /// </summary>
-    public bool IsMisleadMode { get; set; }
-
     protected override async Task MainAsync()
     {
-        IssoAngry? matchedAngry;
+        var messageContent = Message.Content.ToLower();
 
-        if (IsMisleadMode)
+        // まず通常のマッチを確認
+        var matchedAngry = MasterManager.IssoAngryMaster
+            .GetAll(angry => messageContent.Contains(angry.Key.ToLower()))
+            .OrderByDescending(angry => angry.Order)
+            .FirstOrDefault();
+
+        if (matchedAngry != null)
         {
-            // ミスリードモード: orderが大きい順に抽選を行う
-            matchedAngry = TryMisleadLottery();
-            if (matchedAngry == null)
-            {
-                // 抽選に外れた場合は何もしない
-                return;
-            }
-        }
-        else
-        {
-            // 通常モード: メッセージ内容からマッチするエントリを探す
-            var messageContent = Message.Content.ToLower();
-            matchedAngry = MasterManager.IssoAngryMaster
-                .GetAll(angry => messageContent.Contains(angry.Key.ToLower()))
-                .OrderByDescending(angry => angry.Order)
-                .First();
+            // 通常マッチがあればそのメッセージを返して終了
+            await SendAngryReplyAsync(matchedAngry);
+            return;
         }
 
-        var replyMessage = $"今 ***\"{matchedAngry.Word}\"*** って言ったか？{MasterManager.IssoSettingMaster.CommonAngryFormat}";
+        // 何も引っ掛からなかった場合、ミスリード抽選を行う
+        var misleadAngry = TryMisleadLottery();
+        if (misleadAngry != null)
+        {
+            await SendAngryReplyAsync(misleadAngry);
+        }
+    }
+
+    private async Task SendAngryReplyAsync(IssoAngry angry)
+    {
+        var replyMessage = $"今 ***\"{angry.Word}\"*** って言ったか？{MasterManager.IssoSettingMaster.CommonAngryFormat}";
         await SendReplyAsync(replyMessage);
     }
 

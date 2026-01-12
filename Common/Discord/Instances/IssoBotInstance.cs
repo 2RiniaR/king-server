@@ -129,49 +129,9 @@ public class IssoBotInstance : DiscordBotInstanceBase
         // util_onlyチャンネルの場合、メンションなしの機能をスキップ
         if (isUtilOnlyChannel) return;
 
-        // 発言（Angry機能）
-        if (TryExecuteAngry(userMessage))
-        {
-            return;
-        }
-
-        // 発言
-        ExecuteMessageEventAsync<GachaRareReplyPresenter>(userMessage).Run();
-    }
-
-    private bool TryExecuteAngry(SocketUserMessage userMessage)
-    {
-        var messageContent = userMessage.Content.ToLower();
-
-        // 通常のマッチを確認（文字列が含まれているか）
-        var hasMatch = MasterManager.IssoAngryMaster
-            .GetAll(angry => messageContent.Contains(angry.Key.ToLower()))
-            .Any();
-
-        if (hasMatch)
-        {
-            // 通常マッチがある場合は発動
-            ExecuteMessageEventAsync<AngryPresenter>(userMessage).Run();
-            return true;
-        }
-
-        // ミスリード候補があるかチェック
-        var hasMisleadCandidate = MasterManager.IssoAngryMaster
-            .GetAll()
-            .Any(angry => angry.MisleadPermillage > 0);
-
-        if (hasMisleadCandidate)
-        {
-            // ミスリードモードで実行（抽選はAngryPresenter内で行う）
-            ExecuteMessageEventAsync<AngryPresenter>(userMessage, presenter =>
-            {
-                presenter.IsMisleadMode = true;
-                return Task.CompletedTask;
-            }).Run();
-            return true;
-        }
-
-        return false;
+        // 全メッセージでAngryPresenterをトリガー
+        // （通常マッチ・ミスリード抽選の判定はAngryPresenter内で行う）
+        ExecuteMessageEventAsync<AngryPresenter>(userMessage).Run();
     }
 
     private bool TryExecuteMarugame(SocketUserMessage userMessage)
