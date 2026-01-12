@@ -2,7 +2,7 @@ name: Build and Deploy
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "claude/github-actions-deploy-LAlqs" ]
   workflow_dispatch:
 
 env:
