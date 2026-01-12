@@ -6,22 +6,27 @@ namespace Approvers.King.Events.Isso;
 public class AngryPresenter : DiscordMessagePresenterBase
 {
     /// <summary>
-    /// 外部から指定されたAngryエントリ（ミスリード発動時に使用）
+    /// ミスリードモードで実行するかどうか（通常マッチがない場合にtrue）
     /// </summary>
-    public IssoAngry? SpecifiedAngry { get; set; }
+    public bool IsMisleadMode { get; set; }
 
     protected override async Task MainAsync()
     {
-        IssoAngry matchedAngry;
+        IssoAngry? matchedAngry;
 
-        if (SpecifiedAngry != null)
+        if (IsMisleadMode)
         {
-            // 外部から指定されたエントリを使用（ミスリード発動時）
-            matchedAngry = SpecifiedAngry;
+            // ミスリードモード: orderが大きい順に抽選を行う
+            matchedAngry = TryMisleadLottery();
+            if (matchedAngry == null)
+            {
+                // 抽選に外れた場合は何もしない
+                return;
+            }
         }
         else
         {
-            // メッセージ内容からマッチするエントリを探す（通常発動時）
+            // 通常モード: メッセージ内容からマッチするエントリを探す
             var messageContent = Message.Content.ToLower();
             matchedAngry = MasterManager.IssoAngryMaster
                 .GetAll(angry => messageContent.Contains(angry.Key.ToLower()))
@@ -31,6 +36,29 @@ public class AngryPresenter : DiscordMessagePresenterBase
 
         var replyMessage = $"今 ***\"{matchedAngry.Word}\"*** って言ったか？{MasterManager.IssoSettingMaster.CommonAngryFormat}";
         await SendReplyAsync(replyMessage);
+    }
+
+    /// <summary>
+    /// ミスリード抽選を行い、当たったエントリを返す（外れた場合はnull）
+    /// </summary>
+    private static IssoAngry? TryMisleadLottery()
+    {
+        var angryEntries = MasterManager.IssoAngryMaster
+            .GetAll()
+            .OrderByDescending(angry => angry.Order);
+
+        foreach (var angry in angryEntries)
+        {
+            if (angry.MisleadPermillage <= 0) continue;
+
+            var probability = Multiplier.FromPermillage(angry.MisleadPermillage);
+            if (RandomManager.IsHit(probability))
+            {
+                return angry;
+            }
+        }
+
+        return null;
     }
 
     private async Task SendReplyAsync(string message)
