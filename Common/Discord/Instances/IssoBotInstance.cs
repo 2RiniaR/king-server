@@ -129,32 +129,9 @@ public class IssoBotInstance : DiscordBotInstanceBase
         // util_onlyチャンネルの場合、メンションなしの機能をスキップ
         if (isUtilOnlyChannel) return;
 
-        // 発言（Angry機能）
-        if (TryExecuteAngry(userMessage))
-        {
-            return;
-        }
-
-        // 発言
-        ExecuteMessageEventAsync<GachaRareReplyPresenter>(userMessage).Run();
-    }
-
-    private bool TryExecuteAngry(SocketUserMessage userMessage)
-    {
-        var messageContent = userMessage.Content.ToLower();
-
-        // すべてのAngryエントリをチェックし、一致するものがあるかを確認
-        var hasMatch = MasterManager.IssoAngryMaster
-            .GetAll(angry => messageContent.Contains(angry.Key.ToLower()))
-            .Any();
-
-        if (hasMatch)
-        {
-            ExecuteMessageEventAsync<AngryPresenter>(userMessage).Run();
-            return true;
-        }
-
-        return false;
+        // 全メッセージでAngryPresenterをトリガー
+        // （通常マッチ・ミスリード抽選の判定はAngryPresenter内で行う）
+        ExecuteMessageEventAsync<AngryPresenter>(userMessage).Run();
     }
 
     private bool TryExecuteMarugame(SocketUserMessage userMessage)
