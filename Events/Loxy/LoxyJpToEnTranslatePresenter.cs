@@ -4,7 +4,7 @@ using Discord;
 
 namespace Approvers.King.Events.Loxy;
 
-public class LoxyTranslatePresenter : DiscordMessagePresenterBase
+public class LoxyJpToEnTranslatePresenter : DiscordMessagePresenterBase
 {
     private static readonly HttpClient HttpClient = new()
     {
@@ -14,11 +14,9 @@ public class LoxyTranslatePresenter : DiscordMessagePresenterBase
     private const int MaxInputLength = 500;
     private static readonly TimeSpan CoolTime = TimeSpan.FromSeconds(3);
 
-    private static readonly System.Text.RegularExpressions.Regex JapaneseCharPattern =
-        new(@"[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF\u3400-\u4DBF]", System.Text.RegularExpressions.RegexOptions.Compiled);
-    // Discord装飾記号（***, **, *, ~~, __）を除去するパターン
-    private static readonly System.Text.RegularExpressions.Regex DiscordFormattingPattern =
-        new(@"\*{1,3}|~~|__", System.Text.RegularExpressions.RegexOptions.Compiled);
+    private static readonly System.Text.RegularExpressions.Regex EnglishCharPattern =
+        new(@"[a-zA-Z]{2,}", System.Text.RegularExpressions.RegexOptions.Compiled);
+
     private static readonly System.Text.RegularExpressions.Regex SpoilerPattern =
         new(@"\|\|.+?\|\|", System.Text.RegularExpressions.RegexOptions.Compiled | System.Text.RegularExpressions.RegexOptions.Singleline);
 
@@ -26,22 +24,18 @@ public class LoxyTranslatePresenter : DiscordMessagePresenterBase
     {
         // クールダウン中なら発動しない
         var now = TimeManager.GetNow();
-        var lastSend = AppCache.Instance.LoxyLastTranslateTime;
+        var lastSend = AppCache.Instance.LoxyLastJpToEnTranslateTime;
         if (lastSend.HasValue && now - lastSend < CoolTime)
         {
             return;
         }
 
-        AppCache.Instance.LoxyLastTranslateTime = now;
+        AppCache.Instance.LoxyLastJpToEnTranslateTime = now;
 
         string? translatedContent;
         try
         {
             var content = Message.Content;
-
-            // Discord装飾を除去
-            content = DiscordFormattingPattern.Replace(content, "");
-
             if (content.Length > MaxInputLength)
             {
                 content = content[..MaxInputLength];
@@ -60,7 +54,7 @@ public class LoxyTranslatePresenter : DiscordMessagePresenterBase
             return;
         }
 
-        await Message.ReplyAsync($"**{translatedContent}**");
+        await Message.ReplyAsync($"**{translatedContent.ToUpperInvariant()}**");
     }
 
     private async Task<string?> TranslateAsync(string content)
@@ -71,7 +65,7 @@ public class LoxyTranslatePresenter : DiscordMessagePresenterBase
         {
             return null;
         }
-        var url = $"https://api.mymemory.translated.net/get?q={Uri.EscapeDataString(sanitizedContent)}&langpair=en|ja";
+        var url = $"https://api.mymemory.translated.net/get?q={Uri.EscapeDataString(sanitizedContent)}&langpair=ja|en";
 
         try
         {
@@ -91,7 +85,7 @@ public class LoxyTranslatePresenter : DiscordMessagePresenterBase
                 responseData.TryGetProperty("translatedText", out var translatedText))
             {
                 var result = translatedText.GetString();
-                if (!string.IsNullOrEmpty(result) && IsJapanese(result))
+                if (!string.IsNullOrEmpty(result) && IsEnglish(result))
                 {
                     return result;
                 }
@@ -105,8 +99,8 @@ public class LoxyTranslatePresenter : DiscordMessagePresenterBase
         return null;
     }
 
-    private static bool IsJapanese(string content)
+    private static bool IsEnglish(string content)
     {
-        return JapaneseCharPattern.IsMatch(content);
+        return EnglishCharPattern.IsMatch(content);
     }
 }

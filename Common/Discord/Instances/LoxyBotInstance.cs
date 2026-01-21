@@ -78,14 +78,47 @@ public class LoxyBotInstance : DiscordBotInstanceBase
         return AllowedCharsPattern.IsMatch(content);
     }
 
+    /// <summary>
+    /// 日本語が含まれているかどうか（翻訳対象として）
+    /// </summary>
+    private static bool IsJapaneseForTranslation(string content)
+    {
+        // 空文字列は除外
+        if (string.IsNullOrWhiteSpace(content))
+            return false;
+
+        // URLパターンを除外（http://, https://, www.）
+        if (UrlPattern.IsMatch(content))
+            return false;
+
+        // Discordメンション、チャンネル参照、絵文字を除外
+        if (DiscordMentionPattern.IsMatch(content))
+            return false;
+
+        // 日本語文字（ひらがな、カタカナ、漢字）が含まれているかチェック
+        return JapanesePattern.IsMatch(content);
+    }
+
     private void OnMessageReceived(SocketMessage message)
     {
         // botは弾く
         if (message is not SocketUserMessage userMessage || userMessage.Author.IsBot) return;
 
+        // 英語→日本語翻訳（英語のみの場合）
         if (IsEnglish(message.Content))
         {
             ExecuteMessageEventAsync<LoxyTranslatePresenter>(userMessage).Run();
+            return;
+        }
+
+        // 日本語→英語翻訳（確率判定）
+        if (IsJapaneseForTranslation(message.Content))
+        {
+            var permillage = MasterManager.LoxySettingMaster.JpToEnTranslatePermillage;
+            if (permillage > 0 && RandomManager.IsHit(Multiplier.FromPermillage(permillage)))
+            {
+                ExecuteMessageEventAsync<LoxyJpToEnTranslatePresenter>(userMessage).Run();
+            }
         }
     }
 }
