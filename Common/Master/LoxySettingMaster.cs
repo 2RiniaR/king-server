@@ -37,4 +37,9 @@ public class LoxySettingMaster : MasterTable<string, Setting>
     /// 翻訳失敗時に送るメッセージ
     /// </summary>
     public string TranslateFailedMessage => GetString(nameof(TranslateFailedMessage));
+
+    /// <summary>
+    /// 日本語→英語翻訳の発動確率（0-100）
+    /// </summary>
+    public int JpToEnTranslateRate => GetInt(nameof(JpToEnTranslateRate));
 }
