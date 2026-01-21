@@ -22,7 +22,6 @@ public class LoxyBotInstance : DiscordBotInstanceBase
     private static readonly Regex NumberOnlyPattern = new(@"^\d+$", RegexOptions.Compiled);
     private static readonly Regex EnglishLettersPattern = new(@"[a-zA-Z]{2,}", RegexOptions.Compiled);
     private static readonly Regex AllowedCharsPattern = new(@"^[a-zA-Z0-9\s\.\,\!\?\'\-\*\~\(\)\[\]\{\}\:\;""]+$", RegexOptions.Compiled);
-    private static readonly Regex EnglishWordPattern = new(@"\b[a-zA-Z]{2,}\b", RegexOptions.Compiled);
     private static readonly Regex CodePatternSyntax = new(@"[{}\[\];=<>_\+/\|:]", RegexOptions.Compiled);
 
     public override string DisplayName => "Loxy";
@@ -76,11 +75,7 @@ public class LoxyBotInstance : DiscordBotInstanceBase
 
         // 英字・数字・基本的な記号・スペースのみで構成されているかチェック
         // （句読点、感嘆符、疑問符、カンマ、ピリオド、アポストロフィ、ハイフン等を許可）
-        if (!AllowedCharsPattern.IsMatch(content))
-            return false;
-
-        // 最低1つの英単語（2文字以上の英字の連続）が含まれていることを再確認
-        return EnglishWordPattern.IsMatch(content);
+        return AllowedCharsPattern.IsMatch(content);
     }
 
     private void OnMessageReceived(SocketMessage message)
