@@ -37,4 +37,9 @@ public class LoxySettingMaster : MasterTable<string, Setting>
     /// 翻訳失敗時に送るメッセージ
     /// </summary>
     public string TranslateFailedMessage => GetString(nameof(TranslateFailedMessage));
+
+    /// <summary>
+    /// 日本語→英語翻訳の発動確率（千分率: 0-1000、例: 100 = 10%）
+    /// </summary>
+    public int JpToEnTranslatePermillage => GetInt(nameof(JpToEnTranslatePermillage));
 }
