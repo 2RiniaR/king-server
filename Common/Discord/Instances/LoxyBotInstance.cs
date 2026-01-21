@@ -120,7 +120,7 @@ public class LoxyBotInstance : DiscordBotInstanceBase
         if (IsJapaneseForTranslation(message.Content))
         {
             var rate = MasterManager.LoxySettingMaster.JpToEnTranslateRate;
-            if (rate > 0 && RandomManager.IsHit(Multiplier.FromPercent(rate)))
+            if (rate > 0 && RandomManager.IsHit(Multiplier.FromPermillage(rate)))
             {
                 ExecuteMessageEventAsync<LoxyJpToEnTranslatePresenter>(userMessage).Run();
             }
