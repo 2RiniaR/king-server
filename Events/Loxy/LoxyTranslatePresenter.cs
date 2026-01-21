@@ -17,6 +17,10 @@ public class LoxyTranslatePresenter : DiscordMessagePresenterBase
     private static readonly System.Text.RegularExpressions.Regex JapaneseCharPattern =
         new(@"[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF\u3400-\u4DBF]", System.Text.RegularExpressions.RegexOptions.Compiled);
 
+    // Discord装飾記号（***, **, *, ~~, __, ||）を除去するパターン
+    private static readonly System.Text.RegularExpressions.Regex DiscordFormattingPattern =
+        new(@"\*{1,3}|~~|__|\|\|", System.Text.RegularExpressions.RegexOptions.Compiled);
+
     protected override async Task MainAsync()
     {
         // クールダウン中なら発動しない
@@ -33,6 +37,10 @@ public class LoxyTranslatePresenter : DiscordMessagePresenterBase
         try
         {
             var content = Message.Content;
+
+            // Discord装飾を除去
+            content = DiscordFormattingPattern.Replace(content, "");
+
             if (content.Length > MaxInputLength)
             {
                 content = content[..MaxInputLength];
