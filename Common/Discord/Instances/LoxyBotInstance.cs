@@ -119,8 +119,8 @@ public class LoxyBotInstance : DiscordBotInstanceBase
         // 日本語→英語翻訳（確率判定）
         if (IsJapaneseForTranslation(message.Content))
         {
-            var rate = MasterManager.LoxySettingMaster.JpToEnTranslateRate;
-            if (rate > 0 && RandomManager.IsHit(Multiplier.FromPermillage(rate)))
+            var permillage = MasterManager.LoxySettingMaster.JpToEnTranslatePermillage;
+            if (permillage > 0 && RandomManager.IsHit(Multiplier.FromPermillage(permillage)))
             {
                 ExecuteMessageEventAsync<LoxyJpToEnTranslatePresenter>(userMessage).Run();
             }

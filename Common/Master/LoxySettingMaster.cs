@@ -41,5 +41,5 @@ public class LoxySettingMaster : MasterTable<string, Setting>
     /// <summary>
     /// 日本語→英語翻訳の発動確率（千分率: 0-1000、例: 100 = 10%）
     /// </summary>
-    public int JpToEnTranslateRate => GetInt(nameof(JpToEnTranslateRate));
+    public int JpToEnTranslatePermillage => GetInt(nameof(JpToEnTranslatePermillage));
 }
