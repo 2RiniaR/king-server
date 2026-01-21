@@ -21,7 +21,7 @@ public class LoxyBotInstance : DiscordBotInstanceBase
     private static readonly Regex JapanesePattern = new(@"[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]", RegexOptions.Compiled);
     private static readonly Regex NumberOnlyPattern = new(@"^\d+$", RegexOptions.Compiled);
     private static readonly Regex EnglishLettersPattern = new(@"[a-zA-Z]{2,}", RegexOptions.Compiled);
-    private static readonly Regex AllowedCharsPattern = new(@"^[a-zA-Z0-9\s.,!?'*~_+/|=()\[\]{}:;""-]+$", RegexOptions.Compiled);
+    private static readonly Regex AllowedCharsPattern = new(@"^[a-zA-Z0-9\s\.,!\?'\*~_\+/\|=()\[\]\{\}:;""\-]+$", RegexOptions.Compiled);
     private static readonly Regex CodePatternSyntax = new(@"[{}\[\]<>]", RegexOptions.Compiled);
 
     public override string DisplayName => "Loxy";
