@@ -17,6 +17,9 @@ public class LoxyJpToEnTranslatePresenter : DiscordMessagePresenterBase
     private static readonly System.Text.RegularExpressions.Regex EnglishCharPattern =
         new(@"[a-zA-Z]{2,}", System.Text.RegularExpressions.RegexOptions.Compiled);
 
+    private static readonly System.Text.RegularExpressions.Regex SpoilerPattern =
+        new(@"\|\|.+?\|\|", System.Text.RegularExpressions.RegexOptions.Compiled | System.Text.RegularExpressions.RegexOptions.Singleline);
+
     protected override async Task MainAsync()
     {
         // クールダウン中なら発動しない
@@ -57,7 +60,11 @@ public class LoxyJpToEnTranslatePresenter : DiscordMessagePresenterBase
     private async Task<string?> TranslateAsync(string content)
     {
         // 入力のサニタイゼーション
-        var sanitizedContent = content.Replace("\n", " ").Trim();
+        var sanitizedContent = SpoilerPattern.Replace(content, "").Replace("\n", " ").Trim();
+        if (string.IsNullOrEmpty(sanitizedContent))
+        {
+            return null;
+        }
         var url = $"https://api.mymemory.translated.net/get?q={Uri.EscapeDataString(sanitizedContent)}&langpair=ja|en";
 
         try
