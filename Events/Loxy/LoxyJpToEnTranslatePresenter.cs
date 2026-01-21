@@ -51,7 +51,7 @@ public class LoxyJpToEnTranslatePresenter : DiscordMessagePresenterBase
             return;
         }
 
-        await Message.ReplyAsync($"**{translatedContent}**");
+        await Message.ReplyAsync($"**{translatedContent.ToUpperInvariant()}**");
     }
 
     private async Task<string?> TranslateAsync(string content)
