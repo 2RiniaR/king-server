@@ -88,8 +88,8 @@ public class LoxyBotInstance : DiscordBotInstanceBase
     /// </summary>
     private static bool IsJapaneseForTranslation(string content)
     {
-        // 空文字列や短すぎるメッセージは除外
-        if (string.IsNullOrWhiteSpace(content) || content.Length < 3)
+        // 空文字列は除外
+        if (string.IsNullOrWhiteSpace(content))
             return false;
 
         // URLパターンを除外（http://, https://, www.）
