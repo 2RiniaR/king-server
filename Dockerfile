@@ -11,5 +11,12 @@ RUN chmod 755 out/efbundle
 
 FROM --platform=linux/amd64 mcr.microsoft.com/dotnet/runtime:8.0 AS runtime
 WORKDIR /App
+
+# claude-cliのインストール
+RUN apt-get update && apt-get install -y curl && \
+    curl -fsSL https://claude.ai/install.sh | bash && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+ENV PATH="/root/.claude/local/bin:$PATH"
+
 COPY --from=build /App/out .
 ENTRYPOINT ["dotnet", "king-server.dll"]
