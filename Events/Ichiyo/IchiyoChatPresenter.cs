@@ -58,8 +58,9 @@ public class IchiyoChatPresenter : DiscordMessagePresenterBase
         var now = TimeManager.GetNow();
         var timeStr = now.ToString("yyyy/MM/dd HH:mm");
 
-        // 入力フォーマット
-        var formattedInput = $"[{timeStr} JST] [{userName}]: {userInput}";
+        // 入力をJSON形式で構造化（AIがフォーマットを模倣しないように）
+        var inputData = new { time = $"{timeStr} JST", user = userName, message = userInput };
+        var formattedInput = JsonSerializer.Serialize(inputData);
 
         // タイピング表示を開始
         using var typingState = Message.Channel.EnterTypingState();
