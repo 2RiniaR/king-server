@@ -189,7 +189,9 @@ public class IchiyoChatPresenter : DiscordMessagePresenterBase
             arguments.Add("--resume");
             arguments.Add(resumeSessionId);
         }
-        else if (!string.IsNullOrEmpty(systemPrompt))
+
+        // システムプロンプトは常に適用（--resumeでも上書きされるように）
+        if (!string.IsNullOrEmpty(systemPrompt))
         {
             arguments.Add("--system-prompt");
             arguments.Add(systemPrompt);
