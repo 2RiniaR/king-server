@@ -3,7 +3,6 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using Approvers.King.Common;
 using Discord;
-using Discord.WebSocket;
 
 namespace Approvers.King.Events.Ichiyo;
 
@@ -86,6 +85,7 @@ public class IchiyoChatPresenter : DiscordMessagePresenterBase
                 {
                     IchiyoSessionStore.Instance.InvalidateSession(Message.Reference.MessageId.Value);
                 }
+
                 return;
             }
 
@@ -179,7 +179,10 @@ public class IchiyoChatPresenter : DiscordMessagePresenterBase
         {
             "-p",
             "--output-format", "json",
-            "--model", "haiku"
+            "--model", "haiku",
+            "--tools", "\"\"",
+            "--disable-slash-commands",
+            "--verbose"
         };
 
         if (!string.IsNullOrEmpty(resumeSessionId))
@@ -187,7 +190,9 @@ public class IchiyoChatPresenter : DiscordMessagePresenterBase
             arguments.Add("--resume");
             arguments.Add(resumeSessionId);
         }
-        else if (!string.IsNullOrEmpty(systemPrompt))
+
+        // システムプロンプトは常に指定（セッション再開時も含む）
+        if (!string.IsNullOrEmpty(systemPrompt))
         {
             arguments.Add("--system-prompt");
             arguments.Add(systemPrompt);
@@ -208,6 +213,24 @@ public class IchiyoChatPresenter : DiscordMessagePresenterBase
         {
             startInfo.ArgumentList.Add(arg);
         }
+
+        // デバッグ: 引数をログ出力（system-promptの内容は省略）
+        var debugArgs = new List<string>();
+        for (var i = 0; i < arguments.Count; i++)
+        {
+            if (arguments[i] == "--system-prompt" && i + 1 < arguments.Count)
+            {
+                debugArgs.Add(arguments[i]);
+                debugArgs.Add("[SYSTEM_PROMPT]");
+                i++;
+            }
+            else
+            {
+                debugArgs.Add(arguments[i]);
+            }
+        }
+
+        LogManager.Log($"[Ichiyo] claude-cli args: {string.Join(" ", debugArgs)}");
 
         using var process = new Process { StartInfo = startInfo };
         var outputBuilder = new System.Text.StringBuilder();
@@ -252,9 +275,15 @@ public class IchiyoChatPresenter : DiscordMessagePresenterBase
         var output = outputBuilder.ToString().Trim();
         var errorOutput = errorBuilder.ToString().Trim();
 
+        // デバッグ: 出力をログ（長い場合は省略）
+        var debugOutput = output.Length > 500 ? output[..500] + "..." : output;
+        LogManager.Log($"[Ichiyo] claude-cli stdout: {debugOutput}");
+
+        // デバッグ: stderr（verbose出力を含む）をログ
         if (!string.IsNullOrEmpty(errorOutput))
         {
-            LogManager.LogError($"[Ichiyo] claude-cli stderr: {errorOutput}");
+            var debugStderr = errorOutput.Length > 1000 ? errorOutput[..1000] + "..." : errorOutput;
+            LogManager.Log($"[Ichiyo] claude-cli stderr (verbose): {debugStderr}");
         }
 
         if (string.IsNullOrEmpty(output))
@@ -273,53 +302,39 @@ public class IchiyoChatPresenter : DiscordMessagePresenterBase
     {
         try
         {
-            // claude-cliは複数行のJSONを出力する可能性があるので、最後の有効なJSONオブジェクトを探す
-            var lines = output.Split('\n', StringSplitOptions.RemoveEmptyEntries);
             string? sessionId = null;
             string? response = null;
             bool isContextLimit = false;
 
-            foreach (var line in lines)
+            // JSON配列形式の場合（[{...},{...}]）
+            var trimmedOutput = output.Trim();
+            if (trimmedOutput.StartsWith('['))
             {
-                var trimmedLine = line.Trim();
-                if (!trimmedLine.StartsWith('{'))
-                    continue;
-
-                try
+                var jsonArray = JsonDocument.Parse(trimmedOutput);
+                foreach (var element in jsonArray.RootElement.EnumerateArray())
                 {
-                    var json = JsonDocument.Parse(trimmedLine);
-                    var root = json.RootElement;
-
-                    // session_idを探す
-                    if (root.TryGetProperty("session_id", out var sessionIdElement))
-                    {
-                        sessionId = sessionIdElement.GetString();
-                    }
-
-                    // context limitのチェック
-                    if (root.TryGetProperty("is_error", out var isError) && isError.GetBoolean())
-                    {
-                        if (root.TryGetProperty("error", out var error))
-                        {
-                            var errorStr = error.GetString() ?? "";
-                            if (errorStr.Contains("context") && errorStr.Contains("limit"))
-                            {
-                                isContextLimit = true;
-                            }
-                        }
-                    }
-
-                    // resultを探す（文字列として）
-                    if (root.TryGetProperty("result", out var resultElement) &&
-                        resultElement.ValueKind == JsonValueKind.String)
-                    {
-                        response = resultElement.GetString();
-                    }
+                    ProcessJsonElement(element, ref sessionId, ref response, ref isContextLimit);
                 }
-                catch (JsonException)
+            }
+            else
+            {
+                // 複数行のJSONオブジェクト形式の場合
+                var lines = output.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+                foreach (var line in lines)
                 {
-                    // このラインはパースできなかった、次へ
-                    continue;
+                    var trimmedLine = line.Trim();
+                    if (!trimmedLine.StartsWith('{'))
+                        continue;
+
+                    try
+                    {
+                        var json = JsonDocument.Parse(trimmedLine);
+                        ProcessJsonElement(json.RootElement, ref sessionId, ref response, ref isContextLimit);
+                    }
+                    catch (JsonException)
+                    {
+                        continue;
+                    }
                 }
             }
 
@@ -358,6 +373,38 @@ public class IchiyoChatPresenter : DiscordMessagePresenterBase
         public string? SessionId { get; init; }
         public string? Response { get; init; }
         public bool IsContextLimit { get; init; }
+    }
+
+    /// <summary>
+    /// JSONエレメントを処理して結果を抽出する
+    /// </summary>
+    private static void ProcessJsonElement(JsonElement element, ref string? sessionId, ref string? response, ref bool isContextLimit)
+    {
+        // session_idを探す
+        if (element.TryGetProperty("session_id", out var sessionIdElement))
+        {
+            sessionId = sessionIdElement.GetString();
+        }
+
+        // context limitのチェック
+        if (element.TryGetProperty("is_error", out var isError) && isError.GetBoolean())
+        {
+            if (element.TryGetProperty("error", out var error))
+            {
+                var errorStr = error.GetString() ?? "";
+                if (errorStr.Contains("context") && errorStr.Contains("limit"))
+                {
+                    isContextLimit = true;
+                }
+            }
+        }
+
+        // resultを探す（文字列として）
+        if (element.TryGetProperty("result", out var resultElement) &&
+            resultElement.ValueKind == JsonValueKind.String)
+        {
+            response = resultElement.GetString();
+        }
     }
 
     /// <summary>
