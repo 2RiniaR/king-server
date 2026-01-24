@@ -181,8 +181,7 @@ public class IchiyoChatPresenter : DiscordMessagePresenterBase
             "--output-format", "json",
             "--model", "haiku",
             "--tools", "\"\"",
-            "--disable-slash-commands",
-            "--verbose"
+            "--disable-slash-commands"
         };
 
         if (!string.IsNullOrEmpty(resumeSessionId))
@@ -213,24 +212,6 @@ public class IchiyoChatPresenter : DiscordMessagePresenterBase
         {
             startInfo.ArgumentList.Add(arg);
         }
-
-        // デバッグ: 引数をログ出力（system-promptの内容は省略）
-        var debugArgs = new List<string>();
-        for (var i = 0; i < arguments.Count; i++)
-        {
-            if (arguments[i] == "--system-prompt" && i + 1 < arguments.Count)
-            {
-                debugArgs.Add(arguments[i]);
-                debugArgs.Add("[SYSTEM_PROMPT]");
-                i++;
-            }
-            else
-            {
-                debugArgs.Add(arguments[i]);
-            }
-        }
-
-        LogManager.Log($"[Ichiyo] claude-cli args: {string.Join(" ", debugArgs)}");
 
         using var process = new Process { StartInfo = startInfo };
         var outputBuilder = new System.Text.StringBuilder();
@@ -275,15 +256,9 @@ public class IchiyoChatPresenter : DiscordMessagePresenterBase
         var output = outputBuilder.ToString().Trim();
         var errorOutput = errorBuilder.ToString().Trim();
 
-        // デバッグ: 出力をログ（長い場合は省略）
-        var debugOutput = output.Length > 500 ? output[..500] + "..." : output;
-        LogManager.Log($"[Ichiyo] claude-cli stdout: {debugOutput}");
-
-        // デバッグ: stderr（verbose出力を含む）をログ
         if (!string.IsNullOrEmpty(errorOutput))
         {
-            var debugStderr = errorOutput.Length > 1000 ? errorOutput[..1000] + "..." : errorOutput;
-            LogManager.Log($"[Ichiyo] claude-cli stderr (verbose): {debugStderr}");
+            LogManager.LogError($"[Ichiyo] claude-cli stderr: {errorOutput}");
         }
 
         if (string.IsNullOrEmpty(output))
