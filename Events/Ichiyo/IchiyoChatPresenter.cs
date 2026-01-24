@@ -3,7 +3,6 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using Approvers.King.Common;
 using Discord;
-using Discord.WebSocket;
 
 namespace Approvers.King.Events.Ichiyo;
 
@@ -86,6 +85,7 @@ public class IchiyoChatPresenter : DiscordMessagePresenterBase
                 {
                     IchiyoSessionStore.Instance.InvalidateSession(Message.Reference.MessageId.Value);
                 }
+
                 return;
             }
 
@@ -179,7 +179,8 @@ public class IchiyoChatPresenter : DiscordMessagePresenterBase
         {
             "-p",
             "--output-format", "json",
-            "--model", "haiku"
+            "--model", "claude-3-haiku-20240307",
+            "--tools", ""
         };
 
         if (!string.IsNullOrEmpty(resumeSessionId))
