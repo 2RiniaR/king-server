@@ -60,6 +60,7 @@ public static class Program
         DiscordManager.EyesBot.RegisterEvents();
         DiscordManager.YouBot.RegisterEvents();
         DiscordManager.LoxyBot.RegisterEvents();
+        DiscordManager.IchiyoBot.RegisterEvents();
         SchedulerManager.RegisterEvents();
     }
 }
