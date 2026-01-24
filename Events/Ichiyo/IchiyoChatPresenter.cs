@@ -3,6 +3,7 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using Approvers.King.Common;
 using Discord;
+using Discord.WebSocket;
 
 namespace Approvers.King.Events.Ichiyo;
 
@@ -58,9 +59,8 @@ public class IchiyoChatPresenter : DiscordMessagePresenterBase
         var now = TimeManager.GetNow();
         var timeStr = now.ToString("yyyy/MM/dd HH:mm");
 
-        // 入力をJSON形式で構造化（AIがフォーマットを模倣しないように）
-        var inputData = new { time = $"{timeStr} JST", user = userName, message = userInput };
-        var formattedInput = JsonSerializer.Serialize(inputData);
+        // 入力フォーマット
+        var formattedInput = $"[{timeStr} JST] [{userName}]: {userInput}";
 
         // タイピング表示を開始
         using var typingState = Message.Channel.EnterTypingState();
@@ -86,7 +86,6 @@ public class IchiyoChatPresenter : DiscordMessagePresenterBase
                 {
                     IchiyoSessionStore.Instance.InvalidateSession(Message.Reference.MessageId.Value);
                 }
-
                 return;
             }
 
@@ -180,8 +179,7 @@ public class IchiyoChatPresenter : DiscordMessagePresenterBase
         {
             "-p",
             "--output-format", "json",
-            "--model", "claude-3-haiku-20240307",
-            "--tools", ""
+            "--model", "haiku"
         };
 
         if (!string.IsNullOrEmpty(resumeSessionId))
