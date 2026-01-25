@@ -198,6 +198,7 @@ public class IchiyoChatPresenter : DiscordMessagePresenterBase
         // モデル指定（未設定の場合はhaikuをデフォルトとする）
         const string DefaultModel = "haiku";
         var effectiveModel = string.IsNullOrEmpty(model) ? DefaultModel : model;
+        LogManager.Log($"[Ichiyo] Using model: {effectiveModel} (master: {model ?? "null"})");
 
         // コマンド引数を構築
         var arguments = new List<string>
