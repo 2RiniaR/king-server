@@ -33,6 +33,10 @@ public class IchiyoChatPresenter : DiscordMessagePresenterBase
         "initial prompt"
     ];
 
+    // 過剰な改行を検出するパターン（連続する2つ以上の改行）
+    private static readonly Regex ExcessiveLineBreaksPattern =
+        new(@"(\r?\n){2,}", RegexOptions.Compiled);
+
     /// <summary>
     /// セッションを継続する場合のセッションID（nullの場合は新規セッション）
     /// </summary>
@@ -180,8 +184,7 @@ public class IchiyoChatPresenter : DiscordMessagePresenterBase
     private static string ReduceExcessiveLineBreaks(string text)
     {
         // 連続する2つ以上の改行（空行）を1つの改行に置き換え
-        // \r\n と \n の両方に対応
-        var result = Regex.Replace(text, @"(\r?\n){2,}", "\n");
+        var result = ExcessiveLineBreaksPattern.Replace(text, "\n");
 
         // 先頭と末尾の空白を除去
         return result.Trim();
