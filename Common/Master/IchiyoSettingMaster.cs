@@ -57,4 +57,9 @@ public class IchiyoSettingMaster : MasterTable<string, Setting>
     /// context-window limitに達した時のメッセージ
     /// </summary>
     public string ContextLimitMessage => GetString(nameof(ContextLimitMessage));
+
+    /// <summary>
+    /// 使用するClaudeモデル名（haiku, sonnet, opus等）
+    /// </summary>
+    public string Model => GetString(nameof(Model));
 }
