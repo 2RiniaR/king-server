@@ -198,11 +198,10 @@ public class IchiyoChatPresenter : DiscordMessagePresenterBase
         // コマンド引数を構築
         var arguments = new List<string>
         {
+            "--tools", "WebFetch,WebSearch",
             "-p",
             "--output-format", "json",
             "--model", "haiku",
-            "--tools", "\"\"",
-            "--disable-slash-commands"
         };
 
         if (!string.IsNullOrEmpty(resumeSessionId))
