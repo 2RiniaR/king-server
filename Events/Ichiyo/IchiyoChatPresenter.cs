@@ -208,6 +208,7 @@ public class IchiyoChatPresenter : DiscordMessagePresenterBase
         {
             arguments.Add("--resume");
             arguments.Add(resumeSessionId);
+            arguments.Add("--fork-session");
         }
 
         // システムプロンプトは常に指定（セッション再開時も含む）

@@ -51,17 +51,10 @@ public class IchiyoBotInstance : DiscordBotInstanceBase
             var sessionId = IchiyoSessionStore.Instance.GetSessionId(referencedMessageId);
             if (sessionId == null)
             {
-                // セッションが消費済みの場合は無視（既に別のリプライが処理された）
-                if (IchiyoSessionStore.Instance.IsConsumed(referencedMessageId))
-                    return;
-
                 // セッションが見つからない場合は新規セッションとして処理
                 ExecuteMessageEventAsync<IchiyoChatPresenter>(userMessage).Run();
                 return;
             }
-
-            // セッションを消費済みにする（1メッセージにつき1回のみ返答可能）
-            IchiyoSessionStore.Instance.InvalidateSession(referencedMessageId);
 
             ExecuteMessageEventAsync<IchiyoChatPresenter>(userMessage, presenter =>
             {

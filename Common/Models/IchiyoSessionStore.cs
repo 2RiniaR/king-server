@@ -81,7 +81,7 @@ public class IchiyoSessionStore
     }
 
     /// <summary>
-    /// セッションが存在するか確認する（消費済みかどうかは問わない）
+    /// セッションが存在するか確認する
     /// </summary>
     public bool HasSession(ulong referencedMessageId)
     {
@@ -96,17 +96,6 @@ public class IchiyoSessionStore
         }
 
         return true;
-    }
-
-    /// <summary>
-    /// セッションが消費済みかどうか確認する
-    /// </summary>
-    public bool IsConsumed(ulong referencedMessageId)
-    {
-        if (!_sessions.TryGetValue(referencedMessageId, out var entry))
-            return false;
-
-        return !entry.IsActive;
     }
 
     /// <summary>
