@@ -198,6 +198,7 @@ public class IchiyoChatPresenter : DiscordMessagePresenterBase
         // コマンド引数を構築
         var arguments = new List<string>
         {
+            "--allowedTools", "WebFetch,WebSearch",
             "--tools", "WebFetch,WebSearch",
             "-p",
             "--output-format", "json",
