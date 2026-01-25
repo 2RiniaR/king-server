@@ -160,6 +160,9 @@ public class IchiyoChatPresenter : DiscordMessagePresenterBase
             }
         }
 
+        // 過剰な改行を削減（連続する空行を1つの改行に置き換え）
+        response = ReduceExcessiveLineBreaks(response);
+
         // Discordメッセージの長さ制限
         if (response.Length > 2000)
         {
@@ -167,6 +170,21 @@ public class IchiyoChatPresenter : DiscordMessagePresenterBase
         }
 
         return response;
+    }
+
+    /// <summary>
+    /// 過剰な改行を削減する
+    /// Claudeの出力は段落間に空行を入れる傾向があるため、
+    /// 連続する改行を1つに置き換えてDiscord上での視認性を向上させる
+    /// </summary>
+    private static string ReduceExcessiveLineBreaks(string text)
+    {
+        // 連続する2つ以上の改行（空行）を1つの改行に置き換え
+        // \r\n と \n の両方に対応
+        var result = Regex.Replace(text, @"(\r?\n){2,}", "\n");
+
+        // 先頭と末尾の空白を除去
+        return result.Trim();
     }
 
     /// <summary>
