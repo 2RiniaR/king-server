@@ -180,7 +180,7 @@ public class IchiyoChatPresenter : DiscordMessagePresenterBase
             "-p",
             "--output-format", "json",
             "--model", "haiku",
-            "--tools", "\"\"",
+            "--tools", "WebFetch,WebSearch",
             "--disable-slash-commands"
         };
 
