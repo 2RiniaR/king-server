@@ -62,10 +62,11 @@ jobs:
         username: ${{ secrets.VPS_USERNAME }}
         key: ${{ secrets.VPS_SSH_KEY }}
         port: ${{ secrets.VPS_PORT }}
-        envs: GITHUB_TOKEN
+        envs: GITHUB_TOKEN,GITHUB_ACTOR
         script: |
-          echo $GITHUB_TOKEN | docker login ghcr.io -u 2RiniaR --password-stdin
+          echo $GITHUB_TOKEN | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
           cd ~/services/king
           make deploy
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_ACTOR: ${{ github.actor }}
