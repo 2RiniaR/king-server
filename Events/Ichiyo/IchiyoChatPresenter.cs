@@ -70,7 +70,7 @@ public class IchiyoChatPresenter : DiscordMessagePresenterBase
 
         try
         {
-            var result = await ExecuteClaudeCliAsync(formattedInput, settings.SystemPrompt, ResumeSessionId);
+            var result = await ExecuteClaudeCliAsync(formattedInput, settings.SystemPrompt, settings.Model, ResumeSessionId);
 
             if (result == null)
             {
@@ -193,8 +193,13 @@ public class IchiyoChatPresenter : DiscordMessagePresenterBase
     /// <summary>
     /// claude-cliを実行してレスポンスを取得する
     /// </summary>
-    private async Task<ClaudeCliResult?> ExecuteClaudeCliAsync(string userInput, string systemPrompt, string? resumeSessionId)
+    private async Task<ClaudeCliResult?> ExecuteClaudeCliAsync(string userInput, string systemPrompt, string model, string? resumeSessionId)
     {
+        // モデル指定（未設定の場合はhaikuをデフォルトとする）
+        const string DefaultModel = "haiku";
+        var effectiveModel = string.IsNullOrEmpty(model) ? DefaultModel : model;
+        LogManager.Log($"[Ichiyo] Using model: {effectiveModel} (master: {model ?? "null"})");
+
         // コマンド引数を構築
         var arguments = new List<string>
         {
@@ -202,7 +207,7 @@ public class IchiyoChatPresenter : DiscordMessagePresenterBase
             "--tools", "WebFetch,WebSearch",
             "-p",
             "--output-format", "json",
-            "--model", "haiku",
+            "--model", effectiveModel,
         };
 
         if (!string.IsNullOrEmpty(resumeSessionId))
