@@ -6,9 +6,9 @@
 
 | 項目 | 内容 |
 | --- | --- |
-| 対象ロール | マスタ `genkai_setting` の `active_role_id` |
-| 付与条件 | 過去 `active_role_threshold_days` 日以内に、ギルド内のいずれかのチャンネルでメッセージを投稿した（bot 以外の）メンバー |
-| 剥奪条件 | 最終投稿日時から `active_role_threshold_days` 日が経過した / 投稿記録がない / bot である |
+| 対象ロール | マスタ `genkai_setting` の `ActiveRoleId` |
+| 付与条件 | 過去 `ActiveRoleThresholdDays` 日以内に、ギルド内のいずれかのチャンネルでメッセージを投稿した（bot 以外の）メンバー |
+| 剥奪条件 | 最終投稿日時から `ActiveRoleThresholdDays` 日が経過した / 投稿記録がない / bot である |
 | 更新頻度 | 5 分に 1 回の定期リコンサイル（＋ 投稿時の即時付与、後述） |
 | 起動時 | 各メンバーの最終投稿日時テーブルを構築し、ロール状態を一括更新する |
 | 制約 | Discord API コールは最小限。全メッセージ履歴の走査はしない |
@@ -52,15 +52,15 @@ Discord API には「メンバーの最終投稿日時」を取得する手段�
 
 | key | value の例 | 説明 |
 | --- | --- | --- |
-| `active_role_threshold_days` | `14` | 何日以内に投稿があればアクティブとするか |
-| `active_role_id` | `123456789012345678` | アクティブメンバー用ロールの ID |
+| `ActiveRoleThresholdDays` | `14` | 何日以内に投稿があればアクティブとするか |
+| `ActiveRoleId` | `123456789012345678` | アクティブメンバー用ロールの ID |
 
 **`Common/Master/GenkaiSettingMaster.cs`（新規）**
 - `MasterTable<string, Setting>` を継承する。`GetString` / `GetInt` / `GetULong` は既存の `EyesSettingMaster` などと同じパターンで実装する。
 - プロパティ
-  - `int ActiveRoleThresholdDays => GetInt("active_role_threshold_days")`
-  - `ulong ActiveRoleId => GetULong("active_role_id")`
-- 既存マスタはキーに `nameof(...)`（PascalCase）を使っているが、今回は指定どおり snake_case の文字列キーを使う。
+  - `int ActiveRoleThresholdDays => GetInt(nameof(ActiveRoleThresholdDays))`
+  - `ulong ActiveRoleId => GetULong(nameof(ActiveRoleId))`
+- キーは既存マスタと同じく `nameof(...)` によるアッパーキャメルケース（PascalCase）とする。
 
 **`Common/Master/MasterManager.cs`**
 - `[field: MasterTable("genkai_setting")] private GenkaiSettingMaster _genkaiSettingMaster;` と、その static アクセサを追加する。
@@ -169,7 +169,7 @@ public class GenkaiChannelCursor
 
 **補足・既知の制約**
 - アーカイブ済みスレッドは走査しない。閾値期間内に投稿があってアーカイブされたスレッドだけは取りこぼす可能性がある。ただし、アーカイブ済みスレッドの一覧取得はチャンネル数ぶんの追加コールになり、スレッドだけで発言するメンバーはまれなので、許容する。初回起動時だけの問題で、稼働中はイベントで拾える。必要なら初回起動時だけ `GetPublicArchivedThreadsAsync(before: cutoff)` を有効にするオプションを用意する。
-- `active_role_threshold_days` を後から **増やした** 場合、DB に記録のないメンバー（初回走査の期間より前にしか投稿していない人）はアクティブと判定されない。次に投稿した時点で正しくなる。
+- `ActiveRoleThresholdDays` を後から **増やした** 場合、DB に記録のないメンバー（初回走査の期間より前にしか投稿していない人）はアクティブと判定されない。次に投稿した時点で正しくなる。
 - 走査中に届いた `MessageReceived` も同じ dictionary を max 更新するだけなので、競合しても結果は正しい。
 
 ## 5. リコンサイル（5 分ごと）
@@ -204,7 +204,7 @@ toAdd / toRemove を逐次実行（AddRoleAsync / RemoveRoleAsync, 1人あたり
 1. Developer Portal で「限界様」アプリを作成し、bot トークンを発行する
 2. **Server Members Intent**（特権インテント）を有効化する
 3. 権限 `View Channels` / `Read Message History` / `Manage Roles` で招待する
-4. サーバー設定のロール一覧で、**genkai の bot ロールを `active_role_id` のロールより上** に配置する（これをしないと付け外しが 403 になる）
+4. サーバー設定のロール一覧で、**genkai の bot ロールを `ActiveRoleId` のロールより上** に配置する（これをしないと付け外しが 403 になる）
 5. 対象にしたいすべてのチャンネル（プライベートチャンネルを含む）で閲覧権限を与える
 6. 本番と開発の環境変数に `DiscordSecretGenkai` を追加する。スプレッドシートに `genkai_setting` シートを追加する。
 
