@@ -1,4 +1,5 @@
 ﻿using Approvers.King.Common;
+using Approvers.King.Events.Genkai;
 
 namespace Approvers.King;
 
@@ -49,6 +50,9 @@ public static class Program
         }
 
         await app.SaveChangesAsync();
+
+        await new GenkaiMessageCatchUpPresenter().RunAsync();
+        await new GenkaiActiveRoleRefreshPresenter().RunAsync();
     }
 
     /// <summary>
@@ -59,6 +63,7 @@ public static class Program
         DiscordManager.IssoBot.RegisterEvents();
         DiscordManager.EyesBot.RegisterEvents();
         DiscordManager.LoxyBot.RegisterEvents();
+        DiscordManager.GenkaiBot.RegisterEvents();
         SchedulerManager.RegisterEvents();
     }
 }
