@@ -9,6 +9,12 @@ public class User
     public int MonthlySlotProfitPrice { get; set; }
     public int TodaySlotExecuteCount { get; set; }
 
+    /// <summary>
+    /// 最後にメッセージを投稿した日時
+    /// 限界様がアクティブメンバー用ロールの判定に使う
+    /// </summary>
+    public DateTime? LastMessageAt { get; set; }
+
     public User DeepCopy()
     {
         var user = (User)MemberwiseClone();

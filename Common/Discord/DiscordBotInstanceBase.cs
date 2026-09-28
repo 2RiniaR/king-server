@@ -30,16 +30,19 @@ public abstract class DiscordBotInstanceBase
         return Task.CompletedTask;
     }
 
+    public SocketGuild GetGuild()
+    {
+        return Client.GetGuild(EnvironmentManager.DiscordTargetGuildId);
+    }
+
     public SocketGuildUser GetClientUser()
     {
-        var guild = Client.GetGuild(EnvironmentManager.DiscordTargetGuildId);
-        return guild.CurrentUser;
+        return GetGuild().CurrentUser;
     }
 
     public SocketTextChannel GetMainChannel()
     {
-        var guild = Client.GetGuild(EnvironmentManager.DiscordTargetGuildId);
-        return guild.GetTextChannel(EnvironmentManager.DiscordMainChannelId);
+        return GetGuild().GetTextChannel(EnvironmentManager.DiscordMainChannelId);
     }
 
     public async Task ExecuteMessageEventAsync<T>(SocketUserMessage message, Func<T, Task>? onInitializeAsync = null)
