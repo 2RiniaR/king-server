@@ -13,7 +13,8 @@ FROM --platform=linux/amd64 mcr.microsoft.com/dotnet/runtime:8.0 AS runtime
 WORKDIR /App
 
 # claude-cliのインストール
-RUN apt-get update && apt-get install -y curl && \
+# ca-certificatesはベースイメージに入っている版だと失効したCAを信頼し続けるため、取得できる最新版に上げる
+RUN apt-get update && apt-get install -y curl ca-certificates && \
     curl -fsSL https://claude.ai/install.sh | bash && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 ENV PATH="/root/.local/bin:$PATH"
